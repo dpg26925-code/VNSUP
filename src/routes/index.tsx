@@ -293,16 +293,8 @@ function EmptyState({ hasAny }: { hasAny: boolean }) {
       <p className="mt-3 text-sm text-muted-foreground">
         {hasAny
           ? "Không có kết quả phù hợp với bộ lọc."
-          : "Chưa có nhân vật nào trong danh bạ."}
+          : "Danh bạ đang được cập nhật. Vui lòng quay lại sau."}
       </p>
-      {!hasAny && (
-        <Link
-          to="/admin"
-          className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-        >
-          Vào Quản lý để thêm
-        </Link>
-      )}
     </div>
   );
 }
