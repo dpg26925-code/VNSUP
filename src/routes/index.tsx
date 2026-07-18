@@ -1,14 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import {
-  Sparkles,
-  Star,
-  Users,
-  BookOpen,
-  Compass,
-  TrendingUp,
-} from "lucide-react";
+import { Search, Sparkles, Star, TrendingUp, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site-header";
 
@@ -19,16 +12,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, VĐV, doanh nhân. Tiểu sử, thành tích và mạng xã hội — gọn gàng, cập nhật liên tục.",
+          "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, vận động viên, doanh nhân. Tiểu sử, thành tích và mạng xã hội cập nhật.",
       },
-      {
-        property: "og:title",
-        content: "Người nổi tiếng — Danh bạ nhân vật",
-      },
+      { property: "og:title", content: "Người nổi tiếng — Danh bạ nhân vật Việt & thế giới" },
       {
         property: "og:description",
         content:
-          "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, VĐV, doanh nhân.",
+          "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, vận động viên, doanh nhân. Tiểu sử, thành tích và mạng xã hội cập nhật.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -89,20 +79,18 @@ function Home() {
         return (
           c.name.toLowerCase().includes(q) ||
           (c.stage_name ?? "").toLowerCase().includes(q) ||
-          (c.nationality ?? "").toLowerCase().includes(q) ||
-          c.category.toLowerCase().includes(q)
+          (c.nationality ?? "").toLowerCase().includes(q)
         );
       }
       return true;
     });
   }, [celebs, category, query]);
 
-  const featured = celebs.filter((c) => c.featured);
-  const categoryCount = new Set(celebs.map((c) => c.category)).size;
+  const featuredCount = celebs.filter((c) => c.featured).length;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader onSearch={setQuery} searchValue={query} />
+      <SiteHeader />
 
       {/* Hero */}
       <section className="relative overflow-hidden">
@@ -111,7 +99,7 @@ function Home() {
           <div className="absolute -right-32 top-32 h-80 w-80 rounded-full bg-fuchsia-500/20 blur-[120px]" />
         </div>
 
-        <div className="mx-auto max-w-6xl px-4 pb-10 pt-10">
+        <div className="mx-auto max-w-6xl px-4 pb-10 pt-14">
           <div className="rounded-3xl border border-white/10 bg-card/50 p-6 shadow-2xl backdrop-blur-sm sm:p-10">
             <div className="grid gap-6 sm:grid-cols-[1fr_auto]">
               <div>
@@ -119,12 +107,11 @@ function Home() {
                   <Sparkles className="h-3.5 w-3.5" />
                   Danh bạ — hồ sơ mở, cập nhật liên tục
                 </div>
-                <h1 className="mt-4 text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
-                  Người nổi tiếng —{" "}
+                <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">
+                  Người nổi tiếng — Khám phá <br className="hidden sm:block" />
                   <span className="bg-gradient-to-r from-primary via-fuchsia-400 to-primary bg-clip-text text-transparent">
-                    Khám phá nhân vật
+                    nhân vật truyền cảm hứng
                   </span>
-                  <br className="hidden sm:block" /> truyền cảm hứng
                 </h1>
                 <p className="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
                   Tiểu sử, thành tích và hành trình của các gương mặt nổi bật —
@@ -136,7 +123,7 @@ function Home() {
                     href="#library"
                     className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
                   >
-                    <Compass className="h-4 w-4" /> Vào danh bạ
+                    <Users className="h-4 w-4" /> Vào danh bạ
                   </a>
                   <a
                     href="#featured"
@@ -156,42 +143,37 @@ function Home() {
 
             <div className="mt-8 grid grid-cols-3 gap-3">
               <Stat label="Nhân vật" value={celebs.length} />
-              <Stat label="Lĩnh vực" value={categoryCount} />
-              <Stat label="Nổi bật" value={featured.length} highlight />
+              <Stat label="Nổi bật" value={featuredCount} />
+              <Stat
+                label="Lĩnh vực"
+                value={new Set(celebs.map((c) => c.category)).size}
+              />
             </div>
           </div>
         </div>
       </section>
-
-      {/* Featured strip */}
-      {featured.length > 0 && (
-        <section id="featured" className="mx-auto max-w-6xl px-4 pb-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 text-lg font-bold">
-              <Star className="h-5 w-5 text-primary" /> Nổi bật
-            </h2>
-            <span className="text-xs text-muted-foreground">
-              {featured.length} nhân vật
-            </span>
-          </div>
-          <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
-            {featured.slice(0, 10).map((c) => (
-              <FeaturedChip key={c.id} celeb={c} />
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* Library */}
       <section id="library" className="mx-auto max-w-6xl px-4 pb-24">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 className="flex items-center gap-2 text-2xl font-bold">
-              <BookOpen className="h-6 w-6 text-primary" /> Danh bạ nhân vật
+              <TrendingUp className="h-6 w-6 text-primary" /> Danh bạ
             </h2>
             <p className="text-sm text-muted-foreground">
               {filtered.length}/{celebs.length} hồ sơ
             </p>
+          </div>
+
+          <div className="flex w-full max-w-md items-center gap-2 rounded-full border border-white/10 bg-card/60 px-4 py-2">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Tìm tên, nghệ danh, quốc tịch…"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            />
           </div>
         </div>
 
@@ -231,100 +213,23 @@ function Home() {
           </div>
         )}
       </section>
-
-      {/* Footer */}
-      <footer id="about" className="border-t border-white/5 bg-background/60">
-        <div className="mx-auto max-w-6xl px-4 py-10">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary/15 ring-1 ring-primary/30">
-                <Sparkles className="h-4 w-4 text-primary" />
-              </div>
-              <div className="text-sm">
-                <div className="font-bold">Người nổi tiếng</div>
-                <div className="text-xs text-muted-foreground">
-                  Danh bạ nhân vật — cập nhật liên tục
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <a href="#library" className="hover:text-primary">
-                Khám phá
-              </a>
-              <a href="#featured" className="hover:text-primary">
-                Nổi bật
-              </a>
-              <a href="mailto:hello@example.com" className="hover:text-primary">
-                Liên hệ
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
 
-function Stat({
-  label,
-  value,
-  highlight,
-}: {
-  label: string;
-  value: number;
-  highlight?: boolean;
-}) {
+function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
       <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
         {label}
       </div>
-      <div
-        className={
-          "text-2xl font-bold " + (highlight ? "text-primary" : "text-foreground")
-        }
-      >
-        {value}
-      </div>
+      <div className="text-2xl font-bold text-primary">{value}</div>
     </div>
   );
 }
 
-function FeaturedChip({ celeb }: { celeb: Celeb }) {
-  return (
-    <Link
-      to="/celebrities/$slug"
-      params={{ slug: celeb.slug }}
-      className="group flex shrink-0 items-center gap-3 rounded-2xl border border-white/10 bg-card/60 px-3 py-2 pr-4 hover:border-primary/40"
-    >
-      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full ring-2 ring-primary/30">
-        {celeb.avatar_url ? (
-          <img
-            src={celeb.avatar_url}
-            alt={celeb.name}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="grid h-full w-full place-items-center bg-primary/20 text-xs font-bold text-primary">
-            {celeb.name.slice(0, 1).toUpperCase()}
-          </div>
-        )}
-      </div>
-      <div>
-        <div className="text-sm font-semibold group-hover:text-primary">
-          {celeb.stage_name || celeb.name}
-        </div>
-        <div className="text-[11px] text-muted-foreground">
-          {CATEGORIES.find((x) => x.value === celeb.category)?.label ?? "Khác"}
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 function CelebCard({ celeb }: { celeb: Celeb }) {
-  const label =
-    CATEGORIES.find((x) => x.value === celeb.category)?.label ?? "Khác";
+  const label = CATEGORIES.find((x) => x.value === celeb.category)?.label ?? "Khác";
   return (
     <Link
       to="/celebrities/$slug"
@@ -344,17 +249,12 @@ function CelebCard({ celeb }: { celeb: Celeb }) {
             src={celeb.avatar_url}
             alt={celeb.name}
             loading="lazy"
-            className="h-full w-full object-cover opacity-40 blur-sm"
+            className="h-full w-full object-cover blur-sm opacity-40"
           />
         ) : null}
         {celeb.featured && (
           <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary/90 px-2 py-0.5 text-[10px] font-semibold text-primary-foreground shadow">
             <Star className="h-3 w-3" /> Nổi bật
-          </span>
-        )}
-        {celeb.views > 0 && (
-          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-medium text-white/90 backdrop-blur">
-            <TrendingUp className="h-3 w-3" /> {celeb.views}
           </span>
         )}
       </div>

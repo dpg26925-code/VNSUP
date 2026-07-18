@@ -81,17 +81,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, vận động viên, doanh nhân — tiểu sử, thành tích, mạng xã hội.",
+          "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, vận động viên, doanh nhân. Tiểu sử, thành tích và mạng xã hội cập nhật.",
       },
       { name: "author", content: "Người nổi tiếng" },
-      { property: "og:title", content: "Người nổi tiếng — Danh bạ" },
+      { property: "og:title", content: "Người nổi tiếng — Danh bạ nhân vật Việt & thế giới" },
       {
         property: "og:description",
         content:
-          "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, vận động viên, doanh nhân.",
+          "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, vận động viên, doanh nhân. Tiểu sử, thành tích và mạng xã hội cập nhật.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Người nổi tiếng — Danh bạ nhân vật Việt & thế giới" },
+      { name: "twitter:description", content: "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, vận động viên, doanh nhân. Tiểu sử, thành tích và mạng xã hội cập nhật." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/0325ac7d-d233-412d-97b9-869d90cbe946" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/0325ac7d-d233-412d-97b9-869d90cbe946" },
     ],
     links: [
       {
