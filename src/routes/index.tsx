@@ -199,10 +199,10 @@ function Home() {
             <div className="space-y-4">
               <div className="bg-primary p-6 text-primary-foreground">
                 <p className="text-4xl font-extrabold sm:text-5xl" style={display}>
-                  {celebs.length}
+                  {celebs.length || "—"}
                 </p>
                 <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.25em]">
-                  Nhân vật
+                  {celebs.length ? "Nhân vật" : "Đang cập nhật"}
                 </p>
               </div>
               <div className="border border-primary/20 bg-secondary p-6">
@@ -210,7 +210,7 @@ function Home() {
                   className="text-4xl font-extrabold text-foreground sm:text-5xl"
                   style={display}
                 >
-                  {new Set(celebs.map((c) => c.category)).size || 0}
+                  {new Set(celebs.map((c) => c.category)).size || "—"}
                 </p>
                 <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
                   Lĩnh vực
@@ -221,13 +221,14 @@ function Home() {
                   className="text-4xl font-extrabold text-foreground sm:text-5xl"
                   style={display}
                 >
-                  {featuredCount}
+                  {featuredCount || "—"}
                 </p>
                 <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
                   Nổi bật
                 </p>
               </div>
             </div>
+
           </div>
         </section>
 
