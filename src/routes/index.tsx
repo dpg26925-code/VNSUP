@@ -21,11 +21,45 @@ export const Route = createFileRoute("/")({
           "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, vận động viên, doanh nhân. Tiểu sử, thành tích và mạng xã hội cập nhật.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://cheerful-wave-works.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://cheerful-wave-works.lovable.app/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Người nổi tiếng",
+          url: "https://cheerful-wave-works.lovable.app/",
+          inLanguage: "vi-VN",
+          description:
+            "Danh bạ nhân vật nổi tiếng Việt Nam và thế giới: ca sĩ, diễn viên, vận động viên, doanh nhân, KOL.",
+          potentialAction: {
+            "@type": "SearchAction",
+            target:
+              "https://cheerful-wave-works.lovable.app/?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Người nổi tiếng",
+          url: "https://cheerful-wave-works.lovable.app/",
+        }),
+      },
     ],
   }),
   component: Home,
 });
+
 
 const CATEGORIES = [
   { value: "all", label: "Tất cả" },
