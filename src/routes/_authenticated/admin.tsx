@@ -561,3 +561,14 @@ function Field({
     </label>
   );
 }
+
+function StatCard({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-card/50 px-4 py-3">
+      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+        {label}
+      </div>
+      <div className="text-2xl font-bold text-primary">{value}</div>
+    </div>
+  );
+}
