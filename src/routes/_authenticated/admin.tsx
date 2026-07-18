@@ -139,10 +139,10 @@ function AdminPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="flex items-center gap-2 text-2xl font-bold">
-              <Shield className="h-6 w-6 text-primary" /> Quản lý người nổi tiếng
+              <Shield className="h-6 w-6 text-primary" /> Dashboard quản lý
             </h1>
             <p className="text-sm text-muted-foreground">
-              {celebs.length} hồ sơ · thêm, sửa, xóa
+              Thêm, sửa, xóa hồ sơ người nổi tiếng
             </p>
           </div>
           <button
@@ -150,10 +150,27 @@ function AdminPage() {
               setEditing(null);
               setShowForm(true);
             }}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" /> Thêm mới
           </button>
+        </div>
+
+        {/* Stats */}
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatCard label="Tổng hồ sơ" value={celebs.length} />
+          <StatCard
+            label="Đã xuất bản"
+            value={celebs.filter((c) => c.published).length}
+          />
+          <StatCard
+            label="Nổi bật"
+            value={celebs.filter((c) => c.featured).length}
+          />
+          <StatCard
+            label="Lĩnh vực"
+            value={new Set(celebs.map((c) => c.category)).size}
+          />
         </div>
 
         <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
