@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Users } from "lucide-react";
+import { Search, Sparkles, Star, TrendingUp, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site-header";
 
@@ -21,45 +21,11 @@ export const Route = createFileRoute("/")({
           "Khám phá hồ sơ người nổi tiếng: ca sĩ, diễn viên, vận động viên, doanh nhân. Tiểu sử, thành tích và mạng xã hội cập nhật.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://cheerful-wave-works.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
-    ],
-    links: [
-      { rel: "canonical", href: "https://cheerful-wave-works.lovable.app/" },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "Người nổi tiếng",
-          url: "https://cheerful-wave-works.lovable.app/",
-          inLanguage: "vi-VN",
-          description:
-            "Danh bạ nhân vật nổi tiếng Việt Nam và thế giới: ca sĩ, diễn viên, vận động viên, doanh nhân, KOL.",
-          potentialAction: {
-            "@type": "SearchAction",
-            target:
-              "https://cheerful-wave-works.lovable.app/?q={search_term_string}",
-            "query-input": "required name=search_term_string",
-          },
-        }),
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "Người nổi tiếng",
-          url: "https://cheerful-wave-works.lovable.app/",
-        }),
-      },
     ],
   }),
   component: Home,
 });
-
 
 const CATEGORIES = [
   { value: "all", label: "Tất cả" },
@@ -83,8 +49,6 @@ type Celeb = {
   featured: boolean;
   views: number;
 };
-
-const display = { fontFamily: "var(--font-display)" };
 
 function Home() {
   const [query, setQuery] = useState("");
@@ -123,184 +87,143 @@ function Home() {
   }, [celebs, category, query]);
 
   const featuredCount = celebs.filter((c) => c.featured).length;
-  const trending = celebs[0];
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
-      <SiteHeader onSearch={setQuery} searchValue={query} />
+    <div className="min-h-screen bg-background text-foreground">
+      <SiteHeader />
 
-      <div className="mx-auto max-w-7xl px-4 md:px-8">
-        {/* Hero */}
-        <section className="grid gap-10 pb-24 pt-16 lg:grid-cols-12 lg:gap-12 lg:pt-24">
-          <div className="space-y-8 lg:col-span-7">
-            <div className="inline-flex items-center gap-2 border border-primary/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-              Danh bạ — Hồ sơ mở
-            </div>
-            <h1
-              className="text-5xl font-extrabold leading-[0.9] tracking-tight sm:text-6xl md:text-7xl xl:text-8xl"
-              style={display}
-            >
-              Người nổi tiếng
-              <br />
-              <span
-                className="text-transparent"
-                style={{ WebkitTextStroke: "1px oklch(0.78 0.13 85)" }}
-              >
-                Truyền cảm hứng
-              </span>
-            </h1>
-            <p className="max-w-xl text-base leading-relaxed text-foreground/70 sm:text-lg">
-              Khám phá và kết nối với những gương mặt tiêu biểu — từ nghệ sĩ,
-              vận động viên đến doanh nhân, KOL hàng đầu Việt Nam và thế giới.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#library"
-                className="inline-flex items-center gap-2 bg-primary px-8 py-4 text-sm font-bold uppercase tracking-widest text-primary-foreground transition hover:bg-foreground"
-              >
-                Vào danh bạ
-              </a>
-              <a
-                href="#featured"
-                className="inline-flex items-center gap-2 border border-foreground/20 px-8 py-4 text-sm font-bold uppercase tracking-widest text-foreground transition hover:border-primary hover:text-primary"
-              >
-                Nổi bật
-              </a>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 lg:col-span-5">
-            <div className="relative aspect-[4/5] overflow-hidden border border-primary/20 bg-secondary">
-              {trending?.cover_url || trending?.avatar_url ? (
-                <img
-                  src={trending.cover_url ?? trending.avatar_url ?? ""}
-                  alt={trending.name}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              ) : (
-                <div className="absolute inset-0 grid place-items-center text-primary/40">
-                  <Users className="h-16 w-16" />
-                </div>
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-6">
-                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
-                  #1 Trending
-                </p>
-                <h3
-                  className="mt-2 text-2xl font-bold leading-none text-foreground"
-                  style={display}
-                >
-                  {trending?.stage_name || trending?.name || "Đang cập nhật"}
-                </h3>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="bg-primary p-6 text-primary-foreground">
-                <p className="text-4xl font-extrabold sm:text-5xl" style={display}>
-                  {celebs.length || "—"}
-                </p>
-                <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.25em]">
-                  {celebs.length ? "Nhân vật" : "Đang cập nhật"}
-                </p>
-              </div>
-              <div className="border border-primary/20 bg-secondary p-6">
-                <p
-                  className="text-4xl font-extrabold text-foreground sm:text-5xl"
-                  style={display}
-                >
-                  {new Set(celebs.map((c) => c.category)).size || "—"}
-                </p>
-                <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
-                  Lĩnh vực
-                </p>
-              </div>
-              <div className="border border-primary/20 bg-secondary p-6">
-                <p
-                  className="text-4xl font-extrabold text-foreground sm:text-5xl"
-                  style={display}
-                >
-                  {featuredCount || "—"}
-                </p>
-                <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
-                  Nổi bật
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* Library */}
-        <section id="library" className="space-y-10 border-t border-primary/10 pb-24 pt-20">
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-            <div className="space-y-5">
-              <h2
-                className="text-3xl font-bold uppercase tracking-tight sm:text-4xl"
-                style={display}
-              >
-                Thư viện nhân vật
-              </h2>
-              <div className="flex flex-wrap gap-2.5">
-                {CATEGORIES.map((c) => {
-                  const active = category === c.value;
-                  return (
-                    <button
-                      key={c.value}
-                      onClick={() => setCategory(c.value)}
-                      className={
-                        "px-5 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition " +
-                        (active
-                          ? "bg-primary text-primary-foreground"
-                          : "border border-foreground/20 text-foreground/60 hover:border-primary hover:text-primary")
-                      }
-                    >
-                      {c.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="text-sm italic text-foreground/40">
-              Đang hiển thị{" "}
-              <span className="font-bold not-italic text-primary">
-                {filtered.length}
-              </span>{" "}
-              / {celebs.length} kết quả
-            </div>
-          </div>
-
-          {isLoading ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="aspect-[3/4] animate-pulse border border-primary/20 bg-secondary/40"
-                />
-              ))}
-            </div>
-          ) : filtered.length === 0 ? (
-            <EmptyState hasAny={celebs.length > 0} />
-          ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {filtered.map((c) => (
-                <CelebCard key={c.id} celeb={c} />
-              ))}
-            </div>
-          )}
-        </section>
-      </div>
-
-      <footer className="border-t border-primary/10 py-10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 text-xs text-foreground/50 md:flex-row md:px-8">
-          <p className="uppercase tracking-[0.25em]" style={display}>
-            © Người nổi tiếng — Danh bạ
-          </p>
-          <p className="italic">Hồ sơ mở · Cập nhật liên tục</p>
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -left-40 top-0 h-96 w-96 rounded-full bg-primary/25 blur-[120px]" />
+          <div className="absolute -right-32 top-32 h-80 w-80 rounded-full bg-fuchsia-500/20 blur-[120px]" />
         </div>
-      </footer>
+
+        <div className="mx-auto max-w-6xl px-4 pb-10 pt-14">
+          <div className="rounded-3xl border border-white/10 bg-card/50 p-6 shadow-2xl backdrop-blur-sm sm:p-10">
+            <div className="grid gap-6 sm:grid-cols-[1fr_auto]">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Danh bạ — hồ sơ mở, cập nhật liên tục
+                </div>
+                <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">
+                  Người nổi tiếng — Khám phá <br className="hidden sm:block" />
+                  <span className="bg-gradient-to-r from-primary via-fuchsia-400 to-primary bg-clip-text text-transparent">
+                    nhân vật truyền cảm hứng
+                  </span>
+                </h1>
+                <p className="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
+                  Tiểu sử, thành tích và hành trình của các gương mặt nổi bật —
+                  gọn gàng, đẹp mắt, dễ tìm.
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a
+                    href="#library"
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
+                  >
+                    <Users className="h-4 w-4" /> Vào danh bạ
+                  </a>
+                  <a
+                    href="#featured"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold hover:bg-white/10"
+                  >
+                    <Star className="h-4 w-4" /> Nổi bật
+                  </a>
+                </div>
+              </div>
+
+              <div className="hidden sm:block">
+                <div className="grid h-40 w-40 place-items-center rounded-3xl bg-gradient-to-br from-primary/30 via-fuchsia-500/20 to-transparent">
+                  <Sparkles className="h-16 w-16 text-primary" />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 grid grid-cols-3 gap-3">
+              <Stat label="Nhân vật" value={celebs.length} />
+              <Stat label="Nổi bật" value={featuredCount} />
+              <Stat
+                label="Lĩnh vực"
+                value={new Set(celebs.map((c) => c.category)).size}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Library */}
+      <section id="library" className="mx-auto max-w-6xl px-4 pb-24">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="flex items-center gap-2 text-2xl font-bold">
+              <TrendingUp className="h-6 w-6 text-primary" /> Danh bạ
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {filtered.length}/{celebs.length} hồ sơ
+            </p>
+          </div>
+
+          <div className="flex w-full max-w-md items-center gap-2 rounded-full border border-white/10 bg-card/60 px-4 py-2">
+            <Search className="h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Tìm tên, nghệ danh, quốc tịch…"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            />
+          </div>
+        </div>
+
+        <div className="mb-6 flex flex-wrap gap-2">
+          {CATEGORIES.map((c) => (
+            <button
+              key={c.value}
+              onClick={() => setCategory(c.value)}
+              className={
+                "rounded-full border px-3.5 py-1.5 text-xs font-medium transition " +
+                (category === c.value
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10")
+              }
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-64 animate-pulse rounded-2xl border border-white/5 bg-card/40"
+              />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <EmptyState hasAny={celebs.length > 0} />
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((c) => (
+              <CelebCard key={c.id} celeb={c} />
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+        {label}
+      </div>
+      <div className="text-2xl font-bold text-primary">{value}</div>
     </div>
   );
 }
@@ -311,37 +234,53 @@ function CelebCard({ celeb }: { celeb: Celeb }) {
     <Link
       to="/celebrities/$slug"
       params={{ slug: celeb.slug }}
-      className="group relative block aspect-[3/4] overflow-hidden border border-primary/20 bg-secondary/40 transition hover:border-primary"
+      className="group overflow-hidden rounded-2xl border border-white/10 bg-card/60 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10"
     >
-      {celeb.cover_url || celeb.avatar_url ? (
-        <img
-          src={celeb.cover_url ?? celeb.avatar_url ?? ""}
-          alt={celeb.name}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-        />
-      ) : (
-        <div className="absolute inset-0 grid place-items-center text-4xl font-extrabold text-primary/40" style={display}>
-          {celeb.name.slice(0, 1).toUpperCase()}
+      <div className="relative h-40 overflow-hidden bg-gradient-to-br from-primary/20 to-fuchsia-500/10">
+        {celeb.cover_url ? (
+          <img
+            src={celeb.cover_url}
+            alt={celeb.name}
+            loading="lazy"
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          />
+        ) : celeb.avatar_url ? (
+          <img
+            src={celeb.avatar_url}
+            alt={celeb.name}
+            loading="lazy"
+            className="h-full w-full object-cover blur-sm opacity-40"
+          />
+        ) : null}
+        {celeb.featured && (
+          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary/90 px-2 py-0.5 text-[10px] font-semibold text-primary-foreground shadow">
+            <Star className="h-3 w-3" /> Nổi bật
+          </span>
+        )}
+      </div>
+      <div className="flex items-center gap-3 p-4">
+        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-primary/30">
+          {celeb.avatar_url ? (
+            <img
+              src={celeb.avatar_url}
+              alt={celeb.name}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="grid h-full w-full place-items-center bg-primary/20 text-sm font-bold text-primary">
+              {celeb.name.slice(0, 1).toUpperCase()}
+            </div>
+          )}
         </div>
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-      {celeb.featured && (
-        <span className="absolute right-3 top-3 border border-primary/60 bg-background/70 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-primary">
-          Nổi bật
-        </span>
-      )}
-      <div className="absolute inset-x-0 bottom-0 space-y-1.5 p-5">
-        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
-          {label}
-          {celeb.nationality ? ` · ${celeb.nationality}` : ""}
-        </p>
-        <h3
-          className="text-xl font-bold leading-tight text-foreground"
-          style={display}
-        >
-          {celeb.stage_name || celeb.name}
-        </h3>
+        <div className="min-w-0">
+          <div className="truncate text-sm font-semibold">
+            {celeb.stage_name || celeb.name}
+          </div>
+          <div className="truncate text-xs text-muted-foreground">
+            {label}
+            {celeb.nationality ? ` · ${celeb.nationality}` : ""}
+          </div>
+        </div>
       </div>
     </Link>
   );
@@ -349,23 +288,21 @@ function CelebCard({ celeb }: { celeb: Celeb }) {
 
 function EmptyState({ hasAny }: { hasAny: boolean }) {
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      <div className="col-span-full grid place-items-center border-2 border-dashed border-primary/25 p-14 text-center">
-        <div className="grid h-20 w-20 place-items-center rounded-full border border-primary/40">
-          <Users className="h-8 w-8 text-primary/60" />
-        </div>
-        <p className="mt-4 text-sm font-bold uppercase tracking-[0.25em] text-foreground">
-          {hasAny ? "Không có kết quả phù hợp" : "Chưa có nhân vật nào"}
-        </p>
-        {!hasAny && (
-          <Link
-            to="/admin"
-            className="mt-5 inline-flex items-center gap-2 border border-primary px-5 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-primary hover:bg-primary hover:text-primary-foreground"
-          >
-            Vào Quản lý để thêm
-          </Link>
-        )}
-      </div>
+    <div className="rounded-3xl border border-dashed border-white/10 bg-card/40 py-16 text-center">
+      <Users className="mx-auto h-10 w-10 text-primary/60" />
+      <p className="mt-3 text-sm text-muted-foreground">
+        {hasAny
+          ? "Không có kết quả phù hợp với bộ lọc."
+          : "Chưa có nhân vật nào trong danh bạ."}
+      </p>
+      {!hasAny && (
+        <Link
+          to="/admin"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          Vào Quản lý để thêm
+        </Link>
+      )}
     </div>
   );
 }
