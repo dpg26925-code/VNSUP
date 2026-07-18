@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cheerful-wave-works.lovable.app/sitemap.xml
