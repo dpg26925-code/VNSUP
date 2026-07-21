@@ -13,9 +13,32 @@ export type AdminContext = {
   email: string | null;
   roles: AdminRole[];
   highestRole: AdminRole;
+  allowedCategories: string[];
+  canPublish: boolean;
+  canDelete: boolean;
+  canManageUsers: boolean;
   supabase: SupabaseClient<Database>;
   request: Request;
 };
+
+/** Enforce editor category allow-list. Returns null if OK, or a Response on failure. */
+export function enforceCategoryAllowed(
+  ctx: AdminContext,
+  category: string | null | undefined,
+): Response | null {
+  if (ctx.highestRole !== "editor") return null;
+  if (!ctx.allowedCategories || ctx.allowedCategories.length === 0) return null;
+  if (!category) return null;
+  if (ctx.allowedCategories.includes(category)) return null;
+  return json(
+    {
+      error: "forbidden",
+      message: `Editor không được phép thao tác trên chuyên mục '${category}'.`,
+      allowed_categories: ctx.allowedCategories,
+    },
+    403,
+  );
+}
 
 export function json(body: unknown, status = 200, extraHeaders: Record<string, string> = {}) {
   return new Response(JSON.stringify(body), {
