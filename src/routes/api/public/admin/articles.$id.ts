@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { corsPreflight, json, logAudit, requireAdmin } from "@/lib/admin-api.server";
+import { corsPreflight, enforceCategoryAllowed, json, logAudit, requireAdmin } from "@/lib/admin-api.server";
 
 const UPDATABLE = [
   "title",
