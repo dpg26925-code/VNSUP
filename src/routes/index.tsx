@@ -76,7 +76,7 @@ function HomePage() {
             Tìm nhà máy sản xuất<br className="hidden md:block" /> Việt Nam <span className="text-brand">bằng AI</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
-            Hồ sơ nhà máy chi tiết. Năng lực rõ ràng. Tìm kiếm theo khả năng sản xuất thực tế.
+            Kết nối buyer với nhà máy đã xác thực trong 24 giờ. Hồ sơ năng lực chi tiết, tóm tắt AI, liên hệ trực tiếp không qua trung gian.
           </p>
 
           <form
@@ -91,10 +91,17 @@ function HomePage() {
                 className="w-full bg-transparent py-2.5 text-base outline-none placeholder:text-muted-foreground"
               />
             </div>
-            <button className="rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-brand-foreground shadow-sm transition hover:-translate-y-px hover:bg-brand/90">
-              Tìm kiếm
+            <button className="inline-flex items-center gap-1.5 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground shadow-sm transition hover:-translate-y-px hover:bg-brand/90">
+              <Search className="h-4 w-4" strokeWidth={2.25} />
+              Tìm ngay
             </button>
           </form>
+          <div className="mx-auto mt-4 flex max-w-xl flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
+            <span>Gợi ý:</span>
+            {["CNC chính xác", "Ép nhựa", "SMT PCBA", "Cắt laser"].map((k) => (
+              <button key={k} onClick={() => { setQ(k); navigate({ to: "/search", search: { q: k } as any }); }} className="rounded-full border border-border bg-card px-2.5 py-0.5 hover:border-brand hover:text-brand">{k}</button>
+            ))}
+          </div>
 
           <div className="mx-auto mt-12 grid max-w-xl grid-cols-3 gap-3">
             {[
@@ -143,8 +150,8 @@ function HomePage() {
         <section className="mx-auto max-w-6xl px-6 py-8">
           <div className="mb-8 flex items-end justify-between">
             <div>
-              <div className="text-xs font-semibold uppercase tracking-widest text-brand">Nổi bật</div>
-              <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Nhà máy tiêu biểu</h2>
+              <div className="text-xs font-semibold uppercase tracking-widest text-brand">Nhà máy tiêu biểu</div>
+              <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Đối tác được chọn lọc</h2>
               <p className="mt-1 text-sm text-muted-foreground">Được xác thực và cập nhật gần đây.</p>
             </div>
           </div>
