@@ -12,6 +12,7 @@ type Company = {
   industry: string | null; sub_industry: string | null;
   employee_range: string | null; founded_year: number | null;
   website: string | null; phone: string | null; email: string | null; address: string | null;
+  logo_url: string | null;
   description: string | null; ai_summary: string | null;
   capabilities: unknown; verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
@@ -65,6 +66,8 @@ export const Route = createFileRoute("/company/$slug")({
             "@id": url,
             name: c.name,
             url,
+            logo: c.logo_url ?? undefined,
+            image: c.logo_url ?? undefined,
             address: c.address ? {
               "@type": "PostalAddress",
               streetAddress: c.address,
@@ -130,7 +133,7 @@ function CompanyPage() {
   const [products, setProducts] = useState<{ id: string; name: string; category: string | null; description: string | null }[]>([]);
 
   useEffect(() => {
-    supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured")
+    supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("industry", c.industry ?? "").neq("id", c.id).limit(12)
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
     supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)
@@ -160,9 +163,13 @@ function CompanyPage() {
         <div className="overflow-hidden rounded-2xl border bg-card">
           <div className="relative h-32 bg-gradient-to-br from-primary via-primary to-brand md:h-40">
             <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(255,255,255,0.3) 0, transparent 35%)" }} />
-            <div className="absolute -bottom-8 left-6 grid h-20 w-20 place-items-center rounded-2xl border-4 border-card bg-gradient-to-br from-brand to-primary text-2xl font-bold text-primary-foreground shadow-md">
-              {initials(c.name)}
-            </div>
+            {c.logo_url ? (
+              <img src={c.logo_url} alt={`Logo ${c.name}`} className="absolute -bottom-8 left-6 h-20 w-20 rounded-2xl border-4 border-card bg-background object-contain p-1.5 shadow-md" />
+            ) : (
+              <div className="absolute -bottom-8 left-6 grid h-20 w-20 place-items-center rounded-2xl border-4 border-card bg-gradient-to-br from-brand to-primary text-2xl font-bold text-primary-foreground shadow-md">
+                {initials(c.name)}
+              </div>
+            )}
             <div className="absolute right-4 top-4 flex flex-wrap gap-2">
               {c.verified && <span className="inline-flex items-center gap-1 rounded-full bg-success px-2.5 py-1 text-xs font-semibold text-success-foreground shadow"><BadgeCheck className="h-3.5 w-3.5" fill="currentColor" strokeWidth={2.25} /> Đã xác thực</span>}
               {c.featured && <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-brand-foreground shadow"><Star className="h-3.5 w-3.5" fill="currentColor" /> Nổi bật</span>}

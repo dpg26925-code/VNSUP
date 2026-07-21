@@ -51,7 +51,7 @@ function ProvincePage() {
   useEffect(() => {
     setLoading(true);
     supabase.from("companies")
-      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured")
+      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("province", p.name)
       .order("featured", { ascending: false })
       .then(({ data }) => { setRows((data ?? []) as CompanyCardProps[]); setLoading(false); });

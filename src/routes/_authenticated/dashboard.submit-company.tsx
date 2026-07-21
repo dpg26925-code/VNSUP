@@ -34,6 +34,7 @@ const schema = z.object({
     .nullable()
     .transform((v) => (v === "" || v == null ? null : Number(v))),
   website: z.string().url("URL không hợp lệ").max(255).optional().or(z.literal("")),
+  logo_url: z.string().url("URL logo không hợp lệ").max(500).optional().or(z.literal("")),
   phone: z.string().max(50).optional().or(z.literal("")),
   email: z.string().email("Email không hợp lệ").max(255).optional().or(z.literal("")),
   address: z.string().max(500).optional().or(z.literal("")),
@@ -69,7 +70,7 @@ function SubmitCompanyPage() {
     name: "", slug: "", province: "", industry: "", sub_industry: "",
     employee_range: "", founded_year: "", website: "", phone: "", email: "",
     address: "", description: "", capabilities: "",
-    stock_exchange: "", stock_ticker: "",
+    stock_exchange: "", stock_ticker: "", logo_url: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -104,6 +105,7 @@ function SubmitCompanyPage() {
       employee_range: d.employee_range || null,
       founded_year: d.founded_year ?? null,
       website: d.website || null,
+      logo_url: d.logo_url || null,
       phone: d.phone || null,
       email: d.email || null,
       address: d.address || null,
@@ -179,6 +181,16 @@ function SubmitCompanyPage() {
             </F>
             <F label="Website" err={errors.website}>
               <input className="input" placeholder="https://..." value={form.website} onChange={(e) => set("website", e.target.value)} />
+            </F>
+            <F label="Logo URL" err={errors.logo_url} full hint="Dán URL ảnh logo (PNG/JPG/SVG). Nên vuông, nền trong suốt.">
+              <div className="flex items-center gap-3">
+                {form.logo_url ? (
+                  <img src={form.logo_url} alt="Logo preview" className="h-12 w-12 rounded-md border bg-background object-contain p-1" />
+                ) : (
+                  <div className="grid h-12 w-12 place-items-center rounded-md border bg-muted text-[10px] text-muted-foreground">Logo</div>
+                )}
+                <input className="input" placeholder="https://.../logo.png" value={form.logo_url} onChange={(e) => set("logo_url", e.target.value)} />
+              </div>
             </F>
             <F label="Điện thoại">
               <input className="input" value={form.phone} onChange={(e) => set("phone", e.target.value)} />

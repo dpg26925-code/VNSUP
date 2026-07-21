@@ -56,7 +56,7 @@ function SearchPage() {
     setLoading(true);
     const sort = search.sort ?? "featured";
     let qb = supabase.from("companies")
-      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured")
+      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .limit(60);
     if (sort === "featured") qb = qb.order("featured", { ascending: false }).order("verified", { ascending: false });
     else if (sort === "name") qb = qb.order("name", { ascending: true });
