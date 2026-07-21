@@ -84,7 +84,7 @@ export const Route = createFileRoute("/api/public/webhooks/payos")({
 
         // Apply flags to company
         if (order.company_id) {
-          const patch: Record<string, unknown> = {};
+          const patch: any = {};
           if (order.plan_type === "featured_listing") {
             patch.is_featured = true;
             patch.featured_expires_at = expiresAt.toISOString();
@@ -131,13 +131,15 @@ export const Route = createFileRoute("/api/public/webhooks/payos")({
           console.warn("[payos-webhook] email best-effort error:", e);
         }
 
-        // Audit log
-        await supabaseAdmin.from("admin_audit_log").insert({
-          action: "payment.paid",
-          entity_type: "payment_order",
-          entity_id: order.id,
-          metadata: { orderCode: d.orderCode, amount: d.amount, plan: order.plan_type, subscription_id: sub?.id },
-        } as any).catch(() => {});
+        // Audit log (best-effort)
+        try {
+          await supabaseAdmin.from("admin_audit_log").insert({
+            action: "payment.paid",
+            target_type: "payment_order",
+            target_id: order.id,
+            changes: { orderCode: d.orderCode, amount: d.amount, plan: order.plan_type, subscription_id: sub?.id },
+          } as any);
+        } catch {}
 
         return Response.json({ success: true });
       },

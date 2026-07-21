@@ -120,12 +120,13 @@ function PricingPage() {
                   ))}
                 </ul>
                 <Link
-                  to="/auth"
+                  to="/dashboard/subscriptions"
+                  search={{ plan: p.key === "featured" ? "featured_listing" : p.key === "verified" ? "verified_badge" : "lead_notification" }}
                   className={`mt-6 block rounded-md px-4 py-2 text-center text-sm font-medium ${p.highlight ? "bg-primary text-primary-foreground hover:bg-primary/90" : "border hover:bg-accent"}`}
                 >
                   Đăng ký & thanh toán
                 </Link>
-                <p className="mt-2 text-center text-[11px] text-muted-foreground">Đăng nhập → chọn gói trong dashboard</p>
+                <p className="mt-2 text-center text-[11px] text-muted-foreground">Thanh toán qua VietQR (payOS)</p>
               </div>
             );
           })}

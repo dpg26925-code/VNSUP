@@ -23,11 +23,14 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProvinceSlugRouteImport } from './routes/province.$slug'
+import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
+import { Route as PaymentCancelRouteImport } from './routes/payment.cancel'
 import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
 import { Route as CompanySlugRouteImport } from './routes/company.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardSubscriptionsRouteImport } from './routes/_authenticated/dashboard.subscriptions'
 import { Route as AuthenticatedDashboardSubmitCompanyRouteImport } from './routes/_authenticated/dashboard.submit-company'
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardMyCompaniesRouteImport } from './routes/_authenticated/dashboard.my-companies'
@@ -37,6 +40,8 @@ import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardAuditLogRouteImport } from './routes/_authenticated/dashboard.audit-log'
 import { Route as AuthenticatedDashboardArticlesRouteImport } from './routes/_authenticated/dashboard.articles'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
+import { Route as ApiPublicWebhooksPayosRouteImport } from './routes/api/public/webhooks/payos'
+import { Route as ApiPublicHooksExpireSubscriptionsRouteImport } from './routes/api/public/hooks/expire-subscriptions'
 import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
 import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/public/admin/categories'
 import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
@@ -117,6 +122,16 @@ const ProvinceSlugRoute = ProvinceSlugRouteImport.update({
   path: '/province/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
+  id: '/payment/success',
+  path: '/payment/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentCancelRoute = PaymentCancelRouteImport.update({
+  id: '/payment/cancel',
+  path: '/payment/cancel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndustrySlugRoute = IndustrySlugRouteImport.update({
   id: '/industry/$slug',
   path: '/industry/$slug',
@@ -141,6 +156,12 @@ const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardSubscriptionsRoute =
+  AuthenticatedDashboardSubscriptionsRouteImport.update({
+    id: '/subscriptions',
+    path: '/subscriptions',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardSubmitCompanyRoute =
@@ -196,6 +217,17 @@ const AuthenticatedDashboardAnalyticsRoute =
     id: '/analytics',
     path: '/analytics',
     getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const ApiPublicWebhooksPayosRoute = ApiPublicWebhooksPayosRouteImport.update({
+  id: '/public/webhooks/payos',
+  path: '/public/webhooks/payos',
+  getParentRoute: () => ApiRoute,
+} as any)
+const ApiPublicHooksExpireSubscriptionsRoute =
+  ApiPublicHooksExpireSubscriptionsRouteImport.update({
+    id: '/public/hooks/expire-subscriptions',
+    path: '/public/hooks/expire-subscriptions',
+    getParentRoute: () => ApiRoute,
   } as any)
 const ApiPublicAdminLeadsRoute = ApiPublicAdminLeadsRouteImport.update({
   id: '/public/admin/leads',
@@ -273,6 +305,8 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
+  '/payment/cancel': typeof PaymentCancelRoute
+  '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
@@ -283,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
+  '/dashboard/subscriptions': typeof AuthenticatedDashboardSubscriptionsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -290,6 +325,8 @@ export interface FileRoutesByFullPath {
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
+  '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
+  '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
@@ -311,6 +348,8 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/company/$slug': typeof CompanySlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
+  '/payment/cancel': typeof PaymentCancelRoute
+  '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
@@ -321,6 +360,7 @@ export interface FileRoutesByTo {
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
+  '/dashboard/subscriptions': typeof AuthenticatedDashboardSubscriptionsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -328,6 +368,8 @@ export interface FileRoutesByTo {
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
+  '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
+  '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
@@ -352,6 +394,8 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
+  '/payment/cancel': typeof PaymentCancelRoute
+  '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
@@ -362,6 +406,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_authenticated/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
+  '/_authenticated/dashboard/subscriptions': typeof AuthenticatedDashboardSubscriptionsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
@@ -369,6 +414,8 @@ export interface FileRoutesById {
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
+  '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
+  '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
   '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
@@ -393,6 +440,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/company/$slug'
     | '/industry/$slug'
+    | '/payment/cancel'
+    | '/payment/success'
     | '/province/$slug'
     | '/dashboard/analytics'
     | '/dashboard/articles'
@@ -403,6 +452,7 @@ export interface FileRouteTypes {
     | '/dashboard/my-companies'
     | '/dashboard/owner'
     | '/dashboard/submit-company'
+    | '/dashboard/subscriptions'
     | '/dashboard/'
     | '/dashboard/admin/companies'
     | '/dashboard/articles/new'
@@ -410,6 +460,8 @@ export interface FileRouteTypes {
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
+    | '/api/public/hooks/expire-subscriptions'
+    | '/api/public/webhooks/payos'
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
@@ -431,6 +483,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/company/$slug'
     | '/industry/$slug'
+    | '/payment/cancel'
+    | '/payment/success'
     | '/province/$slug'
     | '/dashboard/analytics'
     | '/dashboard/articles'
@@ -441,6 +495,7 @@ export interface FileRouteTypes {
     | '/dashboard/my-companies'
     | '/dashboard/owner'
     | '/dashboard/submit-company'
+    | '/dashboard/subscriptions'
     | '/dashboard'
     | '/dashboard/admin/companies'
     | '/dashboard/articles/new'
@@ -448,6 +503,8 @@ export interface FileRouteTypes {
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
+    | '/api/public/hooks/expire-subscriptions'
+    | '/api/public/webhooks/payos'
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
@@ -471,6 +528,8 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/company/$slug'
     | '/industry/$slug'
+    | '/payment/cancel'
+    | '/payment/success'
     | '/province/$slug'
     | '/_authenticated/dashboard/analytics'
     | '/_authenticated/dashboard/articles'
@@ -481,6 +540,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/my-companies'
     | '/_authenticated/dashboard/owner'
     | '/_authenticated/dashboard/submit-company'
+    | '/_authenticated/dashboard/subscriptions'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/admin/companies'
     | '/_authenticated/dashboard/articles/new'
@@ -488,6 +548,8 @@ export interface FileRouteTypes {
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
+    | '/api/public/hooks/expire-subscriptions'
+    | '/api/public/webhooks/payos'
     | '/_authenticated/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
@@ -510,6 +572,8 @@ export interface RootRouteChildren {
   UnauthorizedRoute: typeof UnauthorizedRoute
   CompanySlugRoute: typeof CompanySlugRoute
   IndustrySlugRoute: typeof IndustrySlugRoute
+  PaymentCancelRoute: typeof PaymentCancelRoute
+  PaymentSuccessRoute: typeof PaymentSuccessRoute
   ProvinceSlugRoute: typeof ProvinceSlugRoute
 }
 
@@ -613,6 +677,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProvinceSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/payment/success': {
+      id: '/payment/success'
+      path: '/payment/success'
+      fullPath: '/payment/success'
+      preLoaderRoute: typeof PaymentSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment/cancel': {
+      id: '/payment/cancel'
+      path: '/payment/cancel'
+      fullPath: '/payment/cancel'
+      preLoaderRoute: typeof PaymentCancelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/industry/$slug': {
       id: '/industry/$slug'
       path: '/industry/$slug'
@@ -646,6 +724,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/subscriptions': {
+      id: '/_authenticated/dashboard/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/dashboard/subscriptions'
+      preLoaderRoute: typeof AuthenticatedDashboardSubscriptionsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/submit-company': {
@@ -710,6 +795,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/analytics'
       preLoaderRoute: typeof AuthenticatedDashboardAnalyticsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/api/public/webhooks/payos': {
+      id: '/api/public/webhooks/payos'
+      path: '/public/webhooks/payos'
+      fullPath: '/api/public/webhooks/payos'
+      preLoaderRoute: typeof ApiPublicWebhooksPayosRouteImport
+      parentRoute: typeof ApiRoute
+    }
+    '/api/public/hooks/expire-subscriptions': {
+      id: '/api/public/hooks/expire-subscriptions'
+      path: '/public/hooks/expire-subscriptions'
+      fullPath: '/api/public/hooks/expire-subscriptions'
+      preLoaderRoute: typeof ApiPublicHooksExpireSubscriptionsRouteImport
+      parentRoute: typeof ApiRoute
     }
     '/api/public/admin/leads': {
       id: '/api/public/admin/leads'
@@ -812,6 +911,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardMyCompaniesRoute: typeof AuthenticatedDashboardMyCompaniesRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
   AuthenticatedDashboardSubmitCompanyRoute: typeof AuthenticatedDashboardSubmitCompanyRoute
+  AuthenticatedDashboardSubscriptionsRoute: typeof AuthenticatedDashboardSubscriptionsRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedDashboardAdminCompaniesRoute: typeof AuthenticatedDashboardAdminCompaniesRoute
   AuthenticatedDashboardIntegrationsHermesRoute: typeof AuthenticatedDashboardIntegrationsHermesRoute
@@ -832,6 +932,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
     AuthenticatedDashboardSubmitCompanyRoute:
       AuthenticatedDashboardSubmitCompanyRoute,
+    AuthenticatedDashboardSubscriptionsRoute:
+      AuthenticatedDashboardSubscriptionsRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
     AuthenticatedDashboardAdminCompaniesRoute:
       AuthenticatedDashboardAdminCompaniesRoute,
@@ -889,6 +991,8 @@ interface ApiRouteChildren {
   ApiPublicAdminArticlesRoute: typeof ApiPublicAdminArticlesRouteWithChildren
   ApiPublicAdminCategoriesRoute: typeof ApiPublicAdminCategoriesRoute
   ApiPublicAdminLeadsRoute: typeof ApiPublicAdminLeadsRoute
+  ApiPublicHooksExpireSubscriptionsRoute: typeof ApiPublicHooksExpireSubscriptionsRoute
+  ApiPublicWebhooksPayosRoute: typeof ApiPublicWebhooksPayosRoute
   ApiPublicAdminAnalyticsSummaryRoute: typeof ApiPublicAdminAnalyticsSummaryRoute
 }
 
@@ -896,6 +1000,9 @@ const ApiRouteChildren: ApiRouteChildren = {
   ApiPublicAdminArticlesRoute: ApiPublicAdminArticlesRouteWithChildren,
   ApiPublicAdminCategoriesRoute: ApiPublicAdminCategoriesRoute,
   ApiPublicAdminLeadsRoute: ApiPublicAdminLeadsRoute,
+  ApiPublicHooksExpireSubscriptionsRoute:
+    ApiPublicHooksExpireSubscriptionsRoute,
+  ApiPublicWebhooksPayosRoute: ApiPublicWebhooksPayosRoute,
   ApiPublicAdminAnalyticsSummaryRoute: ApiPublicAdminAnalyticsSummaryRoute,
 }
 
@@ -917,18 +1024,10 @@ const rootRouteChildren: RootRouteChildren = {
   UnauthorizedRoute: UnauthorizedRoute,
   CompanySlugRoute: CompanySlugRoute,
   IndustrySlugRoute: IndustrySlugRoute,
+  PaymentCancelRoute: PaymentCancelRoute,
+  PaymentSuccessRoute: PaymentSuccessRoute,
   ProvinceSlugRoute: ProvinceSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
