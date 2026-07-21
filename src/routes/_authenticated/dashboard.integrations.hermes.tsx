@@ -1,4 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard/integrations/hermes")({
   head: () => ({
@@ -47,17 +51,18 @@ const testCurl = `curl -H 'Authorization: Bearer <ACCESS_TOKEN>' \\
 const grantSql = `INSERT INTO public.user_roles (user_id, role, allowed_categories, can_publish, can_delete)
 VALUES ('<HERMES_USER_ID>', 'editor', ARRAY['tin-tuc','huong-dan'], false, false);`;
 
-const endpoints: { tool: string; method: string; path: string; purpose: string }[] = [
-  { tool: "factoryhub_list_posts", method: "GET", path: "/articles", purpose: "Danh sách bài" },
+const endpoints: { tool: string; method: string; path: string; purpose: string; body?: string }[] = [
+  { tool: "factoryhub_list_posts", method: "GET", path: "/articles?limit=5", purpose: "Danh sách bài" },
   { tool: "factoryhub_get_post", method: "GET", path: "/articles/:id", purpose: "Chi tiết bài" },
-  { tool: "factoryhub_create_post", method: "POST", path: "/articles", purpose: "Tạo draft" },
-  { tool: "factoryhub_update_post", method: "PUT/PATCH", path: "/articles/:id", purpose: "Sửa bài" },
+  { tool: "factoryhub_create_post", method: "POST", path: "/articles", purpose: "Tạo draft", body: `{\n  "title": "Bài test từ Hermes",\n  "content": "Nội dung test",\n  "category": "tin-tuc"\n}` },
+  { tool: "factoryhub_update_post", method: "PATCH", path: "/articles/:id", purpose: "Sửa bài", body: `{\n  "title": "Tiêu đề mới"\n}` },
   { tool: "factoryhub_delete_post", method: "DELETE", path: "/articles/:id", purpose: "Xóa bài" },
-  { tool: "factoryhub_publish_post", method: "POST", path: "/articles/:id/publish", purpose: "Publish / Unpublish" },
+  { tool: "factoryhub_publish_post", method: "POST", path: "/articles/:id/publish", purpose: "Publish / Unpublish", body: `{ "publish": true }` },
   { tool: "factoryhub_list_categories", method: "GET", path: "/categories", purpose: "Danh sách chuyên mục" },
-  { tool: "factoryhub_list_leads", method: "GET", path: "/leads", purpose: "Xem leads" },
+  { tool: "factoryhub_list_leads", method: "GET", path: "/leads?limit=10", purpose: "Xem leads" },
   { tool: "factoryhub_analytics", method: "GET", path: "/analytics/summary", purpose: "Thống kê" },
 ];
+
 
 function Code({ children }: { children: string }) {
   return (
@@ -141,7 +146,16 @@ function HermesIntegrationPage() {
         <p className="text-sm text-muted-foreground">
           Response mong đợi: <code className="rounded bg-muted px-1">{`{ "data": [...], "count": N, "limit": 5, "offset": 0 }`}</code>
         </p>
+
+        <div className="mt-4 rounded-lg border p-4 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-sm font-semibold">Test nhanh trong trình duyệt</h3>
+            <span className="text-xs text-muted-foreground">Tự dùng session admin hiện tại</span>
+          </div>
+          <EndpointTester />
+        </div>
       </section>
+
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">6. Ví dụ luồng đăng bài</h2>
@@ -166,3 +180,131 @@ function HermesIntegrationPage() {
     </div>
   );
 }
+
+function EndpointTester() {
+  const [idx, setIdx] = useState(0);
+  const [pathInput, setPathInput] = useState(endpoints[0].path);
+  const [method, setMethod] = useState(endpoints[0].method === "PATCH" ? "PATCH" : endpoints[0].method);
+  const [body, setBody] = useState(endpoints[0].body ?? "");
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<number | null>(null);
+  const [response, setResponse] = useState<string>("");
+
+  const onPick = (i: number) => {
+    setIdx(i);
+    const e = endpoints[i];
+    setPathInput(e.path);
+    setMethod(e.method);
+    setBody(e.body ?? "");
+    setStatus(null);
+    setResponse("");
+  };
+
+  const run = async () => {
+    setLoading(true);
+    setStatus(null);
+    setResponse("");
+    try {
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) {
+        setResponse("Chưa có session — vui lòng đăng nhập lại.");
+        setLoading(false);
+        return;
+      }
+      const url = `${BASE_URL}${pathInput.startsWith("/") ? pathInput : `/${pathInput}`}`;
+      const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
+      let payload: BodyInit | undefined;
+      if (method !== "GET" && method !== "DELETE" && body.trim()) {
+        headers["Content-Type"] = "application/json";
+        payload = body;
+      }
+      const res = await fetch(url, { method, headers, body: payload });
+      setStatus(res.status);
+      const text = await res.text();
+      try {
+        setResponse(JSON.stringify(JSON.parse(text), null, 2));
+      } catch {
+        setResponse(text);
+      }
+    } catch (err) {
+      setResponse(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const needsBody = method !== "GET" && method !== "DELETE";
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        {endpoints.map((e, i) => (
+          <button
+            key={e.tool}
+            type="button"
+            onClick={() => onPick(i)}
+            className={`rounded-md border px-2.5 py-1 text-xs font-mono transition ${
+              idx === i ? "border-primary bg-primary/10" : "hover:bg-muted"
+            }`}
+          >
+            {e.method} {e.path.split("?")[0]}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-[110px_1fr]">
+        <select
+          value={method}
+          onChange={(e) => setMethod(e.target.value)}
+          className="rounded-md border bg-background px-2 py-1.5 text-sm"
+        >
+          {["GET", "POST", "PATCH", "PUT", "DELETE"].map((m) => (
+            <option key={m} value={m}>{m}</option>
+          ))}
+        </select>
+        <input
+          value={pathInput}
+          onChange={(e) => setPathInput(e.target.value)}
+          placeholder="/articles?limit=5"
+          className="rounded-md border bg-background px-3 py-1.5 text-sm font-mono"
+        />
+      </div>
+
+      {needsBody && (
+        <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          rows={5}
+          placeholder='{"title": "..."}'
+          className="w-full rounded-md border bg-background p-2 text-xs font-mono"
+        />
+      )}
+
+      <div className="flex items-center gap-2">
+        <Button size="sm" onClick={run} disabled={loading}>
+          {loading ? "Đang gọi..." : "Gửi request"}
+        </Button>
+        {status !== null && (
+          <span
+            className={`text-xs font-mono ${
+              status >= 200 && status < 300 ? "text-green-600" : "text-destructive"
+            }`}
+          >
+            HTTP {status}
+          </span>
+        )}
+        <span className="text-xs text-muted-foreground truncate">
+          {method} {BASE_URL}{pathInput.startsWith("/") ? pathInput : `/${pathInput}`}
+        </span>
+      </div>
+
+      {response && (
+        <pre className="max-h-96 overflow-auto rounded-lg border bg-muted/40 p-3 text-xs">
+          <code>{response}</code>
+        </pre>
+      )}
+    </div>
+  );
+}
+
