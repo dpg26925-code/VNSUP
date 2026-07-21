@@ -259,10 +259,14 @@ export type Database = {
           email: string | null
           employee_range: string | null
           featured: boolean
+          featured_expires_at: string | null
           founded_year: number | null
           id: string
           industry: string | null
+          is_featured: boolean
+          is_verified: boolean
           last_verified_at: string | null
+          lead_notify_expires_at: string | null
           logo_url: string | null
           meta_description: string | null
           meta_title: string | null
@@ -279,6 +283,7 @@ export type Database = {
           submitted_by: string | null
           updated_at: string
           verified: boolean
+          verified_expires_at: string | null
           website: string | null
         }
         Insert: {
@@ -293,10 +298,14 @@ export type Database = {
           email?: string | null
           employee_range?: string | null
           featured?: boolean
+          featured_expires_at?: string | null
           founded_year?: number | null
           id?: string
           industry?: string | null
+          is_featured?: boolean
+          is_verified?: boolean
           last_verified_at?: string | null
+          lead_notify_expires_at?: string | null
           logo_url?: string | null
           meta_description?: string | null
           meta_title?: string | null
@@ -313,6 +322,7 @@ export type Database = {
           submitted_by?: string | null
           updated_at?: string
           verified?: boolean
+          verified_expires_at?: string | null
           website?: string | null
         }
         Update: {
@@ -327,10 +337,14 @@ export type Database = {
           email?: string | null
           employee_range?: string | null
           featured?: boolean
+          featured_expires_at?: string | null
           founded_year?: number | null
           id?: string
           industry?: string | null
+          is_featured?: boolean
+          is_verified?: boolean
           last_verified_at?: string | null
+          lead_notify_expires_at?: string | null
           logo_url?: string | null
           meta_description?: string | null
           meta_title?: string | null
@@ -347,6 +361,7 @@ export type Database = {
           submitted_by?: string | null
           updated_at?: string
           verified?: boolean
+          verified_expires_at?: string | null
           website?: string | null
         }
         Relationships: []
@@ -474,6 +489,77 @@ export type Database = {
           },
         ]
       }
+      payment_orders: {
+        Row: {
+          amount: number
+          cancel_url: string | null
+          checkout_url: string | null
+          company_id: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          order_code: number
+          paid_at: string | null
+          payos_payment_link_id: string | null
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          qr_code: string | null
+          raw_webhook: Json | null
+          return_url: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          cancel_url?: string | null
+          checkout_url?: string | null
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          order_code: number
+          paid_at?: string | null
+          payos_payment_link_id?: string | null
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          qr_code?: string | null
+          raw_webhook?: Json | null
+          return_url?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          cancel_url?: string | null
+          checkout_url?: string | null
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          order_code?: number
+          paid_at?: string | null
+          payos_payment_link_id?: string | null
+          plan_type?: Database["public"]["Enums"]["plan_type"]
+          qr_code?: string | null
+          raw_webhook?: Json | null
+          return_url?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_orders_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           category: string | null
@@ -560,6 +646,66 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          auto_renew: boolean
+          company_id: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          order_id: string | null
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          reminder_sent_at: string | null
+          starts_at: string
+          status: Database["public"]["Enums"]["subscription_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_renew?: boolean
+          company_id?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          order_id?: string | null
+          plan_type: Database["public"]["Enums"]["plan_type"]
+          reminder_sent_at?: string | null
+          starts_at?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_renew?: boolean
+          company_id?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          order_id?: string | null
+          plan_type?: Database["public"]["Enums"]["plan_type"]
+          reminder_sent_at?: string | null
+          starts_at?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "payment_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           allowed_categories: string[]
@@ -620,7 +766,10 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user" | "editor" | "publisher" | "viewer"
       claim_status: "pending" | "approved" | "rejected"
+      payment_status: "pending" | "paid" | "cancelled" | "failed" | "expired"
+      plan_type: "featured_listing" | "verified_badge" | "lead_notification"
       post_status: "draft" | "pending" | "published" | "archived"
+      subscription_status: "active" | "expired" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -750,7 +899,10 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user", "editor", "publisher", "viewer"],
       claim_status: ["pending", "approved", "rejected"],
+      payment_status: ["pending", "paid", "cancelled", "failed", "expired"],
+      plan_type: ["featured_listing", "verified_badge", "lead_notification"],
       post_status: ["draft", "pending", "published", "archived"],
+      subscription_status: ["active", "expired", "cancelled"],
     },
   },
 } as const
