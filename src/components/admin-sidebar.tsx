@@ -50,7 +50,7 @@ export function AdminSidebar({ role }: { role?: string | null }) {
             <ShieldCheck className="h-4 w-4" />
           </div>
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <div className="truncate text-sm font-semibold leading-tight">FactoryHub</div>
+            <div className="truncate text-sm font-semibold leading-tight">VNSupplier</div>
             <div className="truncate text-[11px] text-muted-foreground">Admin Panel</div>
           </div>
         </Link>

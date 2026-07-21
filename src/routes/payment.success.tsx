@@ -5,7 +5,7 @@ import { CheckCircle2 } from "lucide-react";
 export const Route = createFileRoute("/payment/success")({
   head: () => ({
     meta: [
-      { title: "Thanh toán thành công | FactoryHub" },
+      { title: "Thanh toán thành công | VNSupplier" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

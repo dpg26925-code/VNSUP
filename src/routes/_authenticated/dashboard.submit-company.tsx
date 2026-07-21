@@ -9,7 +9,7 @@ import { Building2, Send } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/dashboard/submit-company")({
   head: () => ({
     meta: [
-      { title: "Gửi doanh nghiệp | FactoryHub" },
+      { title: "Gửi doanh nghiệp | VNSupplier" },
       { name: "robots", content: "noindex" },
     ],
   }),

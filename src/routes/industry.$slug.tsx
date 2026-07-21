@@ -14,7 +14,7 @@ export const Route = createFileRoute("/industry/$slug")({
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [{ title: "Không tìm thấy ngành" }, { name: "robots", content: "noindex" }] };
-    const title = `Top nhà máy ${loaderData.name} tại Việt Nam | FactoryHub`;
+    const title = `Top nhà máy ${loaderData.name} tại Việt Nam | VNSupplier`;
     const desc = `Danh sách nhà máy ${loaderData.name} uy tín, có địa chỉ, năng lực sản xuất và tóm tắt AI. ${loaderData.desc}`;
     const url = abs(`/industry/${params.slug}`);
     return {

@@ -1,4 +1,4 @@
-// Shared constants + helpers for FactoryHub
+// Shared constants + helpers for VNSupplier
 
 export const SITE_URL = "https://vnsupplier.cloud";
 export const abs = (path: string) => `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;

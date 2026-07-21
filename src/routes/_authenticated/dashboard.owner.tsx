@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Building2, FileCheck, Inbox } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/owner")({
-  head: () => ({ meta: [{ title: "Owner Dashboard | FactoryHub" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Owner Dashboard | VNSupplier" }, { name: "robots", content: "noindex" }] }),
   component: OwnerDashboard,
 });
 

@@ -4,7 +4,7 @@ import { adminApi } from "@/lib/admin-client";
 import { Pencil, Plus, Trash2, Send } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/articles")({
-  head: () => ({ meta: [{ title: "Bài viết | FactoryHub Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Bài viết | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   component: ArticlesListPage,
 });
 

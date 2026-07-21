@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { adminApi } from "@/lib/admin-client";
 
 export const Route = createFileRoute("/_authenticated/dashboard/analytics")({
-  head: () => ({ meta: [{ title: "Thống kê | FactoryHub Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Thống kê | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   component: AnalyticsPage,
 });
 

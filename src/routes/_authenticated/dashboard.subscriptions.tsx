@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/subscriptions")(
   }),
   head: () => ({
     meta: [
-      { title: "Gói dịch vụ của tôi | FactoryHub" },
+      { title: "Gói dịch vụ của tôi | VNSupplier" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

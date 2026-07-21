@@ -5,8 +5,8 @@ import { abs } from "@/lib/factory";
 export const Route = createFileRoute("/api")({
   head: () => {
     const url = abs("/api");
-    const title = "API cho đối tác | FactoryHub Vietnam";
-    const desc = "Tài liệu Admin API v2 của FactoryHub: quản lý bài viết, danh mục, lead và analytics qua REST, xác thực bằng Supabase JWT.";
+    const title = "API cho đối tác | VNSupplier";
+    const desc = "Tài liệu Admin API v2 của VNSupplier: quản lý bài viết, danh mục, lead và analytics qua REST, xác thực bằng Supabase JWT.";
     return {
       meta: [
         { title },

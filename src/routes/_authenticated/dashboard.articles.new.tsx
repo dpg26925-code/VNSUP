@@ -3,7 +3,7 @@ import { ArticleForm } from "@/components/article-form";
 import { adminApi } from "@/lib/admin-client";
 
 export const Route = createFileRoute("/_authenticated/dashboard/articles/new")({
-  head: () => ({ meta: [{ title: "Tạo bài mới | FactoryHub Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Tạo bài mới | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   component: NewArticlePage,
 });
 

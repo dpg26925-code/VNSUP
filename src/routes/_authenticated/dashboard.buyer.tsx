@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Search, Bookmark, MessageSquare } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/buyer")({
-  head: () => ({ meta: [{ title: "Buyer Dashboard | FactoryHub" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Buyer Dashboard | VNSupplier" }, { name: "robots", content: "noindex" }] }),
   component: BuyerDashboard,
 });
 

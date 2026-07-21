@@ -16,7 +16,7 @@ type Row = {
 };
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Quản lý | FactoryHub" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Quản lý | VNSupplier" }, { name: "robots", content: "noindex" }] }),
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
     if (!data.user) throw redirect({ to: "/auth" });

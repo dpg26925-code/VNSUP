@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/dashboard/audit-log")({
-  head: () => ({ meta: [{ title: "Nhật ký | FactoryHub Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Nhật ký | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   component: AuditLogPage,
 });
 

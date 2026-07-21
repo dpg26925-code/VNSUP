@@ -7,8 +7,8 @@ import { Building2, Check, XCircle, Search, Filter, ChevronLeft, ChevronRight, C
 export const Route = createFileRoute("/_authenticated/dashboard/admin/companies")({
   head: () => ({
     meta: [
-      { title: "Doanh nghiệp mới | FactoryHub Admin" },
-      { name: "description", content: "Quản lý doanh nghiệp gửi lên FactoryHub: duyệt, từ chối, lọc theo trạng thái, ngành, tỉnh." },
+      { title: "Doanh nghiệp mới | VNSupplier Admin" },
+      { name: "description", content: "Quản lý doanh nghiệp gửi lên VNSupplier: duyệt, từ chối, lọc theo trạng thái, ngành, tỉnh." },
       { name: "robots", content: "noindex, nofollow" },
     ],
     links: [{ rel: "canonical", href: "/dashboard/admin/companies" }],
@@ -108,7 +108,7 @@ function AdminCompaniesPage() {
           <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
             <Building2 className="h-6 w-6 text-primary" /> Doanh nghiệp mới
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">Duyệt và quản lý hồ sơ doanh nghiệp gửi lên FactoryHub.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Duyệt và quản lý hồ sơ doanh nghiệp gửi lên VNSupplier.</p>
         </div>
         <div className="text-xs text-muted-foreground">{count.toLocaleString("vi-VN")} kết quả</div>
       </header>

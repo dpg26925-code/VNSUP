@@ -4,7 +4,7 @@ import { adminApi } from "@/lib/admin-client";
 import { Plus } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/categories")({
-  head: () => ({ meta: [{ title: "Chuyên mục | FactoryHub Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Chuyên mục | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   component: CategoriesPage,
 });
 

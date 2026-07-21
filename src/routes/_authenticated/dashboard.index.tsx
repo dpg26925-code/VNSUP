@@ -5,7 +5,7 @@ import { adminApi } from "@/lib/admin-client";
 import { Building2, FileText, Inbox, Plus, Send, Bookmark, MessageSquare, Search } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
-  head: () => ({ meta: [{ title: "Tổng quan | FactoryHub Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Tổng quan | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   component: OverviewPage,
 });
 
@@ -137,7 +137,7 @@ function OverviewPage() {
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Tổng quan</h1>
-          <p className="text-sm text-muted-foreground">Bảng điều khiển FactoryHub Admin.</p>
+          <p className="text-sm text-muted-foreground">Bảng điều khiển VNSupplier Admin.</p>
         </div>
         <div className="flex gap-2">
           <Link to="/dashboard/articles/new" className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">

@@ -14,7 +14,7 @@ export const Route = createFileRoute("/province/$slug")({
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [{ title: "Không tìm thấy tỉnh" }, { name: "robots", content: "noindex" }] };
-    const title = `Công ty sản xuất tại ${loaderData.name} | FactoryHub Vietnam`;
+    const title = `Công ty sản xuất tại ${loaderData.name} | VNSupplier`;
     const desc = `Danh sách nhà máy sản xuất tại ${loaderData.name}: CNC, ép nhựa, điện tử, kim loại, bao bì và nhiều ngành khác.`;
     const url = abs(`/province/${params.slug}`);
     return {
@@ -69,7 +69,7 @@ function ProvincePage() {
           <div>
             <h1 className="text-2xl font-bold md:text-3xl">Nhà máy tại {p.name}</h1>
             <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
-              {p.name} là một trong những trung tâm sản xuất trọng điểm của Việt Nam. Danh sách dưới đây là các nhà máy đã được xác thực hoặc gửi hồ sơ trên FactoryHub.
+              {p.name} là một trong những trung tâm sản xuất trọng điểm của Việt Nam. Danh sách dưới đây là các nhà máy đã được xác thực hoặc gửi hồ sơ trên VNSupplier.
             </p>
           </div>
           {!loading && <div className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{rows.length} nhà máy</div>}

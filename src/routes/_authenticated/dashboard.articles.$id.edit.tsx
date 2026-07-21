@@ -5,7 +5,7 @@ import { adminApi } from "@/lib/admin-client";
 import { Send, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/articles/$id/edit")({
-  head: () => ({ meta: [{ title: "Sửa bài | FactoryHub Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Sửa bài | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   component: EditArticlePage,
 });
 
