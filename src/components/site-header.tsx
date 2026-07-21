@@ -59,6 +59,7 @@ export function SiteHeader() {
         <nav className="ml-auto flex items-center gap-1 text-sm">
           <Link to="/search" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-block">Tìm kiếm</Link>
           <Link to="/pricing" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-block">Bảng giá</Link>
+          <ThemeToggle />
           {isAdmin && (
             <Link to="/admin" className="hidden items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary sm:inline-flex">
               <Shield className="h-3.5 w-3.5" strokeWidth={1.75} /> Quản lý
