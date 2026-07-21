@@ -134,9 +134,15 @@ function initials(name: string) {
 function CompanyPage() {
   const c = Route.useLoaderData() as Company;
   const caps = Array.isArray(c.capabilities) ? (c.capabilities as string[]) : [];
+  const certs: Certification[] = Array.isArray(c.certifications)
+    ? (c.certifications as unknown[]).map((v) => (typeof v === "string" ? { name: v } : (v as Certification))).filter((v) => v && v.name)
+    : [];
+  const gallery: string[] = Array.isArray(c.gallery_urls) ? (c.gallery_urls as string[]).filter((u) => typeof u === "string" && u) : [];
+  const faqs: FAQ[] = Array.isArray(c.faqs) ? (c.faqs as FAQ[]).filter((f) => f && f.q && f.a) : [];
   const [similar, setSimilar] = useState<CompanyCardProps[]>([]);
   const [showAllSimilar, setShowAllSimilar] = useState(false);
   const [products, setProducts] = useState<{ id: string; name: string; category: string | null; description: string | null }[]>([]);
+  const [updates, setUpdates] = useState<{ id: string; title: string; content: string | null; update_type: string | null; published_at: string | null }[]>([]);
 
   useEffect(() => {
     supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
@@ -144,12 +150,18 @@ function CompanyPage() {
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
     supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)
       .then(({ data }) => setProducts(data ?? []));
+    supabase.from("company_updates").select("id,title,content,update_type,published_at")
+      .eq("company_id", c.id).not("published_at", "is", null)
+      .order("published_at", { ascending: false }).limit(6)
+      .then(({ data }) => setUpdates(data ?? []));
   }, [c.id, c.industry]);
 
   const mapQuery = encodeURIComponent([c.name, c.address, c.district, c.province].filter(Boolean).join(", "));
   const mapEmbed = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
   const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
   const shownSimilar = showAllSimilar ? similar : similar.slice(0, 4);
+  const videoEmbed = getVideoEmbed(c.video_url);
+
 
   return (
     <div className="min-h-screen bg-background">
