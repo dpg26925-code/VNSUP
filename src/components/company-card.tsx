@@ -28,9 +28,13 @@ export function CompanyCard(c: CompanyCardProps) {
       className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md"
     >
       <div className="flex items-start gap-3">
-        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-brand text-sm font-bold text-primary-foreground shadow-sm">
-          {initials(c.name)}
-        </div>
+        {c.logo_url ? (
+          <img src={c.logo_url} alt={`Logo ${c.name}`} loading="lazy" className="h-11 w-11 shrink-0 rounded-xl border border-border bg-background object-contain p-1" />
+        ) : (
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-brand text-sm font-bold text-primary-foreground shadow-sm">
+            {initials(c.name)}
+          </div>
+        )}
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-base font-semibold leading-tight tracking-tight group-hover:text-brand">{c.name}</h3>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
