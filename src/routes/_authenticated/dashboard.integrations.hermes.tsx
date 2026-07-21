@@ -146,7 +146,16 @@ function HermesIntegrationPage() {
         <p className="text-sm text-muted-foreground">
           Response mong đợi: <code className="rounded bg-muted px-1">{`{ "data": [...], "count": N, "limit": 5, "offset": 0 }`}</code>
         </p>
+
+        <div className="mt-4 rounded-lg border p-4 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-sm font-semibold">Test nhanh trong trình duyệt</h3>
+            <span className="text-xs text-muted-foreground">Tự dùng session admin hiện tại</span>
+          </div>
+          <EndpointTester />
+        </div>
       </section>
+
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">6. Ví dụ luồng đăng bài</h2>
