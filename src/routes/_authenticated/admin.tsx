@@ -85,7 +85,9 @@ function AdminPage() {
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold">Quản lý nhà máy</h1>
-            <p className="text-sm text-muted-foreground">{rows.length} nhà máy trong hệ thống.</p>
+            <p className="text-sm text-muted-foreground">
+              {rows.length} nhà máy trong hệ thống · <b className="text-brand">{pendingCount} chờ duyệt</b>
+            </p>
           </div>
           <button onClick={() => setEdit({ verified: false, featured: false, capabilities: [] })}
             className="inline-flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
@@ -93,8 +95,16 @@ function AdminPage() {
           </button>
         </div>
 
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Tìm theo tên hoặc slug…"
-          className="mb-4 w-full max-w-md rounded-md border bg-card px-3 py-2 text-sm outline-none" />
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          {(["pending", "all", "rejected"] as const).map((t) => (
+            <button key={t} onClick={() => setTab(t)}
+              className={`rounded-md border px-3 py-1.5 text-sm ${tab === t ? "border-brand bg-brand-soft text-brand" : "hover:bg-accent"}`}>
+              {t === "pending" ? `Chờ duyệt${pendingCount ? ` (${pendingCount})` : ""}` : t === "rejected" ? "Đã từ chối" : "Tất cả"}
+            </button>
+          ))}
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Tìm theo tên hoặc slug…"
+            className="ml-auto w-full max-w-xs rounded-md border bg-card px-3 py-1.5 text-sm outline-none" />
+        </div>
 
         <div className="overflow-x-auto rounded-md border bg-card">
           <table className="w-full text-sm">
@@ -106,6 +116,7 @@ function AdminPage() {
             </thead>
             <tbody>
               {loading ? <tr><td colSpan={6} className="p-4 text-center text-muted-foreground">Đang tải…</td></tr> :
+              filtered.length === 0 ? <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">Không có mục nào.</td></tr> :
               filtered.map((r) => (
                 <tr key={r.id} className="border-b last:border-0 hover:bg-accent/40">
                   <td className="p-3 font-medium">{r.name}</td>
@@ -113,12 +124,21 @@ function AdminPage() {
                   <td className="p-3">{r.province}</td>
                   <td className="p-3">{r.industry}</td>
                   <td className="p-3">
-                    {r.verified && <span className="mr-1 rounded bg-success/10 px-1.5 py-0.5 text-[10px] text-success">Verified</span>}
+                    {r.status === "pending" && <span className="mr-1 rounded bg-brand-soft px-1.5 py-0.5 text-[10px] font-medium text-brand">Chờ duyệt</span>}
+                    {r.status === "rejected" && <span className="mr-1 rounded bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium text-destructive">Từ chối</span>}
+                    {r.status === "approved" && r.verified && <span className="mr-1 rounded bg-success/10 px-1.5 py-0.5 text-[10px] text-success">Verified</span>}
+                    {r.status === "approved" && !r.verified && <span className="mr-1 rounded bg-secondary px-1.5 py-0.5 text-[10px]">Đã duyệt</span>}
                     {r.featured && <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] text-amber-700">Featured</span>}
                   </td>
-                  <td className="p-3 text-right">
-                    <button onClick={() => setEdit(r)} className="mr-1 rounded p-1.5 hover:bg-accent"><Pencil className="h-4 w-4" /></button>
-                    <button onClick={() => remove(r.id)} className="rounded p-1.5 text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></button>
+                  <td className="p-3 text-right whitespace-nowrap">
+                    {r.status === "pending" && (
+                      <>
+                        <button title="Duyệt" onClick={() => approve(r.id)} className="mr-1 rounded p-1.5 text-success hover:bg-success/10"><Check className="h-4 w-4" /></button>
+                        <button title="Từ chối" onClick={() => reject(r.id)} className="mr-1 rounded p-1.5 text-destructive hover:bg-destructive/10"><XCircle className="h-4 w-4" /></button>
+                      </>
+                    )}
+                    <button title="Sửa" onClick={() => setEdit(r)} className="mr-1 rounded p-1.5 hover:bg-accent"><Pencil className="h-4 w-4" /></button>
+                    <button title="Xoá" onClick={() => remove(r.id)} className="rounded p-1.5 text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></button>
                   </td>
                 </tr>
               ))}
