@@ -16,44 +16,117 @@ type Summary = {
 };
 type Article = { id: string; title: string; slug: string; status: string; updated_at: string };
 
+type SavedSearch = { id: string; name: string | null; query: unknown; created_at: string };
+type Lead = { id: string; company_id: string; message: string; created_at: string; companies?: { name: string; slug: string } | null };
+
 function OverviewPage() {
   const [role, setRole] = useState<string | null>(null);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [recent, setRecent] = useState<Article[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
+  const [myLeads, setMyLeads] = useState<Lead[]>([]);
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     (async () => {
       const { data } = await supabase.auth.getUser();
-      if (data.user) {
-        const { data: rows } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
+      const uid = data.user?.id;
+      const email = data.user?.email;
+      let highest: string | null = null;
+      if (uid) {
+        const { data: rows } = await supabase.from("user_roles").select("role").eq("user_id", uid);
         const roles = (rows ?? []).map((r) => r.role as string);
         const rank = { admin: 3, publisher: 2, editor: 1 } as Record<string, number>;
-        setRole(roles.reduce<string | null>((b, r) => ((rank[r] ?? 0) > (rank[b ?? ""] ?? 0) ? r : b), null));
+        highest = roles.reduce<string | null>((b, r) => ((rank[r] ?? 0) > (rank[b ?? ""] ?? 0) ? r : b), null);
+        setRole(highest);
       }
-      try {
-        const s = await adminApi<{ data: Summary }>("/analytics/summary");
-        setSummary(s.data);
-        const a = await adminApi<{ data: Article[] }>("/articles?limit=10");
-        setRecent(a.data ?? []);
-      } catch (e) {
-        setErr((e as Error).message);
+      const isAdmin = highest === "admin" || highest === "publisher" || highest === "editor";
+      if (isAdmin) {
+        try {
+          const s = await adminApi<{ data: Summary }>("/analytics/summary");
+          setSummary(s.data);
+          const a = await adminApi<{ data: Article[] }>("/articles?limit=10");
+          setRecent(a.data ?? []);
+        } catch (e) {
+          setErr((e as Error).message);
+        }
+      } else {
+        if (uid) {
+          const { data: ss } = await supabase.from("saved_searches").select("id,name,query,created_at").eq("user_id", uid).order("created_at", { ascending: false }).limit(6);
+          setSavedSearches((ss ?? []) as SavedSearch[]);
+        }
+        if (email) {
+          const { data: ls } = await supabase.from("leads").select("id,company_id,message,created_at,companies(name,slug)").eq("email", email).order("created_at", { ascending: false }).limit(6);
+          setMyLeads((ls ?? []) as unknown as Lead[]);
+        }
       }
+      setChecked(true);
     })();
   }, []);
 
   const hasAdminRole = role === "admin" || role === "publisher" || role === "editor";
 
   if (!hasAdminRole) {
-    // Legacy account overview for regular users
     return (
       <div className="mx-auto max-w-5xl px-4 py-8">
-        <h1 className="text-2xl font-bold">Xin chào</h1>
-        <p className="mt-1 text-muted-foreground">Bảng điều khiển tài khoản FactoryHub.</p>
+        <h1 className="text-2xl font-bold">Bảng điều khiển</h1>
+        <p className="mt-1 text-muted-foreground">Quản lý tìm kiếm đã lưu, yêu cầu báo giá và hồ sơ doanh nghiệp của bạn.</p>
+
         <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <QuickLink to="/dashboard/submit-company" icon={Send} title="+ Gửi doanh nghiệp" desc="Đăng ký hồ sơ nhà máy để admin duyệt." />
-          <QuickLink to="/dashboard/my-companies" icon={Building2} title="Doanh nghiệp của tôi" desc="Theo dõi trạng thái duyệt." />
-          <QuickLink to="/search" icon={FileText} title="Tìm nhà máy" desc="Khám phá danh bạ." />
+          <QuickLink to="/search" icon={Search} title="Tìm nhà máy" desc="Lọc theo ngành, tỉnh, quy mô." />
+          <QuickLink to="/dashboard/submit-company" icon={Send} title="Gửi doanh nghiệp" desc="Đăng ký hồ sơ nhà máy để admin duyệt." />
+          <QuickLink to="/dashboard/my-companies" icon={Building2} title="Doanh nghiệp của tôi" desc="Theo dõi trạng thái duyệt & lead inbox." />
+        </div>
+
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <section className="rounded-lg border bg-card p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground"><Bookmark className="h-4 w-4" /> Tìm kiếm đã lưu</h2>
+              <Link to="/search" className="text-xs font-semibold text-primary hover:underline">Tìm mới →</Link>
+            </div>
+            {!checked ? (
+              <p className="text-sm text-muted-foreground">Đang tải…</p>
+            ) : savedSearches.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Bạn chưa lưu tìm kiếm nào. Vào <Link to="/search" className="text-primary hover:underline">trang tìm nhà máy</Link> để lọc và lưu.</p>
+            ) : (
+              <ul className="space-y-2 text-sm">
+                {savedSearches.map((s) => (
+                  <li key={s.id} className="rounded border p-3">
+                    <div className="font-medium">{s.name ?? "Tìm kiếm không tên"}</div>
+                    <div className="mt-1 truncate text-xs text-muted-foreground">{JSON.stringify(s.query)}</div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section className="rounded-lg border bg-card p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground"><MessageSquare className="h-4 w-4" /> Yêu cầu báo giá gần đây</h2>
+            </div>
+            {!checked ? (
+              <p className="text-sm text-muted-foreground">Đang tải…</p>
+            ) : myLeads.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Bạn chưa gửi yêu cầu báo giá nào.</p>
+            ) : (
+              <ul className="space-y-2 text-sm">
+                {myLeads.map((l) => (
+                  <li key={l.id} className="rounded border p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      {l.companies?.slug ? (
+                        <Link to="/company/$slug" params={{ slug: l.companies.slug }} className="font-medium hover:text-primary">{l.companies.name}</Link>
+                      ) : (
+                        <span className="font-medium">Nhà máy</span>
+                      )}
+                      <span className="text-xs text-muted-foreground">{new Date(l.created_at).toLocaleDateString("vi-VN")}</span>
+                    </div>
+                    <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{l.message}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
         </div>
       </div>
     );
