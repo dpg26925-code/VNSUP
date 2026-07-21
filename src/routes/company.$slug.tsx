@@ -76,6 +76,7 @@ export const Route = createFileRoute("/company/$slug")({
             sameAs: c.website ? [c.website] : undefined,
             areaServed: c.province ?? undefined,
             foundingDate: c.founded_year ? String(c.founded_year) : undefined,
+            tickerSymbol: c.stock_ticker ? `${c.stock_exchange ?? ""}:${c.stock_ticker}`.replace(/^:/, "") : undefined,
             description: desc,
           }),
         },
