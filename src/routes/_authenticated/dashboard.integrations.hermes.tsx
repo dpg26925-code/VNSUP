@@ -51,17 +51,18 @@ const testCurl = `curl -H 'Authorization: Bearer <ACCESS_TOKEN>' \\
 const grantSql = `INSERT INTO public.user_roles (user_id, role, allowed_categories, can_publish, can_delete)
 VALUES ('<HERMES_USER_ID>', 'editor', ARRAY['tin-tuc','huong-dan'], false, false);`;
 
-const endpoints: { tool: string; method: string; path: string; purpose: string }[] = [
-  { tool: "factoryhub_list_posts", method: "GET", path: "/articles", purpose: "Danh sách bài" },
+const endpoints: { tool: string; method: string; path: string; purpose: string; body?: string }[] = [
+  { tool: "factoryhub_list_posts", method: "GET", path: "/articles?limit=5", purpose: "Danh sách bài" },
   { tool: "factoryhub_get_post", method: "GET", path: "/articles/:id", purpose: "Chi tiết bài" },
-  { tool: "factoryhub_create_post", method: "POST", path: "/articles", purpose: "Tạo draft" },
-  { tool: "factoryhub_update_post", method: "PUT/PATCH", path: "/articles/:id", purpose: "Sửa bài" },
+  { tool: "factoryhub_create_post", method: "POST", path: "/articles", purpose: "Tạo draft", body: `{\n  "title": "Bài test từ Hermes",\n  "content": "Nội dung test",\n  "category": "tin-tuc"\n}` },
+  { tool: "factoryhub_update_post", method: "PATCH", path: "/articles/:id", purpose: "Sửa bài", body: `{\n  "title": "Tiêu đề mới"\n}` },
   { tool: "factoryhub_delete_post", method: "DELETE", path: "/articles/:id", purpose: "Xóa bài" },
-  { tool: "factoryhub_publish_post", method: "POST", path: "/articles/:id/publish", purpose: "Publish / Unpublish" },
+  { tool: "factoryhub_publish_post", method: "POST", path: "/articles/:id/publish", purpose: "Publish / Unpublish", body: `{ "publish": true }` },
   { tool: "factoryhub_list_categories", method: "GET", path: "/categories", purpose: "Danh sách chuyên mục" },
-  { tool: "factoryhub_list_leads", method: "GET", path: "/leads", purpose: "Xem leads" },
+  { tool: "factoryhub_list_leads", method: "GET", path: "/leads?limit=10", purpose: "Xem leads" },
   { tool: "factoryhub_analytics", method: "GET", path: "/analytics/summary", purpose: "Thống kê" },
 ];
+
 
 function Code({ children }: { children: string }) {
   return (
