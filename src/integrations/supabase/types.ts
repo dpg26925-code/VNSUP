@@ -252,15 +252,19 @@ export type Database = {
           ai_summary: string | null
           canonical_url: string | null
           capabilities: Json
+          certifications: Json
+          company_type: string | null
           cover_url: string | null
           created_at: string
           description: string | null
           district: string | null
           email: string | null
           employee_range: string | null
+          faqs: Json
           featured: boolean
           featured_expires_at: string | null
           founded_year: number | null
+          gallery_urls: Json
           id: string
           industry: string | null
           is_featured: boolean
@@ -274,6 +278,7 @@ export type Database = {
           phone: string | null
           province: string | null
           rejection_reason: string | null
+          revenue_range: string | null
           slug: string
           source: string
           status: string
@@ -284,6 +289,7 @@ export type Database = {
           updated_at: string
           verified: boolean
           verified_expires_at: string | null
+          video_url: string | null
           website: string | null
         }
         Insert: {
@@ -291,15 +297,19 @@ export type Database = {
           ai_summary?: string | null
           canonical_url?: string | null
           capabilities?: Json
+          certifications?: Json
+          company_type?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           district?: string | null
           email?: string | null
           employee_range?: string | null
+          faqs?: Json
           featured?: boolean
           featured_expires_at?: string | null
           founded_year?: number | null
+          gallery_urls?: Json
           id?: string
           industry?: string | null
           is_featured?: boolean
@@ -313,6 +323,7 @@ export type Database = {
           phone?: string | null
           province?: string | null
           rejection_reason?: string | null
+          revenue_range?: string | null
           slug: string
           source?: string
           status?: string
@@ -323,6 +334,7 @@ export type Database = {
           updated_at?: string
           verified?: boolean
           verified_expires_at?: string | null
+          video_url?: string | null
           website?: string | null
         }
         Update: {
@@ -330,15 +342,19 @@ export type Database = {
           ai_summary?: string | null
           canonical_url?: string | null
           capabilities?: Json
+          certifications?: Json
+          company_type?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           district?: string | null
           email?: string | null
           employee_range?: string | null
+          faqs?: Json
           featured?: boolean
           featured_expires_at?: string | null
           founded_year?: number | null
+          gallery_urls?: Json
           id?: string
           industry?: string | null
           is_featured?: boolean
@@ -352,6 +368,7 @@ export type Database = {
           phone?: string | null
           province?: string | null
           rejection_reason?: string | null
+          revenue_range?: string | null
           slug?: string
           source?: string
           status?: string
@@ -362,6 +379,7 @@ export type Database = {
           updated_at?: string
           verified?: boolean
           verified_expires_at?: string | null
+          video_url?: string | null
           website?: string | null
         }
         Relationships: []

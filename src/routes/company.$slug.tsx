@@ -4,20 +4,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
-import { BadgeCheck, Globe, Mail, MapPin, Phone, Sparkles, Star, Users, ShieldQuestion } from "lucide-react";
+import { BadgeCheck, Building2, Calendar, DollarSign, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package } from "lucide-react";
+
+type FAQ = { q: string; a: string };
+type Certification = { name: string; issuer?: string; year?: number | string };
 
 type Company = {
   id: string; slug: string; name: string;
   province: string | null; district: string | null;
   industry: string | null; sub_industry: string | null;
   employee_range: string | null; founded_year: number | null;
+  revenue_range: string | null; company_type: string | null;
   website: string | null; phone: string | null; email: string | null; address: string | null;
-  logo_url: string | null;
+  logo_url: string | null; cover_url: string | null; video_url: string | null;
   description: string | null; ai_summary: string | null;
-  capabilities: unknown; verified: boolean; featured: boolean;
+  capabilities: unknown; certifications: unknown; gallery_urls: unknown; faqs: unknown;
+  verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   submitted_by: string | null;
 };
+
 
 async function loadCompany(slug: string) {
   const { data, error } = await supabase.from("companies").select("*").eq("slug", slug).maybeSingle();
@@ -128,9 +134,15 @@ function initials(name: string) {
 function CompanyPage() {
   const c = Route.useLoaderData() as Company;
   const caps = Array.isArray(c.capabilities) ? (c.capabilities as string[]) : [];
+  const certs: Certification[] = Array.isArray(c.certifications)
+    ? (c.certifications as unknown[]).map((v) => (typeof v === "string" ? { name: v } : (v as Certification))).filter((v) => v && v.name)
+    : [];
+  const gallery: string[] = Array.isArray(c.gallery_urls) ? (c.gallery_urls as string[]).filter((u) => typeof u === "string" && u) : [];
+  const faqs: FAQ[] = Array.isArray(c.faqs) ? (c.faqs as FAQ[]).filter((f) => f && f.q && f.a) : [];
   const [similar, setSimilar] = useState<CompanyCardProps[]>([]);
   const [showAllSimilar, setShowAllSimilar] = useState(false);
   const [products, setProducts] = useState<{ id: string; name: string; category: string | null; description: string | null }[]>([]);
+  const [updates, setUpdates] = useState<{ id: string; title: string; content: string | null; update_type: string | null; published_at: string | null }[]>([]);
 
   useEffect(() => {
     supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
@@ -138,12 +150,18 @@ function CompanyPage() {
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
     supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)
       .then(({ data }) => setProducts(data ?? []));
+    supabase.from("company_updates").select("id,title,content,update_type,published_at")
+      .eq("company_id", c.id).not("published_at", "is", null)
+      .order("published_at", { ascending: false }).limit(6)
+      .then(({ data }) => setUpdates(data ?? []));
   }, [c.id, c.industry]);
 
   const mapQuery = encodeURIComponent([c.name, c.address, c.district, c.province].filter(Boolean).join(", "));
   const mapEmbed = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
   const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
   const shownSimilar = showAllSimilar ? similar : similar.slice(0, 4);
+  const videoEmbed = getVideoEmbed(c.video_url);
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -161,8 +179,12 @@ function CompanyPage() {
 
         {/* Hero header with gradient banner */}
         <div className="overflow-hidden rounded-2xl border bg-card">
-          <div className="relative h-32 bg-gradient-to-br from-primary via-primary to-brand md:h-40">
-            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(255,255,255,0.3) 0, transparent 35%)" }} />
+          <div className="relative h-32 overflow-hidden bg-gradient-to-br from-primary via-primary to-brand md:h-48">
+            {c.cover_url ? (
+              <img src={c.cover_url} alt={`Banner ${c.name}`} className="h-full w-full object-cover" loading="lazy" />
+            ) : (
+              <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(255,255,255,0.3) 0, transparent 35%)" }} />
+            )}
             {c.logo_url ? (
               <img src={c.logo_url} alt={`Logo ${c.name}`} className="absolute -bottom-8 left-6 h-20 w-20 rounded-2xl border-4 border-card bg-background object-contain p-1.5 shadow-md" />
             ) : (
@@ -206,6 +228,10 @@ function CompanyPage() {
             )}
           </div>
         </div>
+
+        {/* Quick Info Stats */}
+        <QuickInfoStats c={c} />
+
 
         <div className="mt-6 grid gap-6 md:grid-cols-3">
           <div className="space-y-6 md:col-span-2">
@@ -253,17 +279,98 @@ function CompanyPage() {
 
             {products.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
-                <h2 className="mb-3 text-lg font-semibold">Sản phẩm</h2>
-                <ul className="grid gap-2 sm:grid-cols-2">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Package className="h-5 w-5 text-brand" />Sản phẩm & dịch vụ</h2>
+                <ul className="grid gap-3 sm:grid-cols-2">
                   {products.map((p) => (
-                    <li key={p.id} className="rounded border p-3 text-sm">
-                      <div className="font-medium">{p.name}</div>
-                      {p.category && <div className="text-xs text-muted-foreground">{p.category}</div>}
+                    <li key={p.id} className="rounded-lg border bg-background p-3.5 text-sm transition hover:border-brand/40">
+                      <div className="font-semibold">{p.name}</div>
+                      {p.category && <div className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{p.category}</div>}
+                      {p.description && <p className="mt-1.5 line-clamp-2 text-xs text-muted-foreground">{p.description}</p>}
                     </li>
                   ))}
                 </ul>
               </section>
             )}
+
+            {certs.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Award className="h-5 w-5 text-brand" />Chứng nhận</h2>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {certs.map((cert, i) => (
+                    <div key={i} className="flex items-start gap-2.5 rounded-md border border-success/20 bg-success/5 p-3">
+                      <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold">{cert.name}</div>
+                        {(cert.issuer || cert.year) && (
+                          <div className="text-[11px] text-muted-foreground">{[cert.issuer, cert.year].filter(Boolean).join(" · ")}</div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {gallery.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><ImageIcon className="h-5 w-5 text-brand" />Hình ảnh nhà máy</h2>
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {gallery.slice(0, 9).map((url, i) => (
+                    <a key={i} href={url} target="_blank" rel="noopener" className="group relative aspect-square overflow-hidden rounded-lg border bg-secondary">
+                      <img src={url} alt={`Ảnh nhà máy ${c.name} ${i + 1}`} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
+                    </a>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {videoEmbed && (
+              <section className="overflow-hidden rounded-lg border bg-card">
+                <div className="flex items-center gap-2 p-4">
+                  <h2 className="flex items-center gap-2 text-lg font-semibold"><Play className="h-5 w-5 text-brand" />Video giới thiệu</h2>
+                </div>
+                <div className="aspect-video w-full bg-black">
+                  <iframe src={videoEmbed} title={`Video ${c.name}`} className="h-full w-full border-0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                </div>
+              </section>
+            )}
+
+            {faqs.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><HelpCircle className="h-5 w-5 text-brand" />Câu hỏi thường gặp</h2>
+                <div className="divide-y">
+                  {faqs.map((f, i) => (
+                    <details key={i} className="group py-3">
+                      <summary className="flex cursor-pointer items-start justify-between gap-3 text-sm font-semibold marker:content-none">
+                        <span>{f.q}</span>
+                        <span className="text-muted-foreground transition group-open:rotate-45">+</span>
+                      </summary>
+                      <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {updates.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Newspaper className="h-5 w-5 text-brand" />Tin tức & cập nhật</h2>
+                <ul className="space-y-3">
+                  {updates.map((u) => (
+                    <li key={u.id} className="rounded-md border-l-2 border-brand bg-secondary/40 p-3">
+                      <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                        {u.update_type && <span className="rounded bg-brand/10 px-1.5 py-0.5 font-semibold text-brand">{u.update_type}</span>}
+                        {u.published_at && <span>{new Date(u.published_at).toLocaleDateString("vi-VN")}</span>}
+                      </div>
+                      <div className="mt-1 text-sm font-semibold">{u.title}</div>
+                      {u.content && <p className="mt-1 line-clamp-3 text-xs text-muted-foreground">{u.content}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+
 
             {/* Map */}
             {(c.address || c.province) && (
@@ -465,3 +572,35 @@ function ClaimCard({ companyId, companyName }: { companyId: string; companyName:
     </section>
   );
 }
+
+function getVideoEmbed(url: string | null): string | null {
+  if (!url) return null;
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return null;
+}
+
+function QuickInfoStats({ c }: { c: Company }) {
+  const items: { icon: React.ReactNode; label: string; value: string }[] = [];
+  if (c.founded_year) items.push({ icon: <Calendar className="h-4 w-4" />, label: "Thành lập", value: `${c.founded_year} (${new Date().getFullYear() - c.founded_year}+ năm)` });
+  if (c.employee_range) items.push({ icon: <Users className="h-4 w-4" />, label: "Quy mô", value: `${c.employee_range} lao động` });
+  if (c.revenue_range) items.push({ icon: <DollarSign className="h-4 w-4" />, label: "Doanh thu", value: c.revenue_range });
+  if (c.company_type) items.push({ icon: <Building2 className="h-4 w-4" />, label: "Loại hình", value: c.company_type });
+  if (items.length === 0) return null;
+  return (
+    <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {items.map((it) => (
+        <div key={it.label} className="flex items-start gap-3 rounded-xl border bg-card p-4">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand">{it.icon}</div>
+          <div className="min-w-0">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{it.label}</div>
+            <div className="mt-0.5 truncate text-sm font-semibold">{it.value}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+

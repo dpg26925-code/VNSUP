@@ -40,6 +40,13 @@ const schema = z.object({
   address: z.string().max(500).optional().or(z.literal("")),
   description: z.string().max(2000).optional().or(z.literal("")),
   capabilities: z.string().max(500).optional().or(z.literal("")),
+  revenue_range: z.string().optional().or(z.literal("")),
+  company_type: z.string().optional().or(z.literal("")),
+  cover_url: z.string().url("URL banner không hợp lệ").max(500).optional().or(z.literal("")),
+  video_url: z.string().url("URL video không hợp lệ").max(500).optional().or(z.literal("")),
+  certifications: z.string().max(2000).optional().or(z.literal("")),
+  gallery_urls: z.string().max(3000).optional().or(z.literal("")),
+  faqs: z.string().max(5000).optional().or(z.literal("")),
   stock_exchange: z.enum(["", "HOSE", "HNX", "UPCOM", "Khác"]).optional(),
   stock_ticker: z
     .string()
@@ -52,6 +59,7 @@ const schema = z.object({
   message: "Vui lòng chọn sàn niêm yết",
   path: ["stock_exchange"],
 });
+
 
 function slugify(s: string) {
   return s
@@ -70,8 +78,11 @@ function SubmitCompanyPage() {
     name: "", slug: "", province: "", industry: "", sub_industry: "",
     employee_range: "", founded_year: "", website: "", phone: "", email: "",
     address: "", description: "", capabilities: "",
+    revenue_range: "", company_type: "", cover_url: "", video_url: "",
+    certifications: "", gallery_urls: "", faqs: "",
     stock_exchange: "", stock_ticker: "", logo_url: "",
   });
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [ok, setOk] = useState(false);
@@ -96,6 +107,15 @@ function SubmitCompanyPage() {
 
     const d = parsed.data;
     const caps = (d.capabilities || "").split(",").map((s) => s.trim()).filter(Boolean);
+    const gallery = (d.gallery_urls || "").split("\n").map((s) => s.trim()).filter(Boolean);
+    const certs = (d.certifications || "").split("\n").map((l) => l.trim()).filter(Boolean).map((line) => {
+      const [name, issuer, year] = line.split("|").map((s) => s.trim());
+      return { name, ...(issuer ? { issuer } : {}), ...(year ? { year } : {}) };
+    });
+    const faqs = (d.faqs || "").split(/\n\n+/).map((block) => {
+      const [q, ...a] = block.split("\n");
+      return { q: (q ?? "").trim(), a: a.join("\n").trim() };
+    }).filter((f) => f.q && f.a);
     const { error } = await supabase.from("companies").insert({
       name: d.name,
       slug: d.slug,
@@ -104,13 +124,20 @@ function SubmitCompanyPage() {
       sub_industry: d.sub_industry || null,
       employee_range: d.employee_range || null,
       founded_year: d.founded_year ?? null,
+      revenue_range: d.revenue_range || null,
+      company_type: d.company_type || null,
       website: d.website || null,
       logo_url: d.logo_url || null,
+      cover_url: d.cover_url || null,
+      video_url: d.video_url || null,
       phone: d.phone || null,
       email: d.email || null,
       address: d.address || null,
       description: d.description || null,
       capabilities: caps,
+      certifications: certs,
+      gallery_urls: gallery,
+      faqs: faqs,
       stock_exchange: d.stock_exchange || null,
       stock_ticker: d.stock_ticker ? d.stock_ticker.toUpperCase() : null,
       verified: false,
@@ -119,6 +146,7 @@ function SubmitCompanyPage() {
       status: "pending",
       submitted_by: uid,
     });
+
     setSubmitting(false);
     if (error) {
       setErrors({ _root: error.message.includes("companies_slug") ? "Slug đã tồn tại, vui lòng chọn slug khác." : error.message });
@@ -207,6 +235,34 @@ function SubmitCompanyPage() {
             <F label="Năng lực (cách nhau bằng dấu phẩy)" full hint="VD: CNC 5-trục, Ép phun, ISO 9001">
               <input className="input" value={form.capabilities} onChange={(e) => set("capabilities", e.target.value)} />
             </F>
+            <F label="Doanh thu năm">
+              <select className="input" value={form.revenue_range} onChange={(e) => set("revenue_range", e.target.value)}>
+                <option value="">— Chọn —</option>
+                {["< 1 tỷ","1-10 tỷ","10-50 tỷ","50-200 tỷ","200 tỷ - 1000 tỷ","> 1000 tỷ"].map((r) => <option key={r}>{r}</option>)}
+              </select>
+            </F>
+            <F label="Loại hình doanh nghiệp">
+              <select className="input" value={form.company_type} onChange={(e) => set("company_type", e.target.value)}>
+                <option value="">— Chọn —</option>
+                {["TNHH","Cổ phần","Cổ phần niêm yết","Doanh nghiệp tư nhân","FDI","Nhà nước","Hợp tác xã"].map((r) => <option key={r}>{r}</option>)}
+              </select>
+            </F>
+            <F label="Banner/Cover URL" full err={errors.cover_url} hint="Ảnh banner nằm ngang, khuyến nghị 1600×400px">
+              <input className="input" placeholder="https://.../banner.jpg" value={form.cover_url} onChange={(e) => set("cover_url", e.target.value)} />
+            </F>
+            <F label="Video giới thiệu (YouTube/Vimeo)" full err={errors.video_url}>
+              <input className="input" placeholder="https://youtube.com/watch?v=..." value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
+            </F>
+            <F label="Chứng nhận" full hint="Mỗi dòng: Tên chứng nhận | Đơn vị cấp | Năm. VD: ISO 9001:2015 | BSI | 2023">
+              <textarea rows={3} className="input" value={form.certifications} onChange={(e) => set("certifications", e.target.value)} />
+            </F>
+            <F label="Thư viện ảnh nhà máy" full hint="Mỗi dòng 1 URL ảnh">
+              <textarea rows={3} className="input" value={form.gallery_urls} onChange={(e) => set("gallery_urls", e.target.value)} placeholder="https://.../factory-1.jpg" />
+            </F>
+            <F label="Câu hỏi thường gặp (FAQ)" full hint="Câu hỏi ở dòng đầu, trả lời ở dòng sau; cách nhau bằng 1 dòng trống">
+              <textarea rows={5} className="input" value={form.faqs} onChange={(e) => set("faqs", e.target.value)} placeholder={"MOQ tối thiểu là bao nhiêu?\nMOQ 500-1000 sản phẩm tuỳ loại.\n\nThời gian sản xuất trung bình?\nKhoảng 15-30 ngày làm việc."} />
+            </F>
+
             <F label="Sàn niêm yết" err={errors.stock_exchange} hint="Bỏ trống nếu chưa niêm yết">
               <select className="input" value={form.stock_exchange} onChange={(e) => set("stock_exchange", e.target.value)}>
                 <option value="">— Chưa niêm yết —</option>

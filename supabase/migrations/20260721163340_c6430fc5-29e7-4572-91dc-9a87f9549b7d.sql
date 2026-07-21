@@ -1,0 +1,8 @@
+
+ALTER TABLE public.companies
+  ADD COLUMN IF NOT EXISTS revenue_range TEXT,
+  ADD COLUMN IF NOT EXISTS company_type TEXT,
+  ADD COLUMN IF NOT EXISTS certifications JSONB NOT NULL DEFAULT '[]'::jsonb,
+  ADD COLUMN IF NOT EXISTS gallery_urls JSONB NOT NULL DEFAULT '[]'::jsonb,
+  ADD COLUMN IF NOT EXISTS video_url TEXT,
+  ADD COLUMN IF NOT EXISTS faqs JSONB NOT NULL DEFAULT '[]'::jsonb;

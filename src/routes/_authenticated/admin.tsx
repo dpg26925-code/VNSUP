@@ -8,13 +8,19 @@ import { Check, Pencil, Plus, Trash2, X, XCircle } from "lucide-react";
 type Row = {
   id: string; slug: string; name: string; province: string | null; industry: string | null;
   sub_industry: string | null; employee_range: string | null; founded_year: number | null;
+  revenue_range: string | null; company_type: string | null;
   website: string | null; phone: string | null; email: string | null; address: string | null;
-  logo_url: string | null;
+  logo_url: string | null; cover_url: string | null; video_url: string | null;
   description: string | null; ai_summary: string | null; capabilities: unknown;
+  certifications: unknown; gallery_urls: unknown; faqs: unknown;
   verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   status: string | null; submitted_by: string | null; rejection_reason: string | null;
 };
+
+const REVENUE_RANGES = ["< 1 tỷ", "1-10 tỷ", "10-50 tỷ", "50-200 tỷ", "200 tỷ - 1000 tỷ", "> 1000 tỷ"];
+const COMPANY_TYPES = ["TNHH", "Cổ phần", "Cổ phần niêm yết", "Doanh nghiệp tư nhân", "FDI", "Nhà nước", "Hợp tác xã"];
+
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Quản lý | VNSupplier" }, { name: "robots", content: "noindex" }] }),
@@ -43,13 +49,39 @@ function AdminPage() {
 
   async function save() {
     if (!edit || !edit.name || !edit.slug) return;
+    const parseLines = (v: unknown): string[] =>
+      typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : Array.isArray(v) ? (v as string[]) : [];
+    const parseCsv = (v: unknown): string[] =>
+      typeof v === "string" ? v.split(",").map((s) => s.trim()).filter(Boolean) : Array.isArray(v) ? (v as string[]) : [];
+    const parseCerts = (v: unknown) => {
+      if (Array.isArray(v)) return v;
+      if (typeof v !== "string") return [];
+      return v.split("\n").map((l) => l.trim()).filter(Boolean).map((line) => {
+        const [name, issuer, year] = line.split("|").map((s) => s.trim());
+        return { name, ...(issuer ? { issuer } : {}), ...(year ? { year } : {}) };
+      });
+    };
+    const parseFaqs = (v: unknown) => {
+      if (Array.isArray(v)) return v;
+      if (typeof v !== "string") return [];
+      return v.split(/\n\n+/).map((block) => {
+        const [q, ...aLines] = block.split("\n");
+        return { q: (q ?? "").trim(), a: aLines.join("\n").trim() };
+      }).filter((f) => f.q && f.a);
+    };
     const payload: any = {
       name: edit.name, slug: edit.slug, province: edit.province ?? null, industry: edit.industry ?? null,
       sub_industry: edit.sub_industry ?? null, employee_range: edit.employee_range ?? null,
       founded_year: edit.founded_year ? Number(edit.founded_year) : null,
+      revenue_range: edit.revenue_range || null, company_type: edit.company_type || null,
       website: edit.website || null, phone: edit.phone || null, email: edit.email || null,
       address: edit.address || null, description: edit.description || null, ai_summary: edit.ai_summary || null,
-      capabilities: typeof edit.capabilities === "string" ? (edit.capabilities as string).split(",").map((s) => s.trim()).filter(Boolean) : (edit.capabilities ?? []),
+      capabilities: parseCsv(edit.capabilities),
+      certifications: parseCerts(edit.certifications),
+      gallery_urls: parseLines(edit.gallery_urls),
+      faqs: parseFaqs(edit.faqs),
+      video_url: edit.video_url || null,
+      cover_url: edit.cover_url || null,
       verified: !!edit.verified, featured: !!edit.featured,
       stock_exchange: edit.stock_exchange || null,
       stock_ticker: edit.stock_ticker ? String(edit.stock_ticker).toUpperCase() : null,
@@ -60,6 +92,7 @@ function AdminPage() {
     } else {
       await supabase.from("companies").insert({ ...payload, status: "approved", source: "admin" });
     }
+
     setEdit(null); load();
   }
 
@@ -214,6 +247,34 @@ function AdminPage() {
               <Field label="Mã chứng khoán">
                 <input value={edit.stock_ticker ?? ""} maxLength={10} style={{ textTransform: "uppercase" }} onChange={(e) => setEdit({ ...edit, stock_ticker: e.target.value.toUpperCase() })} className="input" placeholder="VD: VNM" />
               </Field>
+              <Field label="Doanh thu">
+                <select value={edit.revenue_range ?? ""} onChange={(e) => setEdit({ ...edit, revenue_range: e.target.value || null })} className="input">
+                  <option value="">—</option>
+                  {REVENUE_RANGES.map((r) => <option key={r}>{r}</option>)}
+                </select>
+              </Field>
+              <Field label="Loại hình DN">
+                <select value={edit.company_type ?? ""} onChange={(e) => setEdit({ ...edit, company_type: e.target.value || null })} className="input">
+                  <option value="">—</option>
+                  {COMPANY_TYPES.map((r) => <option key={r}>{r}</option>)}
+                </select>
+              </Field>
+              <Field label="Banner/Cover URL" full>
+                <input value={edit.cover_url ?? ""} onChange={(e) => setEdit({ ...edit, cover_url: e.target.value })} className="input" placeholder="https://.../banner.jpg (khuyến nghị 1600×400)" />
+              </Field>
+              <Field label="Video URL (YouTube/Vimeo)" full>
+                <input value={edit.video_url ?? ""} onChange={(e) => setEdit({ ...edit, video_url: e.target.value })} className="input" placeholder="https://youtube.com/watch?v=..." />
+              </Field>
+              <Field label="Chứng nhận (mỗi dòng: Tên | Đơn vị cấp | Năm)" full>
+                <textarea rows={3} value={Array.isArray(edit.certifications) ? (edit.certifications as any[]).map((c) => [c.name, c.issuer, c.year].filter(Boolean).join(" | ")).join("\n") : String(edit.certifications ?? "")} onChange={(e) => setEdit({ ...edit, certifications: e.target.value as any })} className="input" placeholder="ISO 9001:2015 | BSI | 2023" />
+              </Field>
+              <Field label="Thư viện ảnh (mỗi dòng 1 URL)" full>
+                <textarea rows={3} value={Array.isArray(edit.gallery_urls) ? (edit.gallery_urls as string[]).join("\n") : String(edit.gallery_urls ?? "")} onChange={(e) => setEdit({ ...edit, gallery_urls: e.target.value as any })} className="input" placeholder="https://.../factory1.jpg" />
+              </Field>
+              <Field label="FAQ (câu hỏi dòng 1, trả lời dòng 2+; cách nhau bằng dòng trống)" full>
+                <textarea rows={5} value={Array.isArray(edit.faqs) ? (edit.faqs as any[]).map((f) => `${f.q}\n${f.a}`).join("\n\n") : String(edit.faqs ?? "")} onChange={(e) => setEdit({ ...edit, faqs: e.target.value as any })} className="input" />
+              </Field>
+
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.verified} onChange={(e) => setEdit({ ...edit, verified: e.target.checked })} /> Đã xác thực</label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.featured} onChange={(e) => setEdit({ ...edit, featured: e.target.checked })} /> Nổi bật</label>
             </div>
