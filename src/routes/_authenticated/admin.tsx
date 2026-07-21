@@ -30,6 +30,7 @@ function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState<Partial<Row> | null>(null);
   const [q, setQ] = useState("");
+  const [tab, setTab] = useState<"pending" | "all" | "rejected">("pending");
 
   async function load() {
     setLoading(true);
@@ -52,7 +53,7 @@ function AdminPage() {
     if (edit.id) {
       await supabase.from("companies").update(payload).eq("id", edit.id);
     } else {
-      await supabase.from("companies").insert(payload);
+      await supabase.from("companies").insert({ ...payload, status: "approved", source: "admin" });
     }
     setEdit(null); load();
   }
@@ -62,7 +63,20 @@ function AdminPage() {
     await supabase.from("companies").delete().eq("id", id); load();
   }
 
-  const filtered = rows.filter((r) => !q || r.name.toLowerCase().includes(q.toLowerCase()) || r.slug.includes(q.toLowerCase()));
+  async function approve(id: string) {
+    await supabase.from("companies").update({ status: "approved", rejection_reason: null }).eq("id", id);
+    load();
+  }
+  async function reject(id: string) {
+    const reason = prompt("Lý do từ chối (tuỳ chọn):") ?? "";
+    await supabase.from("companies").update({ status: "rejected", rejection_reason: reason || null }).eq("id", id);
+    load();
+  }
+
+  const pendingCount = rows.filter((r) => r.status === "pending").length;
+  const filtered = rows
+    .filter((r) => tab === "all" ? true : r.status === tab)
+    .filter((r) => !q || r.name.toLowerCase().includes(q.toLowerCase()) || r.slug.includes(q.toLowerCase()));
 
   return (
     <div className="min-h-screen bg-background">
