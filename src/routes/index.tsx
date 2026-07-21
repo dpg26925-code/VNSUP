@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Search, ArrowRight, Building2, Cpu, Factory, Package, Scissors, Wrench, Zap } from "lucide-react";
+import { Search, ArrowUpRight, Building2, Cpu, Factory, Package, Scissors, Wrench, Zap, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
@@ -40,8 +40,7 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-
-const INDUSTRY_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
+const INDUSTRY_ICON: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
   nhua: Factory, cnc: Wrench, "dien-tu": Cpu, "kim-loai": Zap, "bao-bi": Package, "cao-su": Building2, "det-may": Scissors,
 };
 
@@ -67,58 +66,70 @@ function HomePage() {
       <SiteHeader />
 
       {/* Hero */}
-      <section className="border-b bg-gradient-to-b from-primary/5 to-transparent">
-        <div className="mx-auto max-w-7xl px-4 py-16 md:py-24">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
-              Tìm nhà máy sản xuất Việt Nam <span className="text-primary">bằng AI</span>
-            </h1>
-            <p className="mt-4 text-base text-muted-foreground md:text-lg">
-              Hồ sơ nhà máy chi tiết • Năng lực rõ ràng • Tìm kiếm theo khả năng sản xuất
-            </p>
-            <form
-              onSubmit={(e) => { e.preventDefault(); navigate({ to: "/search", search: { q: q || undefined } as any }); }}
-              className="mx-auto mt-8 flex max-w-2xl items-center gap-2 rounded-lg border bg-card p-2 shadow-sm"
-            >
-              <Search className="ml-2 h-5 w-5 text-muted-foreground" />
+      <section className="px-6 pt-20 pb-16 md:pt-28 md:pb-20">
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
+            <Sparkles className="h-3.5 w-3.5 text-brand" strokeWidth={2} />
+            Mạng lưới sản xuất được xác thực
+          </div>
+          <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground md:text-6xl">
+            Tìm nhà máy sản xuất<br className="hidden md:block" /> Việt Nam <span className="text-brand">bằng AI</span>
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
+            Hồ sơ nhà máy chi tiết. Năng lực rõ ràng. Tìm kiếm theo khả năng sản xuất thực tế.
+          </p>
+
+          <form
+            onSubmit={(e) => { e.preventDefault(); navigate({ to: "/search", search: { q: q || undefined } as any }); }}
+            className="mx-auto mt-10 flex max-w-xl items-center gap-1 rounded-2xl border border-border bg-card p-1.5 shadow-sm transition focus-within:ring-2 focus-within:ring-brand/25"
+          >
+            <div className="flex flex-1 items-center gap-2 px-3">
+              <Search className="h-5 w-5 text-muted-foreground" strokeWidth={1.75} />
               <input
                 value={q} onChange={(e) => setQ(e.target.value)}
                 placeholder="Tìm nhà máy CNC, ép nhựa, SMT…"
-                className="flex-1 bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground"
+                className="w-full bg-transparent py-2.5 text-base outline-none placeholder:text-muted-foreground"
               />
-              <button className="rounded-md bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Tìm</button>
-            </form>
-
-            <div className="mt-8 grid grid-cols-3 gap-4 text-center">
-              {[
-                { l: "Nhà máy", v: stats.companies || "20+" },
-                { l: "Ngành", v: stats.industries },
-                { l: "Tỉnh/TP", v: stats.provinces },
-              ].map((s) => (
-                <div key={s.l} className="rounded-lg border bg-card px-4 py-3">
-                  <div className="text-2xl font-bold text-primary">{s.v}</div>
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground">{s.l}</div>
-                </div>
-              ))}
             </div>
+            <button className="rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-brand-foreground shadow-sm transition hover:-translate-y-px hover:bg-brand/90">
+              Tìm kiếm
+            </button>
+          </form>
+
+          <div className="mx-auto mt-12 grid max-w-xl grid-cols-3 gap-3">
+            {[
+              { l: "Nhà máy", v: stats.companies || 20, suffix: "+" },
+              { l: "Ngành", v: stats.industries, suffix: "" },
+              { l: "Tỉnh/TP", v: stats.provinces, suffix: "" },
+            ].map((s) => (
+              <div key={s.l} className="rounded-xl border border-border bg-card px-4 py-4">
+                <div className="text-2xl font-bold text-foreground">{s.v}{s.suffix}</div>
+                <div className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{s.l}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Industries */}
-      <section className="mx-auto max-w-7xl px-4 py-12">
-        <div className="mb-6 flex items-end justify-between">
-          <h2 className="text-xl font-bold md:text-2xl">Ngành sản xuất</h2>
-          <Link to="/search" className="text-sm text-primary hover:underline">Xem tất cả →</Link>
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-widest text-brand">Ngành sản xuất</div>
+            <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Khám phá theo lĩnh vực</h2>
+          </div>
+          <Link to="/search" className="hidden text-sm font-semibold text-muted-foreground hover:text-brand sm:inline-flex sm:items-center sm:gap-1">
+            Xem tất cả <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
+          </Link>
         </div>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
           {INDUSTRIES.map((i) => {
             const Icon = INDUSTRY_ICON[i.slug] ?? Factory;
             return (
               <Link key={i.slug} to="/industry/$slug" params={{ slug: i.slug }}
-                className="group flex flex-col items-center gap-2 rounded-lg border bg-card p-4 text-center transition hover:border-primary hover:shadow-sm">
-                <div className="grid h-10 w-10 place-items-center rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground">
-                  <Icon className="h-5 w-5" />
+                className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-5 text-center transition hover:border-brand/50 hover:shadow-sm">
+                <div className="grid h-11 w-11 place-items-center rounded-lg bg-secondary text-foreground transition group-hover:bg-brand/10 group-hover:text-brand">
+                  <Icon className="h-5 w-5" strokeWidth={1.75} />
                 </div>
                 <div className="text-sm font-semibold">{i.name}</div>
               </Link>
@@ -129,28 +140,32 @@ function HomePage() {
 
       {/* Featured */}
       {featured.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-8">
-          <div className="mb-6 flex items-end justify-between">
+        <section className="mx-auto max-w-6xl px-6 py-8">
+          <div className="mb-8 flex items-end justify-between">
             <div>
-              <h2 className="text-xl font-bold md:text-2xl">Nhà máy nổi bật</h2>
-              <p className="text-sm text-muted-foreground">Được xác thực và cập nhật gần đây.</p>
+              <div className="text-xs font-semibold uppercase tracking-widest text-brand">Nổi bật</div>
+              <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Nhà máy tiêu biểu</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Được xác thực và cập nhật gần đây.</p>
             </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((c) => <CompanyCard key={c.slug} {...c} />)}
           </div>
         </section>
       )}
 
       {/* Provinces */}
-      <section className="mx-auto max-w-7xl px-4 py-12">
-        <h2 className="mb-6 text-xl font-bold md:text-2xl">Khu vực trọng điểm</h2>
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mb-8">
+          <div className="text-xs font-semibold uppercase tracking-widest text-brand">Khu vực</div>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Tỉnh thành trọng điểm</h2>
+        </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
           {PROVINCES.map((p) => (
             <Link key={p.slug} to="/province/$slug" params={{ slug: p.slug }}
-              className="flex items-center justify-between rounded-lg border bg-card p-4 hover:border-primary hover:shadow-sm">
+              className="group flex items-center justify-between rounded-xl border border-border bg-card px-4 py-4 transition hover:border-brand/50 hover:shadow-sm">
               <span className="font-medium">{p.name}</span>
-              <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              <ArrowUpRight className="h-4 w-4 text-muted-foreground transition group-hover:text-brand" strokeWidth={2} />
             </Link>
           ))}
         </div>
