@@ -1,55 +1,77 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { SiteHeader, SiteFooter } from "@/components/site-header";
+import { AdminSidebar } from "@/components/admin-sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard | FactoryHub" }, { name: "robots", content: "noindex" }] }),
-  component: Dashboard,
+  head: () => ({ meta: [{ title: "Admin | FactoryHub" }, { name: "robots", content: "noindex" }] }),
+  component: DashboardLayout,
 });
 
-function Dashboard() {
+function DashboardLayout() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [role, setRole] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
       setEmail(data.user?.email ?? "");
       if (data.user) {
-        supabase.from("user_roles").select("role").eq("user_id", data.user.id).eq("role", "admin").maybeSingle()
-          .then(({ data: r }) => setIsAdmin(!!r));
+        const { data: rows } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", data.user.id);
+        const roles = (rows ?? []).map((r) => r.role as string);
+        const rank = { admin: 3, publisher: 2, editor: 1 } as Record<string, number>;
+        const highest = roles.reduce<string | null>(
+          (best, r) => ((rank[r] ?? 0) > (rank[best ?? ""] ?? 0) ? r : best),
+          null,
+        );
+        setRole(highest);
       }
-    });
+      setChecked(true);
+    })();
   }, []);
 
+  async function signOut() {
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
+
+  if (!checked) return <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">Đang tải…</div>;
+
+  // Users without any admin-tier role fall back to the legacy account pages.
+  const hasAdminRole = role === "admin" || role === "publisher" || role === "editor";
+
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <div className="mx-auto max-w-5xl px-4 py-8">
-        <h1 className="text-2xl font-bold">Xin chào {email}</h1>
-        <p className="mt-1 text-muted-foreground">Bảng điều khiển tài khoản FactoryHub.</p>
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <Link to="/dashboard/submit-company" className="rounded-lg border border-brand/40 bg-brand-soft p-5 hover:border-brand">
-            <div className="font-semibold text-brand">+ Gửi doanh nghiệp</div>
-            <div className="mt-1 text-sm text-muted-foreground">Đăng ký hồ sơ nhà máy của bạn để admin duyệt.</div>
-          </Link>
-          <Link to="/dashboard/my-companies" className="rounded-lg border bg-card p-5 hover:border-primary">
-            <div className="font-semibold">Doanh nghiệp của tôi</div>
-            <div className="mt-1 text-sm text-muted-foreground">Theo dõi trạng thái duyệt và các yêu cầu claim.</div>
-          </Link>
-          <Link to="/search" className="rounded-lg border bg-card p-5 hover:border-primary">
-            <div className="font-semibold">Tìm nhà máy</div>
-            <div className="mt-1 text-sm text-muted-foreground">Khám phá danh bạ nhà máy sản xuất.</div>
-          </Link>
-          {isAdmin && (
-            <Link to="/admin" className="rounded-lg border border-primary/40 bg-primary/5 p-5">
-              <div className="font-semibold text-primary">Quản lý & duyệt</div>
-              <div className="mt-1 text-sm text-muted-foreground">Duyệt hồ sơ mới, chỉnh sửa, xoá nhà máy.</div>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-muted/30">
+        {hasAdminRole && <AdminSidebar role={role} />}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background px-3">
+            {hasAdminRole && <SidebarTrigger />}
+            <Link to="/" className="text-sm font-semibold">
+              FactoryHub {hasAdminRole && <span className="text-muted-foreground font-normal">/ Admin</span>}
             </Link>
-          )}
+            <div className="ml-auto flex items-center gap-3 text-xs">
+              <span className="hidden text-muted-foreground sm:inline">{email}</span>
+              <button
+                onClick={signOut}
+                className="inline-flex items-center gap-1 rounded-md border px-2.5 py-1 hover:bg-accent"
+              >
+                <LogOut className="h-3.5 w-3.5" /> Đăng xuất
+              </button>
+            </div>
+          </header>
+          <main className="flex-1">
+            <Outlet />
+          </main>
         </div>
       </div>
-      <SiteFooter />
-    </div>
+    </SidebarProvider>
   );
 }
