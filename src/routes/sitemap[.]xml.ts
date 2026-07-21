@@ -17,14 +17,17 @@ export const Route = createFileRoute("/sitemap.xml")({
           const { data } = await s.from("companies").select("slug").limit(50000);
           slugs = (data ?? []).map((r: { slug: string }) => r.slug);
         }
-        const paths: string[] = [
-          "/", "/search",
-          ...INDUSTRIES.map((i) => `/industry/${i.slug}`),
-          ...PROVINCES.map((p) => `/province/${p.slug}`),
-          ...slugs.map((s) => `/company/${s}`),
-        ];
         const now = new Date().toISOString();
-        const urls = paths.map((p) => `  <url><loc>${BASE_URL}${p}</loc><lastmod>${now}</lastmod></url>`).join("\n");
+        const rows: { loc: string; changefreq: string; priority: string }[] = [
+          { loc: "/", changefreq: "daily", priority: "1.0" },
+          { loc: "/search", changefreq: "daily", priority: "0.9" },
+          { loc: "/pricing", changefreq: "weekly", priority: "0.7" },
+          { loc: "/about", changefreq: "monthly", priority: "0.5" },
+          ...INDUSTRIES.map((i) => ({ loc: `/industry/${i.slug}`, changefreq: "weekly", priority: "0.8" })),
+          ...PROVINCES.map((p) => ({ loc: `/province/${p.slug}`, changefreq: "weekly", priority: "0.8" })),
+          ...slugs.map((s) => ({ loc: `/company/${s}`, changefreq: "weekly", priority: "0.7" })),
+        ];
+        const urls = rows.map((r) => `  <url><loc>${BASE_URL}${r.loc}</loc><lastmod>${now}</lastmod><changefreq>${r.changefreq}</changefreq><priority>${r.priority}</priority></url>`).join("\n");
         const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`;
         return new Response(xml, { headers: { "Content-Type": "application/xml", "Cache-Control": "public, max-age=3600" } });
       },
