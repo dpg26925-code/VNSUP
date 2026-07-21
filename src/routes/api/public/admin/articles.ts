@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { corsPreflight, json, logAudit, requireAdmin, slugify } from "@/lib/admin-api.server";
+import { corsPreflight, enforceCategoryAllowed, json, logAudit, requireAdmin, slugify } from "@/lib/admin-api.server";
 
 export const Route = createFileRoute("/api/public/admin/articles")({
   server: {
