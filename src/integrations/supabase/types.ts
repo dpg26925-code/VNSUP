@@ -250,6 +250,7 @@ export type Database = {
         Row: {
           address: string | null
           ai_summary: string | null
+          canonical_url: string | null
           capabilities: Json
           cover_url: string | null
           created_at: string
@@ -263,6 +264,8 @@ export type Database = {
           industry: string | null
           last_verified_at: string | null
           logo_url: string | null
+          meta_description: string | null
+          meta_title: string | null
           name: string
           phone: string | null
           province: string | null
@@ -281,6 +284,7 @@ export type Database = {
         Insert: {
           address?: string | null
           ai_summary?: string | null
+          canonical_url?: string | null
           capabilities?: Json
           cover_url?: string | null
           created_at?: string
@@ -294,6 +298,8 @@ export type Database = {
           industry?: string | null
           last_verified_at?: string | null
           logo_url?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
           name: string
           phone?: string | null
           province?: string | null
@@ -312,6 +318,7 @@ export type Database = {
         Update: {
           address?: string | null
           ai_summary?: string | null
+          canonical_url?: string | null
           capabilities?: Json
           cover_url?: string | null
           created_at?: string
@@ -325,6 +332,8 @@ export type Database = {
           industry?: string | null
           last_verified_at?: string | null
           logo_url?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
           name?: string
           phone?: string | null
           province?: string | null
@@ -594,6 +603,7 @@ export type Database = {
     Functions: {
       can_delete: { Args: { _user_id: string }; Returns: boolean }
       can_publish: { Args: { _user_id: string }; Returns: boolean }
+      factoryhub_slugify: { Args: { _input: string }; Returns: string }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
