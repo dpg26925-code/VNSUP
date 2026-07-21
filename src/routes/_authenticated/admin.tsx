@@ -190,6 +190,18 @@ function AdminPage() {
                 <input value={Array.isArray(edit.capabilities) ? (edit.capabilities as string[]).join(", ") : String(edit.capabilities ?? "")}
                   onChange={(e) => setEdit({ ...edit, capabilities: e.target.value as any })} className="input" />
               </Field>
+              <Field label="Sàn niêm yết">
+                <select value={edit.stock_exchange ?? ""} onChange={(e) => setEdit({ ...edit, stock_exchange: e.target.value || null })} className="input">
+                  <option value="">— Chưa niêm yết —</option>
+                  <option value="HOSE">HOSE</option>
+                  <option value="HNX">HNX</option>
+                  <option value="UPCOM">UPCOM</option>
+                  <option value="Khác">Khác</option>
+                </select>
+              </Field>
+              <Field label="Mã chứng khoán">
+                <input value={edit.stock_ticker ?? ""} maxLength={10} style={{ textTransform: "uppercase" }} onChange={(e) => setEdit({ ...edit, stock_ticker: e.target.value.toUpperCase() })} className="input" placeholder="VD: VNM" />
+              </Field>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.verified} onChange={(e) => setEdit({ ...edit, verified: e.target.checked })} /> Đã xác thực</label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.featured} onChange={(e) => setEdit({ ...edit, featured: e.target.checked })} /> Nổi bật</label>
             </div>
