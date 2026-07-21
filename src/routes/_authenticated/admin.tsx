@@ -247,6 +247,34 @@ function AdminPage() {
               <Field label="Mã chứng khoán">
                 <input value={edit.stock_ticker ?? ""} maxLength={10} style={{ textTransform: "uppercase" }} onChange={(e) => setEdit({ ...edit, stock_ticker: e.target.value.toUpperCase() })} className="input" placeholder="VD: VNM" />
               </Field>
+              <Field label="Doanh thu">
+                <select value={edit.revenue_range ?? ""} onChange={(e) => setEdit({ ...edit, revenue_range: e.target.value || null })} className="input">
+                  <option value="">—</option>
+                  {REVENUE_RANGES.map((r) => <option key={r}>{r}</option>)}
+                </select>
+              </Field>
+              <Field label="Loại hình DN">
+                <select value={edit.company_type ?? ""} onChange={(e) => setEdit({ ...edit, company_type: e.target.value || null })} className="input">
+                  <option value="">—</option>
+                  {COMPANY_TYPES.map((r) => <option key={r}>{r}</option>)}
+                </select>
+              </Field>
+              <Field label="Banner/Cover URL" full>
+                <input value={edit.cover_url ?? ""} onChange={(e) => setEdit({ ...edit, cover_url: e.target.value })} className="input" placeholder="https://.../banner.jpg (khuyến nghị 1600×400)" />
+              </Field>
+              <Field label="Video URL (YouTube/Vimeo)" full>
+                <input value={edit.video_url ?? ""} onChange={(e) => setEdit({ ...edit, video_url: e.target.value })} className="input" placeholder="https://youtube.com/watch?v=..." />
+              </Field>
+              <Field label="Chứng nhận (mỗi dòng: Tên | Đơn vị cấp | Năm)" full>
+                <textarea rows={3} value={Array.isArray(edit.certifications) ? (edit.certifications as any[]).map((c) => [c.name, c.issuer, c.year].filter(Boolean).join(" | ")).join("\n") : String(edit.certifications ?? "")} onChange={(e) => setEdit({ ...edit, certifications: e.target.value as any })} className="input" placeholder="ISO 9001:2015 | BSI | 2023" />
+              </Field>
+              <Field label="Thư viện ảnh (mỗi dòng 1 URL)" full>
+                <textarea rows={3} value={Array.isArray(edit.gallery_urls) ? (edit.gallery_urls as string[]).join("\n") : String(edit.gallery_urls ?? "")} onChange={(e) => setEdit({ ...edit, gallery_urls: e.target.value as any })} className="input" placeholder="https://.../factory1.jpg" />
+              </Field>
+              <Field label="FAQ (câu hỏi dòng 1, trả lời dòng 2+; cách nhau bằng dòng trống)" full>
+                <textarea rows={5} value={Array.isArray(edit.faqs) ? (edit.faqs as any[]).map((f) => `${f.q}\n${f.a}`).join("\n\n") : String(edit.faqs ?? "")} onChange={(e) => setEdit({ ...edit, faqs: e.target.value as any })} className="input" />
+              </Field>
+
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.verified} onChange={(e) => setEdit({ ...edit, verified: e.target.checked })} /> Đã xác thực</label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.featured} onChange={(e) => setEdit({ ...edit, featured: e.target.checked })} /> Nổi bật</label>
             </div>
