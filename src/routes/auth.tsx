@@ -22,11 +22,8 @@ function AuthPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dashboard" });
-    });
-  }, [navigate]);
+  // Do not auto-redirect /auth to /dashboard — this page is always the login/register surface.
+  useEffect(() => {}, [navigate]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
