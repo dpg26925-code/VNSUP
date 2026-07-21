@@ -121,7 +121,6 @@ function PricingPage() {
                 </ul>
                 <Link
                   to="/auth"
-                  search={{ next: "/dashboard/submit-company" } as any}
                   className={`mt-6 block rounded-md px-4 py-2 text-center text-sm font-medium ${p.highlight ? "bg-primary text-primary-foreground hover:bg-primary/90" : "border hover:bg-accent"}`}
                 >
                   Đăng ký & thanh toán
