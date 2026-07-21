@@ -24,6 +24,7 @@ import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
 import { Route as CompanySlugRouteImport } from './routes/company.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedDashboardSubmitCompanyRouteImport } from './routes/_authenticated/dashboard.submit-company'
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardMyCompaniesRouteImport } from './routes/_authenticated/dashboard.my-companies'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
@@ -102,6 +103,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboardSubmitCompanyRoute =
+  AuthenticatedDashboardSubmitCompanyRouteImport.update({
+    id: '/submit-company',
+    path: '/submit-company',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardOwnerRoute =
   AuthenticatedDashboardOwnerRouteImport.update({
     id: '/owner',
@@ -139,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
+  '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -158,6 +166,7 @@ export interface FileRoutesByTo {
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
+  '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -179,6 +188,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/_authenticated/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
+  '/_authenticated/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/dashboard/buyer'
     | '/dashboard/my-companies'
     | '/dashboard/owner'
+    | '/dashboard/submit-company'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/dashboard/buyer'
     | '/dashboard/my-companies'
     | '/dashboard/owner'
+    | '/dashboard/submit-company'
   id:
     | '__root__'
     | '/'
@@ -239,6 +251,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/buyer'
     | '/_authenticated/dashboard/my-companies'
     | '/_authenticated/dashboard/owner'
+    | '/_authenticated/dashboard/submit-company'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -364,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/submit-company': {
+      id: '/_authenticated/dashboard/submit-company'
+      path: '/submit-company'
+      fullPath: '/dashboard/submit-company'
+      preLoaderRoute: typeof AuthenticatedDashboardSubmitCompanyRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/owner': {
       id: '/_authenticated/dashboard/owner'
       path: '/owner'
@@ -392,6 +412,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
   AuthenticatedDashboardMyCompaniesRoute: typeof AuthenticatedDashboardMyCompaniesRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
+  AuthenticatedDashboardSubmitCompanyRoute: typeof AuthenticatedDashboardSubmitCompanyRoute
 }
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
@@ -400,6 +421,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardMyCompaniesRoute:
       AuthenticatedDashboardMyCompaniesRoute,
     AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
+    AuthenticatedDashboardSubmitCompanyRoute:
+      AuthenticatedDashboardSubmitCompanyRoute,
   }
 
 const AuthenticatedDashboardRouteWithChildren =

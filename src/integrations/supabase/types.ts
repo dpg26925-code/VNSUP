@@ -129,9 +129,12 @@ export type Database = {
           name: string
           phone: string | null
           province: string | null
+          rejection_reason: string | null
           slug: string
           source: string
+          status: string
           sub_industry: string | null
+          submitted_by: string | null
           updated_at: string
           verified: boolean
           website: string | null
@@ -155,9 +158,12 @@ export type Database = {
           name: string
           phone?: string | null
           province?: string | null
+          rejection_reason?: string | null
           slug: string
           source?: string
+          status?: string
           sub_industry?: string | null
+          submitted_by?: string | null
           updated_at?: string
           verified?: boolean
           website?: string | null
@@ -181,9 +187,12 @@ export type Database = {
           name?: string
           phone?: string | null
           province?: string | null
+          rejection_reason?: string | null
           slug?: string
           source?: string
+          status?: string
           sub_industry?: string | null
+          submitted_by?: string | null
           updated_at?: string
           verified?: boolean
           website?: string | null
