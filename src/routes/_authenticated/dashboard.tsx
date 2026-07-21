@@ -29,14 +29,22 @@ function Dashboard() {
         <h1 className="text-2xl font-bold">Xin chào {email}</h1>
         <p className="mt-1 text-muted-foreground">Bảng điều khiển tài khoản FactoryHub.</p>
         <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <Link to="/dashboard/submit-company" className="rounded-lg border border-brand/40 bg-brand-soft p-5 hover:border-brand">
+            <div className="font-semibold text-brand">+ Gửi doanh nghiệp</div>
+            <div className="mt-1 text-sm text-muted-foreground">Đăng ký hồ sơ nhà máy của bạn để admin duyệt.</div>
+          </Link>
+          <Link to="/dashboard/my-companies" className="rounded-lg border bg-card p-5 hover:border-primary">
+            <div className="font-semibold">Doanh nghiệp của tôi</div>
+            <div className="mt-1 text-sm text-muted-foreground">Theo dõi trạng thái duyệt và các yêu cầu claim.</div>
+          </Link>
           <Link to="/search" className="rounded-lg border bg-card p-5 hover:border-primary">
             <div className="font-semibold">Tìm nhà máy</div>
             <div className="mt-1 text-sm text-muted-foreground">Khám phá danh bạ nhà máy sản xuất.</div>
           </Link>
           {isAdmin && (
             <Link to="/admin" className="rounded-lg border border-primary/40 bg-primary/5 p-5">
-              <div className="font-semibold text-primary">Quản lý dữ liệu</div>
-              <div className="mt-1 text-sm text-muted-foreground">Thêm/sửa/xóa hồ sơ nhà máy.</div>
+              <div className="font-semibold text-primary">Quản lý & duyệt</div>
+              <div className="mt-1 text-sm text-muted-foreground">Duyệt hồ sơ mới, chỉnh sửa, xoá nhà máy.</div>
             </Link>
           )}
         </div>
