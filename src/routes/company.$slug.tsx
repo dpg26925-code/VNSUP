@@ -133,7 +133,7 @@ function CompanyPage() {
   const [products, setProducts] = useState<{ id: string; name: string; category: string | null; description: string | null }[]>([]);
 
   useEffect(() => {
-    supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured")
+    supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("industry", c.industry ?? "").neq("id", c.id).limit(12)
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
     supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)

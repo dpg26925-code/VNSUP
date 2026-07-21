@@ -53,7 +53,7 @@ function HomePage() {
   useEffect(() => {
     supabase
       .from("companies")
-      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured")
+      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("featured", true)
       .limit(6)
       .then(({ data }) => setFeatured((data ?? []) as CompanyCardProps[]));
