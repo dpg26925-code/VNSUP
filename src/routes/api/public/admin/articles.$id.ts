@@ -33,44 +33,8 @@ export const Route = createFileRoute("/api/public/admin/articles/$id")({
         return json({ data });
       },
 
-      PATCH: async ({ request, params }) => {
-        const ctx = await requireAdmin(request, "editor");
-        if (ctx instanceof Response) return ctx;
-
-        let body: Record<string, unknown>;
-        try {
-          body = await request.json();
-        } catch {
-          return json({ error: "invalid_json" }, 400);
-        }
-
-        const patch: Record<string, unknown> = {};
-        for (const key of UPDATABLE) {
-          if (key in body) patch[key] = body[key];
-        }
-
-        if (patch.status === "published") {
-          if (ctx.highestRole === "editor") {
-            return json({ error: "forbidden", message: "Editors cannot publish" }, 403);
-          }
-          patch.published_at = new Date().toISOString();
-        }
-
-        if (Object.keys(patch).length === 0) {
-          return json({ error: "validation", message: "no updatable fields provided" }, 400);
-        }
-
-        const { data, error } = await ctx.supabase
-          .from("articles")
-          .update(patch as never)
-          .eq("id", params.id)
-          .select()
-          .single();
-
-        if (error) return json({ error: "update_failed", message: error.message }, 400);
-        await logAudit(ctx, "article.update", { type: "article", id: data.id, slug: data.slug }, patch);
-        return json({ data });
-      },
+      PATCH: async (evt) => updateArticle(evt, "patch"),
+      PUT: async (evt) => updateArticle(evt, "put"),
 
       DELETE: async ({ request, params }) => {
         const ctx = await requireAdmin(request, "publisher");
