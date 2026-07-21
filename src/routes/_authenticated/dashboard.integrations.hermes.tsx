@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/integrations/her
   component: HermesIntegrationPage,
 });
 
-const BASE_URL = "https://cheerful-wave-works.lovable.app/api/public/admin";
+const BASE_URL = "https://vnsupplier.cloud/api/public/admin";
 const SUPABASE_URL = "https://fnyonwdojxkchbrqrcpu.supabase.co";
 const ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZueW9ud2RvanhrY2hicnFyY3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3ODA0NDcsImV4cCI6MjA5OTM1NjQ0N30.NiaFCAuY-1-7o5H203TZ3voczi5bfn1WCu89uOztC_c";

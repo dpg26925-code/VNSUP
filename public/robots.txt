@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cheerful-wave-works.lovable.app/sitemap.xml
+Sitemap: https://vnsupplier.cloud/sitemap.xml

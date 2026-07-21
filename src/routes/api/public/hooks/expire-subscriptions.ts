@@ -58,7 +58,7 @@ export const Route = createFileRoute("/api/public/hooks/expire-subscriptions")({
                   to: email,
                   subject: "FactoryHub - Nhắc gia hạn gói dịch vụ",
                   html: `<p>Gói <strong>${s.plan_type}</strong> của bạn sẽ hết hạn vào <strong>${new Date(s.expires_at).toLocaleDateString("vi-VN")}</strong>.</p>
-                    <p><a href="https://cheerful-wave-works.lovable.app/dashboard/subscriptions">Gia hạn ngay</a></p>`,
+                    <p><a href="https://vnsupplier.cloud/dashboard/subscriptions">Gia hạn ngay</a></p>`,
                 }),
               });
               await supabaseAdmin.from("subscriptions").update({ reminder_sent_at: now }).eq("id", s.id);

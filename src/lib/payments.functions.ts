@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const SITE_URL = process.env.SITE_URL || "https://cheerful-wave-works.lovable.app";
+const SITE_URL = process.env.SITE_URL || "https://vnsupplier.cloud";
 
 const CreateInput = z.object({
   plan: z.enum([

@@ -143,7 +143,7 @@ export const Route = createFileRoute("/api/public/webhooks/payos")({
                       <li>Số tiền: <strong>${plan.amount.toLocaleString("vi-VN")}₫</strong></li>
                       <li>Hiệu lực đến: <strong>${expiresAt.toLocaleDateString("vi-VN")}</strong></li>
                     </ul>
-                    <p>Xem chi tiết: <a href="https://cheerful-wave-works.lovable.app/dashboard/subscriptions">Dashboard</a></p>`,
+                    <p>Xem chi tiết: <a href="https://vnsupplier.cloud/dashboard/subscriptions">Dashboard</a></p>`,
                 }),
               }).catch((e) => console.warn("[payos-webhook] email send failed:", e));
             }
