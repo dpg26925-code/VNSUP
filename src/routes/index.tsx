@@ -6,8 +6,8 @@ import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { INDUSTRIES, PROVINCES, SITE_URL, abs } from "@/lib/factory";
 
-const HOME_TITLE = "FactoryHub Vietnam — Tìm nhà máy sản xuất bằng AI";
-const HOME_DESC = "Danh bạ 2,400+ nhà máy Việt Nam. Tìm theo năng lực sản xuất, ngành, tỉnh. Có tóm tắt AI cho mỗi hồ sơ.";
+const HOME_TITLE = "VNSupplier.cloud — Danh bạ nhà máy & nhà cung cấp Việt Nam bằng AI";
+const HOME_DESC = "vnsupplier.cloud: tìm 2,400+ nhà máy Việt Nam theo năng lực sản xuất, ngành, tỉnh. CNC, ép nhựa, SMT PCBA, kim loại, bao bì, cao su, dệt may — có tóm tắt AI cho mỗi hồ sơ.";
 const HOME_URL = abs("/");
 
 export const Route = createFileRoute("/")({
@@ -70,13 +70,13 @@ function HomePage() {
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
             <Sparkles className="h-3.5 w-3.5 text-brand" strokeWidth={2} />
-            Mạng lưới sản xuất được xác thực
+            vnsupplier.cloud — Mạng lưới nhà cung cấp đã xác thực
           </div>
           <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground md:text-6xl">
-            Tìm nhà máy sản xuất<br className="hidden md:block" /> Việt Nam <span className="text-brand">bằng AI</span>
+            Tìm nhà cung cấp<br className="hidden md:block" /> sản xuất Việt Nam <span className="text-brand">bằng AI</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
-            Kết nối buyer với nhà máy đã xác thực trong 24 giờ. Hồ sơ năng lực chi tiết, tóm tắt AI, liên hệ trực tiếp không qua trung gian.
+            VNSupplier.cloud kết nối buyer với nhà máy đã xác thực trong 24 giờ. Hồ sơ năng lực chi tiết, tóm tắt AI, liên hệ trực tiếp không qua trung gian.
           </p>
 
           <form

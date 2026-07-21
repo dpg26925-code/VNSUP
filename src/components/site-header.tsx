@@ -40,7 +40,7 @@ export function SiteHeader() {
             <Factory className="h-4 w-4" strokeWidth={1.75} />
           </div>
           <span className="text-lg font-bold tracking-tight">
-            FactoryHub <span className="text-brand">VN</span>
+            VNSupplier<span className="text-brand">.cloud</span>
           </span>
         </Link>
 
@@ -90,10 +90,10 @@ export function SiteFooter() {
               <div className="grid h-7 w-7 place-items-center rounded-md bg-brand text-brand-foreground">
                 <Factory className="h-3.5 w-3.5" strokeWidth={1.75} />
               </div>
-              <span className="font-bold tracking-tight">FactoryHub <span className="text-brand">VN</span></span>
+              <span className="font-bold tracking-tight">VNSupplier<span className="text-brand">.cloud</span></span>
             </div>
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-              Nền tảng AI danh bạ nhà máy sản xuất Việt Nam. Tìm đối tác OEM/ODM theo năng lực thực tế.
+              Danh bạ AI nhà máy & nhà cung cấp sản xuất Việt Nam. Tìm đối tác OEM/ODM theo năng lực thực tế tại vnsupplier.cloud.
             </p>
           </div>
           <div>
@@ -115,8 +115,8 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-12 flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:justify-between">
-          <div>© {new Date().getFullYear()} FactoryHub Vietnam. Mọi quyền được bảo lưu.</div>
-          <div>hello@factoryhub.vn</div>
+          <div>© {new Date().getFullYear()} VNSupplier.cloud — Vietnam Supplier Network. Mọi quyền được bảo lưu.</div>
+          <div>hello@vnsupplier.cloud</div>
         </div>
       </div>
     </footer>
