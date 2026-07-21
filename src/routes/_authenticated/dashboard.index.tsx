@@ -93,8 +93,8 @@ function OverviewPage() {
               <ul className="space-y-2 text-sm">
                 {savedSearches.map((s) => (
                   <li key={s.id} className="rounded border p-3">
-                    <div className="font-medium">{s.name ?? "Tìm kiếm không tên"}</div>
-                    <div className="mt-1 truncate text-xs text-muted-foreground">{JSON.stringify(s.query)}</div>
+                    <div className="font-medium">{s.query ?? "Tìm kiếm không tên"}</div>
+                    <div className="mt-1 truncate text-xs text-muted-foreground">{JSON.stringify(s.filters)}</div>
                   </li>
                 ))}
               </ul>
