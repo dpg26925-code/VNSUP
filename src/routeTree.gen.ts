@@ -28,6 +28,12 @@ import { Route as AuthenticatedDashboardSubmitCompanyRouteImport } from './route
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardMyCompaniesRouteImport } from './routes/_authenticated/dashboard.my-companies'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
+import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
+import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/public/admin/categories'
+import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
+import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
+import { Route as ApiPublicAdminAnalyticsSummaryRouteImport } from './routes/api/public/admin/analytics.summary'
+import { Route as ApiPublicAdminArticlesIdPublishRouteImport } from './routes/api/public/admin/articles.$id.publish'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -127,6 +133,40 @@ const AuthenticatedDashboardBuyerRoute =
     path: '/buyer',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const ApiPublicAdminLeadsRoute = ApiPublicAdminLeadsRouteImport.update({
+  id: '/api/public/admin/leads',
+  path: '/api/public/admin/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAdminCategoriesRoute =
+  ApiPublicAdminCategoriesRouteImport.update({
+    id: '/api/public/admin/categories',
+    path: '/api/public/admin/categories',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicAdminArticlesRoute = ApiPublicAdminArticlesRouteImport.update({
+  id: '/api/public/admin/articles',
+  path: '/api/public/admin/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAdminArticlesIdRoute =
+  ApiPublicAdminArticlesIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => ApiPublicAdminArticlesRoute,
+  } as any)
+const ApiPublicAdminAnalyticsSummaryRoute =
+  ApiPublicAdminAnalyticsSummaryRouteImport.update({
+    id: '/api/public/admin/analytics/summary',
+    path: '/api/public/admin/analytics/summary',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicAdminArticlesIdPublishRoute =
+  ApiPublicAdminArticlesIdPublishRouteImport.update({
+    id: '/publish',
+    path: '/publish',
+    getParentRoute: () => ApiPublicAdminArticlesIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -147,6 +187,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
+  '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
+  '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
+  '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
+  '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
+  '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -167,6 +213,12 @@ export interface FileRoutesByTo {
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
+  '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
+  '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
+  '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
+  '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
+  '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -189,6 +241,12 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_authenticated/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
+  '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
+  '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
+  '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
+  '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
+  '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -211,6 +269,12 @@ export interface FileRouteTypes {
     | '/dashboard/my-companies'
     | '/dashboard/owner'
     | '/dashboard/submit-company'
+    | '/api/public/admin/articles'
+    | '/api/public/admin/categories'
+    | '/api/public/admin/leads'
+    | '/api/public/admin/analytics/summary'
+    | '/api/public/admin/articles/$id'
+    | '/api/public/admin/articles/$id/publish'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -231,6 +295,12 @@ export interface FileRouteTypes {
     | '/dashboard/my-companies'
     | '/dashboard/owner'
     | '/dashboard/submit-company'
+    | '/api/public/admin/articles'
+    | '/api/public/admin/categories'
+    | '/api/public/admin/leads'
+    | '/api/public/admin/analytics/summary'
+    | '/api/public/admin/articles/$id'
+    | '/api/public/admin/articles/$id/publish'
   id:
     | '__root__'
     | '/'
@@ -252,6 +322,12 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/my-companies'
     | '/_authenticated/dashboard/owner'
     | '/_authenticated/dashboard/submit-company'
+    | '/api/public/admin/articles'
+    | '/api/public/admin/categories'
+    | '/api/public/admin/leads'
+    | '/api/public/admin/analytics/summary'
+    | '/api/public/admin/articles/$id'
+    | '/api/public/admin/articles/$id/publish'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -268,6 +344,10 @@ export interface RootRouteChildren {
   CompanySlugRoute: typeof CompanySlugRoute
   IndustrySlugRoute: typeof IndustrySlugRoute
   ProvinceSlugRoute: typeof ProvinceSlugRoute
+  ApiPublicAdminArticlesRoute: typeof ApiPublicAdminArticlesRouteWithChildren
+  ApiPublicAdminCategoriesRoute: typeof ApiPublicAdminCategoriesRoute
+  ApiPublicAdminLeadsRoute: typeof ApiPublicAdminLeadsRoute
+  ApiPublicAdminAnalyticsSummaryRoute: typeof ApiPublicAdminAnalyticsSummaryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -405,6 +485,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBuyerRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/api/public/admin/leads': {
+      id: '/api/public/admin/leads'
+      path: '/api/public/admin/leads'
+      fullPath: '/api/public/admin/leads'
+      preLoaderRoute: typeof ApiPublicAdminLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/admin/categories': {
+      id: '/api/public/admin/categories'
+      path: '/api/public/admin/categories'
+      fullPath: '/api/public/admin/categories'
+      preLoaderRoute: typeof ApiPublicAdminCategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/admin/articles': {
+      id: '/api/public/admin/articles'
+      path: '/api/public/admin/articles'
+      fullPath: '/api/public/admin/articles'
+      preLoaderRoute: typeof ApiPublicAdminArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/admin/articles/$id': {
+      id: '/api/public/admin/articles/$id'
+      path: '/$id'
+      fullPath: '/api/public/admin/articles/$id'
+      preLoaderRoute: typeof ApiPublicAdminArticlesIdRouteImport
+      parentRoute: typeof ApiPublicAdminArticlesRoute
+    }
+    '/api/public/admin/analytics/summary': {
+      id: '/api/public/admin/analytics/summary'
+      path: '/api/public/admin/analytics/summary'
+      fullPath: '/api/public/admin/analytics/summary'
+      preLoaderRoute: typeof ApiPublicAdminAnalyticsSummaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/admin/articles/$id/publish': {
+      id: '/api/public/admin/articles/$id/publish'
+      path: '/publish'
+      fullPath: '/api/public/admin/articles/$id/publish'
+      preLoaderRoute: typeof ApiPublicAdminArticlesIdPublishRouteImport
+      parentRoute: typeof ApiPublicAdminArticlesIdRoute
+    }
   }
 }
 
@@ -443,6 +565,34 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ApiPublicAdminArticlesIdRouteChildren {
+  ApiPublicAdminArticlesIdPublishRoute: typeof ApiPublicAdminArticlesIdPublishRoute
+}
+
+const ApiPublicAdminArticlesIdRouteChildren: ApiPublicAdminArticlesIdRouteChildren =
+  {
+    ApiPublicAdminArticlesIdPublishRoute: ApiPublicAdminArticlesIdPublishRoute,
+  }
+
+const ApiPublicAdminArticlesIdRouteWithChildren =
+  ApiPublicAdminArticlesIdRoute._addFileChildren(
+    ApiPublicAdminArticlesIdRouteChildren,
+  )
+
+interface ApiPublicAdminArticlesRouteChildren {
+  ApiPublicAdminArticlesIdRoute: typeof ApiPublicAdminArticlesIdRouteWithChildren
+}
+
+const ApiPublicAdminArticlesRouteChildren: ApiPublicAdminArticlesRouteChildren =
+  {
+    ApiPublicAdminArticlesIdRoute: ApiPublicAdminArticlesIdRouteWithChildren,
+  }
+
+const ApiPublicAdminArticlesRouteWithChildren =
+  ApiPublicAdminArticlesRoute._addFileChildren(
+    ApiPublicAdminArticlesRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -457,6 +607,10 @@ const rootRouteChildren: RootRouteChildren = {
   CompanySlugRoute: CompanySlugRoute,
   IndustrySlugRoute: IndustrySlugRoute,
   ProvinceSlugRoute: ProvinceSlugRoute,
+  ApiPublicAdminArticlesRoute: ApiPublicAdminArticlesRouteWithChildren,
+  ApiPublicAdminCategoriesRoute: ApiPublicAdminCategoriesRoute,
+  ApiPublicAdminLeadsRoute: ApiPublicAdminLeadsRoute,
+  ApiPublicAdminAnalyticsSummaryRoute: ApiPublicAdminAnalyticsSummaryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
