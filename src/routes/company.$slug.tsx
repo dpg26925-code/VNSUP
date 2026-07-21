@@ -229,6 +229,10 @@ function CompanyPage() {
           </div>
         </div>
 
+        {/* Quick Info Stats */}
+        <QuickInfoStats c={c} />
+
+
         <div className="mt-6 grid gap-6 md:grid-cols-3">
           <div className="space-y-6 md:col-span-2">
             {c.description && (
