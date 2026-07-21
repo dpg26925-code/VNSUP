@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
-import { INDUSTRIES, industryBySlug } from "@/lib/factory";
+import { INDUSTRIES, industryBySlug, abs } from "@/lib/factory";
 
 export const Route = createFileRoute("/industry/$slug")({
   loader: ({ params }) => {
@@ -11,21 +11,36 @@ export const Route = createFileRoute("/industry/$slug")({
     if (!i) throw notFound();
     return i;
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [{ title: "Không tìm thấy ngành" }, { name: "robots", content: "noindex" }] };
     const title = `Top nhà máy ${loaderData.name} tại Việt Nam | FactoryHub`;
     const desc = `Danh sách nhà máy ${loaderData.name} uy tín, có địa chỉ, năng lực sản xuất và tóm tắt AI. ${loaderData.desc}`;
+    const url = abs(`/industry/${params.slug}`);
     return {
       meta: [
         { title },
         { name: "description", content: desc },
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
+        { property: "og:url", content: url },
       ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [{
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Trang chủ", item: abs("/") },
+            { "@type": "ListItem", position: 2, name: `Ngành ${loaderData.name}`, item: url },
+          ],
+        }),
+      }],
     };
   },
   component: IndustryPage,
 });
+
 
 function IndustryPage() {
   const i = Route.useLoaderData();
