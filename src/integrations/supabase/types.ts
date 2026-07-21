@@ -376,6 +376,7 @@ export type Database = {
           requester_name: string | null
           reviewed_at: string | null
           status: Database["public"]["Enums"]["claim_status"]
+          user_id: string | null
         }
         Insert: {
           company_id: string
@@ -386,6 +387,7 @@ export type Database = {
           requester_name?: string | null
           reviewed_at?: string | null
           status?: Database["public"]["Enums"]["claim_status"]
+          user_id?: string | null
         }
         Update: {
           company_id?: string
@@ -396,6 +398,7 @@ export type Database = {
           requester_name?: string | null
           reviewed_at?: string | null
           status?: Database["public"]["Enums"]["claim_status"]
+          user_id?: string | null
         }
         Relationships: [
           {
