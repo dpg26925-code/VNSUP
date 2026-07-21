@@ -180,3 +180,131 @@ function HermesIntegrationPage() {
     </div>
   );
 }
+
+function EndpointTester() {
+  const [idx, setIdx] = useState(0);
+  const [pathInput, setPathInput] = useState(endpoints[0].path);
+  const [method, setMethod] = useState(endpoints[0].method === "PATCH" ? "PATCH" : endpoints[0].method);
+  const [body, setBody] = useState(endpoints[0].body ?? "");
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<number | null>(null);
+  const [response, setResponse] = useState<string>("");
+
+  const onPick = (i: number) => {
+    setIdx(i);
+    const e = endpoints[i];
+    setPathInput(e.path);
+    setMethod(e.method);
+    setBody(e.body ?? "");
+    setStatus(null);
+    setResponse("");
+  };
+
+  const run = async () => {
+    setLoading(true);
+    setStatus(null);
+    setResponse("");
+    try {
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) {
+        setResponse("Chưa có session — vui lòng đăng nhập lại.");
+        setLoading(false);
+        return;
+      }
+      const url = `${BASE_URL}${pathInput.startsWith("/") ? pathInput : `/${pathInput}`}`;
+      const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
+      let payload: BodyInit | undefined;
+      if (method !== "GET" && method !== "DELETE" && body.trim()) {
+        headers["Content-Type"] = "application/json";
+        payload = body;
+      }
+      const res = await fetch(url, { method, headers, body: payload });
+      setStatus(res.status);
+      const text = await res.text();
+      try {
+        setResponse(JSON.stringify(JSON.parse(text), null, 2));
+      } catch {
+        setResponse(text);
+      }
+    } catch (err) {
+      setResponse(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const needsBody = method !== "GET" && method !== "DELETE";
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        {endpoints.map((e, i) => (
+          <button
+            key={e.tool}
+            type="button"
+            onClick={() => onPick(i)}
+            className={`rounded-md border px-2.5 py-1 text-xs font-mono transition ${
+              idx === i ? "border-primary bg-primary/10" : "hover:bg-muted"
+            }`}
+          >
+            {e.method} {e.path.split("?")[0]}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-[110px_1fr]">
+        <select
+          value={method}
+          onChange={(e) => setMethod(e.target.value)}
+          className="rounded-md border bg-background px-2 py-1.5 text-sm"
+        >
+          {["GET", "POST", "PATCH", "PUT", "DELETE"].map((m) => (
+            <option key={m} value={m}>{m}</option>
+          ))}
+        </select>
+        <input
+          value={pathInput}
+          onChange={(e) => setPathInput(e.target.value)}
+          placeholder="/articles?limit=5"
+          className="rounded-md border bg-background px-3 py-1.5 text-sm font-mono"
+        />
+      </div>
+
+      {needsBody && (
+        <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          rows={5}
+          placeholder='{"title": "..."}'
+          className="w-full rounded-md border bg-background p-2 text-xs font-mono"
+        />
+      )}
+
+      <div className="flex items-center gap-2">
+        <Button size="sm" onClick={run} disabled={loading}>
+          {loading ? "Đang gọi..." : "Gửi request"}
+        </Button>
+        {status !== null && (
+          <span
+            className={`text-xs font-mono ${
+              status >= 200 && status < 300 ? "text-green-600" : "text-destructive"
+            }`}
+          >
+            HTTP {status}
+          </span>
+        )}
+        <span className="text-xs text-muted-foreground truncate">
+          {method} {BASE_URL}{pathInput.startsWith("/") ? pathInput : `/${pathInput}`}
+        </span>
+      </div>
+
+      {response && (
+        <pre className="max-h-96 overflow-auto rounded-lg border bg-muted/40 p-3 text-xs">
+          <code>{response}</code>
+        </pre>
+      )}
+    </div>
+  );
+}
+
