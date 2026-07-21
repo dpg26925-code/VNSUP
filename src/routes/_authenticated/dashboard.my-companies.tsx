@@ -31,12 +31,10 @@ function MyCompanies() {
           .select("id,slug,name,province,industry,verified,featured,status,rejection_reason,created_at")
           .eq("submitted_by", uid)
           .order("created_at", { ascending: false }),
-        email
-          ? supabase.from("company_claims")
-              .select("id,company_id,status,created_at")
-              .eq("requester_email", email)
-              .order("created_at", { ascending: false })
-          : Promise.resolve({ data: [] as Claim[] }),
+        supabase.from("company_claims")
+          .select("id,company_id,status,created_at")
+          .or(`user_id.eq.${uid}${email ? `,requester_email.eq.${email}` : ""}`)
+          .order("created_at", { ascending: false }),
       ]);
 
       setSubmissions((subRes.data ?? []) as Submission[]);

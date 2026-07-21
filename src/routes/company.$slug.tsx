@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
-import { BadgeCheck, Globe, Mail, MapPin, Phone, Sparkles, Star, Users } from "lucide-react";
+import { BadgeCheck, Globe, Mail, MapPin, Phone, Sparkles, Star, Users, ShieldQuestion } from "lucide-react";
 
 type Company = {
   id: string; slug: string; name: string;
@@ -15,6 +15,7 @@ type Company = {
   description: string | null; ai_summary: string | null;
   capabilities: unknown; verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
+  submitted_by: string | null;
 };
 
 async function loadCompany(slug: string) {
@@ -286,6 +287,8 @@ function CompanyPage() {
               </ul>
             </section>
 
+            {!c.submitted_by && <ClaimCard companyId={c.id} companyName={c.name} />}
+
             <ContactForm companyId={c.id} companyName={c.name} />
           </aside>
         </div>
@@ -359,6 +362,97 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
             {status === "sending" ? "Đang gửi…" : "Gửi yêu cầu báo giá"}
           </button>
           <p className="text-center text-[11px] text-muted-foreground">Miễn phí · Không spam · Bảo mật thông tin</p>
+        </form>
+      )}
+    </section>
+  );
+}
+
+function ClaimCard({ companyId, companyName }: { companyId: string; companyName: string }) {
+  const [open, setOpen] = useState(false);
+  const [note, setNote] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error" | "exists">("idle");
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        setEmail(data.user.email ?? "");
+        setName((data.user.user_metadata?.full_name as string) ?? "");
+        const { data: existing } = await supabase
+          .from("company_claims")
+          .select("id,status")
+          .eq("company_id", companyId)
+          .eq("user_id", data.user.id)
+          .maybeSingle();
+        if (existing) setStatus("exists");
+      }
+    })();
+  }, [open, companyId]);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("sending"); setErr(null);
+    const { data: userRes } = await supabase.auth.getUser();
+    if (!userRes.user) {
+      setStatus("error");
+      setErr("Bạn cần đăng nhập để gửi yêu cầu xác thực quyền sở hữu.");
+      return;
+    }
+    if (name.trim().length < 2 || !/^\S+@\S+\.\S+$/.test(email)) {
+      setStatus("error"); setErr("Nhập họ tên và email hợp lệ."); return;
+    }
+    const { error } = await supabase.from("company_claims").insert({
+      company_id: companyId,
+      user_id: userRes.user.id,
+      requester_email: email.trim(),
+      requester_name: name.trim(),
+      note: note.trim() || null,
+    });
+    if (error) { setStatus("error"); setErr(error.message); return; }
+    setStatus("sent");
+  }
+
+  const inputCls = "w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20";
+
+  return (
+    <section className="rounded-lg border border-brand/30 bg-brand-soft/40 p-5">
+      <div className="flex items-start gap-2">
+        <ShieldQuestion className="mt-0.5 h-5 w-5 text-brand" />
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold">Bạn là chủ nhà máy này?</h3>
+          <p className="mt-1 text-xs text-muted-foreground">Yêu cầu xác thực quyền sở hữu để cập nhật thông tin, phản hồi báo giá và mở khoá các tính năng nâng cao.</p>
+        </div>
+      </div>
+      {!open ? (
+        <button onClick={() => setOpen(true)} className="mt-3 w-full rounded-md bg-brand py-2 text-sm font-semibold text-brand-foreground hover:bg-brand/90">
+          Yêu cầu xác thực (Claim)
+        </button>
+      ) : status === "sent" ? (
+        <div className="mt-3 rounded-md border border-success/30 bg-success/10 p-3 text-xs">
+          <div className="font-semibold text-success">✓ Đã gửi yêu cầu</div>
+          <p className="mt-1 text-muted-foreground">Admin FactoryHub sẽ liên hệ xác minh trong 1–2 ngày làm việc.</p>
+        </div>
+      ) : status === "exists" ? (
+        <div className="mt-3 rounded-md border bg-card p-3 text-xs text-muted-foreground">
+          Bạn đã gửi yêu cầu cho nhà máy này. Xem trạng thái trong <Link to="/dashboard/my-companies" className="font-semibold text-brand hover:underline">Doanh nghiệp của tôi</Link>.
+        </div>
+      ) : (
+        <form onSubmit={submit} className="mt-3 space-y-2">
+          <input placeholder="Họ và tên *" value={name} onChange={(e) => setName(e.target.value)} className={inputCls} required />
+          <input type="email" placeholder="Email công việc *" value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} required />
+          <textarea rows={3} placeholder={`Chứng minh bạn là đại diện hợp pháp của ${companyName} (chức vụ, giấy tờ, website nội bộ…)`} value={note} onChange={(e) => setNote(e.target.value)} className={inputCls} />
+          {err && <div className="rounded border border-destructive/30 bg-destructive/10 p-2 text-[11px] text-destructive">{err}</div>}
+          <div className="flex gap-2">
+            <button type="button" onClick={() => setOpen(false)} className="flex-1 rounded-md border py-2 text-sm hover:bg-accent">Hủy</button>
+            <button disabled={status === "sending"} className="flex-1 rounded-md bg-brand py-2 text-sm font-semibold text-brand-foreground hover:bg-brand/90 disabled:opacity-60">
+              {status === "sending" ? "Đang gửi…" : "Gửi yêu cầu"}
+            </button>
+          </div>
         </form>
       )}
     </section>
