@@ -107,6 +107,15 @@ function SubmitCompanyPage() {
 
     const d = parsed.data;
     const caps = (d.capabilities || "").split(",").map((s) => s.trim()).filter(Boolean);
+    const gallery = (d.gallery_urls || "").split("\n").map((s) => s.trim()).filter(Boolean);
+    const certs = (d.certifications || "").split("\n").map((l) => l.trim()).filter(Boolean).map((line) => {
+      const [name, issuer, year] = line.split("|").map((s) => s.trim());
+      return { name, ...(issuer ? { issuer } : {}), ...(year ? { year } : {}) };
+    });
+    const faqs = (d.faqs || "").split(/\n\n+/).map((block) => {
+      const [q, ...a] = block.split("\n");
+      return { q: (q ?? "").trim(), a: a.join("\n").trim() };
+    }).filter((f) => f.q && f.a);
     const { error } = await supabase.from("companies").insert({
       name: d.name,
       slug: d.slug,
@@ -115,13 +124,20 @@ function SubmitCompanyPage() {
       sub_industry: d.sub_industry || null,
       employee_range: d.employee_range || null,
       founded_year: d.founded_year ?? null,
+      revenue_range: d.revenue_range || null,
+      company_type: d.company_type || null,
       website: d.website || null,
       logo_url: d.logo_url || null,
+      cover_url: d.cover_url || null,
+      video_url: d.video_url || null,
       phone: d.phone || null,
       email: d.email || null,
       address: d.address || null,
       description: d.description || null,
       capabilities: caps,
+      certifications: certs,
+      gallery_urls: gallery,
+      faqs: faqs,
       stock_exchange: d.stock_exchange || null,
       stock_ticker: d.stock_ticker ? d.stock_ticker.toUpperCase() : null,
       verified: false,
@@ -130,6 +146,7 @@ function SubmitCompanyPage() {
       status: "pending",
       submitted_by: uid,
     });
+
     setSubmitting(false);
     if (error) {
       setErrors({ _root: error.message.includes("companies_slug") ? "Slug đã tồn tại, vui lòng chọn slug khác." : error.message });
