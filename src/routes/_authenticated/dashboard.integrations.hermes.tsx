@@ -104,10 +104,13 @@ function HermesIntegrationPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">3. Cấp quyền cho user Hermes</h2>
         <p className="text-sm text-muted-foreground">
-          Chạy trong Supabase SQL Editor, thay <code className="rounded bg-muted px-1">&lt;HERMES_USER_ID&gt;</code> bằng UID
-          trong <code className="rounded bg-muted px-1">auth.users</code>:
+          Chọn vai trò và phạm vi bên dưới, hệ thống sẽ sinh SQL tương ứng để bạn copy vào Supabase SQL Editor.
         </p>
-        <Code>{grantSql}</Code>
+        <RoleGrantBuilder />
+        <details className="rounded-lg border p-3 text-sm">
+          <summary className="cursor-pointer font-medium">Ví dụ mẫu (editor + 2 chuyên mục)</summary>
+          <div className="mt-2"><Code>{grantSql}</Code></div>
+        </details>
       </section>
 
       <section className="space-y-3">
