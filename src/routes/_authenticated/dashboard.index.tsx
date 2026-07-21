@@ -53,7 +53,7 @@ function OverviewPage() {
         }
       } else {
         if (uid) {
-          const { data: ss } = await supabase.from("saved_searches").select("id,name,query,created_at").eq("user_id", uid).order("created_at", { ascending: false }).limit(6);
+          const { data: ss } = await supabase.from("saved_searches").select("id,query,filters,created_at").eq("user_id", uid).order("created_at", { ascending: false }).limit(6);
           setSavedSearches((ss ?? []) as SavedSearch[]);
         }
         if (email) {
