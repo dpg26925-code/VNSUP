@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { SiteHeader, SiteFooter } from "@/components/site-header";
+
 import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
 import { Building2, Send } from "lucide-react";
 
@@ -128,7 +128,6 @@ function SubmitCompanyPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
       <div className="mx-auto max-w-3xl px-4 py-8">
         <div className="mb-6 flex items-start gap-3">
           <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand">
@@ -229,7 +228,6 @@ function SubmitCompanyPage() {
         )}
       </div>
       <style>{`.input{width:100%;border:1px solid var(--color-border);background:var(--color-background);border-radius:.5rem;padding:.55rem .75rem;font-size:.875rem;outline:none}.input:focus{border-color:var(--color-brand)}`}</style>
-      <SiteFooter />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { SiteHeader, SiteFooter } from "@/components/site-header";
+
 import { Building2, FileCheck, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/my-companies")({
@@ -57,7 +57,6 @@ function MyCompanies() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
       <div className="mx-auto max-w-5xl px-4 py-8">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -141,7 +140,6 @@ function MyCompanies() {
           )}
         </section>
       </div>
-      <SiteFooter />
     </div>
   );
 }
