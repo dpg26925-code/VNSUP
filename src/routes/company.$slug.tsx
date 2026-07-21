@@ -68,7 +68,7 @@ function CompanyPage() {
 
   useEffect(() => {
     supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured")
-      .eq("industry", c.industry).neq("id", c.id).limit(4)
+      .eq("industry", c.industry ?? "").neq("id", c.id).limit(4)
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
     supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)
       .then(({ data }) => setProducts(data ?? []));

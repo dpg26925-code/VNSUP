@@ -9,15 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CelebritiesSlugRouteImport } from './routes/celebrities.$slug'
+import { Route as ProvinceSlugRouteImport } from './routes/province.$slug'
+import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
+import { Route as CompanySlugRouteImport } from './routes/company.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -42,9 +56,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CelebritiesSlugRoute = CelebritiesSlugRouteImport.update({
-  id: '/celebrities/$slug',
-  path: '/celebrities/$slug',
+const ProvinceSlugRoute = ProvinceSlugRouteImport.update({
+  id: '/province/$slug',
+  path: '/province/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndustrySlugRoute = IndustrySlugRouteImport.update({
+  id: '/industry/$slug',
+  path: '/industry/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanySlugRoute = CompanySlugRouteImport.update({
+  id: '/company/$slug',
+  path: '/company/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -63,18 +87,26 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/celebrities/$slug': typeof CelebritiesSlugRoute
+  '/company/$slug': typeof CompanySlugRoute
+  '/industry/$slug': typeof IndustrySlugRoute
+  '/province/$slug': typeof ProvinceSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/celebrities/$slug': typeof CelebritiesSlugRoute
+  '/company/$slug': typeof CompanySlugRoute
+  '/industry/$slug': typeof IndustrySlugRoute
+  '/province/$slug': typeof ProvinceSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -83,9 +115,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/celebrities/$slug': typeof CelebritiesSlugRoute
+  '/company/$slug': typeof CompanySlugRoute
+  '/industry/$slug': typeof IndustrySlugRoute
+  '/province/$slug': typeof ProvinceSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -94,18 +130,26 @@ export interface FileRouteTypes {
     | '/auth'
     | '/forgot-password'
     | '/reset-password'
+    | '/search'
+    | '/sitemap.xml'
     | '/admin'
     | '/dashboard'
-    | '/celebrities/$slug'
+    | '/company/$slug'
+    | '/industry/$slug'
+    | '/province/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/forgot-password'
     | '/reset-password'
+    | '/search'
+    | '/sitemap.xml'
     | '/admin'
     | '/dashboard'
-    | '/celebrities/$slug'
+    | '/company/$slug'
+    | '/industry/$slug'
+    | '/province/$slug'
   id:
     | '__root__'
     | '/'
@@ -113,9 +157,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/forgot-password'
     | '/reset-password'
+    | '/search'
+    | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
-    | '/celebrities/$slug'
+    | '/company/$slug'
+    | '/industry/$slug'
+    | '/province/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -124,11 +172,29 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  CelebritiesSlugRoute: typeof CelebritiesSlugRoute
+  SearchRoute: typeof SearchRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  CompanySlugRoute: typeof CompanySlugRoute
+  IndustrySlugRoute: typeof IndustrySlugRoute
+  ProvinceSlugRoute: typeof ProvinceSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -164,11 +230,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/celebrities/$slug': {
-      id: '/celebrities/$slug'
-      path: '/celebrities/$slug'
-      fullPath: '/celebrities/$slug'
-      preLoaderRoute: typeof CelebritiesSlugRouteImport
+    '/province/$slug': {
+      id: '/province/$slug'
+      path: '/province/$slug'
+      fullPath: '/province/$slug'
+      preLoaderRoute: typeof ProvinceSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/industry/$slug': {
+      id: '/industry/$slug'
+      path: '/industry/$slug'
+      fullPath: '/industry/$slug'
+      preLoaderRoute: typeof IndustrySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company/$slug': {
+      id: '/company/$slug'
+      path: '/company/$slug'
+      fullPath: '/company/$slug'
+      preLoaderRoute: typeof CompanySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard': {
@@ -207,7 +287,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  CelebritiesSlugRoute: CelebritiesSlugRoute,
+  SearchRoute: SearchRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  CompanySlugRoute: CompanySlugRoute,
+  IndustrySlugRoute: IndustrySlugRoute,
+  ProvinceSlugRoute: ProvinceSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

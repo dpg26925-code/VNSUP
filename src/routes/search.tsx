@@ -52,7 +52,7 @@ function SearchPage() {
   }, [search.q, search.industry, search.province, search.size]);
 
   function apply(next: Partial<typeof search>) {
-    navigate({ search: (prev) => ({ ...prev, ...next }) as any, replace: true });
+    navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, ...next }) as any, replace: true });
   }
 
   const activeCount = useMemo(() => [search.industry, search.province, search.size].filter(Boolean).length, [search]);
