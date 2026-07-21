@@ -49,13 +49,13 @@ function ApiPage() {
 
         <section className="mt-8 rounded-lg border bg-card p-6">
           <h2 className="text-lg font-semibold">Base URL</h2>
-          <pre className="mt-2 overflow-x-auto rounded bg-muted p-3 text-sm"><code>https://cheerful-wave-works.lovable.app/api/public/admin</code></pre>
+          <pre className="mt-2 overflow-x-auto rounded bg-muted p-3 text-sm"><code>https://vnsupplier.cloud/api/public/admin</code></pre>
           <h2 className="mt-6 text-lg font-semibold">Xác thực</h2>
           <p className="mt-2 text-sm text-foreground/90">
             Mọi request phải gửi header <code className="rounded bg-muted px-1">Authorization: Bearer &lt;supabase_access_token&gt;</code>. Token lấy từ Supabase Auth của người dùng đã được cấp role tương ứng trong bảng <code className="rounded bg-muted px-1">user_roles</code>.
           </p>
           <pre className="mt-2 overflow-x-auto rounded bg-muted p-3 text-xs">{`curl -H "Authorization: Bearer $TOKEN" \\
-  https://cheerful-wave-works.lovable.app/api/public/admin/articles`}</pre>
+  https://vnsupplier.cloud/api/public/admin/articles`}</pre>
         </section>
 
         <section className="mt-8 overflow-hidden rounded-lg border bg-card">

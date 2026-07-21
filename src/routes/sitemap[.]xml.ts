@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { INDUSTRIES, PROVINCES } from "@/lib/factory";
 
-const BASE_URL = "https://cheerful-wave-works.lovable.app";
+const BASE_URL = "https://vnsupplier.cloud";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {

@@ -1,6 +1,6 @@
 // Shared constants + helpers for FactoryHub
 
-export const SITE_URL = "https://cheerful-wave-works.lovable.app";
+export const SITE_URL = "https://vnsupplier.cloud";
 export const abs = (path: string) => `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 
 
