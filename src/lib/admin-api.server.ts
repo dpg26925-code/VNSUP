@@ -13,9 +13,32 @@ export type AdminContext = {
   email: string | null;
   roles: AdminRole[];
   highestRole: AdminRole;
+  allowedCategories: string[];
+  canPublish: boolean;
+  canDelete: boolean;
+  canManageUsers: boolean;
   supabase: SupabaseClient<Database>;
   request: Request;
 };
+
+/** Enforce editor category allow-list. Returns null if OK, or a Response on failure. */
+export function enforceCategoryAllowed(
+  ctx: AdminContext,
+  category: string | null | undefined,
+): Response | null {
+  if (ctx.highestRole !== "editor") return null;
+  if (!ctx.allowedCategories || ctx.allowedCategories.length === 0) return null;
+  if (!category) return null;
+  if (ctx.allowedCategories.includes(category)) return null;
+  return json(
+    {
+      error: "forbidden",
+      message: `Editor không được phép thao tác trên chuyên mục '${category}'.`,
+      allowed_categories: ctx.allowedCategories,
+    },
+    403,
+  );
+}
 
 export function json(body: unknown, status = 200, extraHeaders: Record<string, string> = {}) {
   return new Response(JSON.stringify(body), {
@@ -74,11 +97,11 @@ export async function requireAdmin(
 
   const { data: roleRows, error: roleErr } = await supabase
     .from("user_roles")
-    .select("role")
-    .eq("user_id", userData.user.id);
+    .select("role, allowed_categories, can_publish, can_delete, can_manage_users");
   if (roleErr) return json({ error: "role_lookup_failed", message: roleErr.message }, 500);
 
-  const roles = (roleRows ?? [])
+  const rows = roleRows ?? [];
+  const roles = rows
     .map((r) => r.role as string)
     .filter((r): r is AdminRole => r === "admin" || r === "publisher" || r === "editor");
 
@@ -98,11 +121,24 @@ export async function requireAdmin(
     );
   }
 
+  const allowedCategories = Array.from(
+    new Set(rows.flatMap((r) => (r.allowed_categories as string[] | null) ?? [])),
+  );
+  const canPublish =
+    highestRole === "admin" || highestRole === "publisher" || rows.some((r) => r.can_publish);
+  const canDelete =
+    highestRole === "admin" || highestRole === "publisher" || rows.some((r) => r.can_delete);
+  const canManageUsers = highestRole === "admin" || rows.some((r) => r.can_manage_users);
+
   return {
     userId: userData.user.id,
     email: userData.user.email ?? null,
     roles,
     highestRole,
+    allowedCategories,
+    canPublish,
+    canDelete,
+    canManageUsers,
     supabase,
     request,
   };

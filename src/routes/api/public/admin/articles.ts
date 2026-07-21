@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { corsPreflight, json, logAudit, requireAdmin, slugify } from "@/lib/admin-api.server";
+import { corsPreflight, enforceCategoryAllowed, json, logAudit, requireAdmin, slugify } from "@/lib/admin-api.server";
 
 export const Route = createFileRoute("/api/public/admin/articles")({
   server: {
@@ -55,10 +55,14 @@ export const Route = createFileRoute("/api/public/admin/articles")({
             ? (requestedStatus as "draft" | "pending" | "published" | "archived")
             : "draft";
 
-        // Only publisher/admin can create as "published" directly
-        if (status === "published" && ctx.highestRole === "editor") {
-          return json({ error: "forbidden", message: "Editors cannot publish directly" }, 403);
+        // Only publisher/admin (or explicit can_publish flag) can create as "published" directly
+        if (status === "published" && !ctx.canPublish) {
+          return json({ error: "forbidden", message: "You cannot publish directly" }, 403);
         }
+
+        // Enforce editor allowed_categories
+        const denyCat = enforceCategoryAllowed(ctx, (body.category as string) ?? null);
+        if (denyCat) return denyCat;
 
         const slug = String(body.slug ?? "").trim() || slugify(title) || `bai-viet-${Date.now()}`;
 

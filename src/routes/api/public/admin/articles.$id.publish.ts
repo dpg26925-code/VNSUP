@@ -8,8 +8,9 @@ export const Route = createFileRoute("/api/public/admin/articles/$id/publish")({
 
       // POST /api/public/admin/articles/:id/publish  { publish?: boolean }
       POST: async ({ request, params }) => {
-        const ctx = await requireAdmin(request, "publisher");
+        const ctx = await requireAdmin(request, "editor");
         if (ctx instanceof Response) return ctx;
+        if (!ctx.canPublish) return json({ error: "forbidden", message: "You cannot publish" }, 403);
 
         let publish = true;
         try {
