@@ -105,6 +105,7 @@ function SubmitCompanyPage() {
       employee_range: d.employee_range || null,
       founded_year: d.founded_year ?? null,
       website: d.website || null,
+      logo_url: d.logo_url || null,
       phone: d.phone || null,
       email: d.email || null,
       address: d.address || null,
