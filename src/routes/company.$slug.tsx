@@ -572,3 +572,35 @@ function ClaimCard({ companyId, companyName }: { companyId: string; companyName:
     </section>
   );
 }
+
+function getVideoEmbed(url: string | null): string | null {
+  if (!url) return null;
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return null;
+}
+
+function QuickInfoStats({ c }: { c: Company }) {
+  const items: { icon: React.ReactNode; label: string; value: string }[] = [];
+  if (c.founded_year) items.push({ icon: <Calendar className="h-4 w-4" />, label: "Thành lập", value: `${c.founded_year} (${new Date().getFullYear() - c.founded_year}+ năm)` });
+  if (c.employee_range) items.push({ icon: <Users className="h-4 w-4" />, label: "Quy mô", value: `${c.employee_range} lao động` });
+  if (c.revenue_range) items.push({ icon: <DollarSign className="h-4 w-4" />, label: "Doanh thu", value: c.revenue_range });
+  if (c.company_type) items.push({ icon: <Building2 className="h-4 w-4" />, label: "Loại hình", value: c.company_type });
+  if (items.length === 0) return null;
+  return (
+    <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {items.map((it) => (
+        <div key={it.label} className="flex items-start gap-3 rounded-xl border bg-card p-4">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand">{it.icon}</div>
+          <div className="min-w-0">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{it.label}</div>
+            <div className="mt-0.5 truncate text-sm font-semibold">{it.value}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
