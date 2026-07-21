@@ -12,6 +12,7 @@ export type CompanyCardProps = {
   capabilities: unknown;
   verified: boolean;
   featured: boolean;
+  logo_url?: string | null;
 };
 
 function initials(name: string) {
