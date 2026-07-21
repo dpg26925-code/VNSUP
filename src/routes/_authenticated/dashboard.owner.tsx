@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { SiteHeader, SiteFooter } from "@/components/site-header";
+
 import { Building2, FileCheck, Inbox } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/owner")({
@@ -27,7 +27,6 @@ function OwnerDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
       <div className="mx-auto max-w-5xl px-4 py-8">
         <h1 className="text-2xl font-bold">Bảng điều khiển Owner</h1>
         <p className="mt-1 text-sm text-muted-foreground">Quản lý hồ sơ nhà máy và các lead nhận được.</p>
@@ -50,7 +49,6 @@ function OwnerDashboard() {
           </Link>
         </div>
       </div>
-      <SiteFooter />
     </div>
   );
 }

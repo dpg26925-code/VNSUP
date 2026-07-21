@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -24,17 +25,30 @@ import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
 import { Route as CompanySlugRouteImport } from './routes/company.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardSubmitCompanyRouteImport } from './routes/_authenticated/dashboard.submit-company'
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardMyCompaniesRouteImport } from './routes/_authenticated/dashboard.my-companies'
+import { Route as AuthenticatedDashboardLeadsRouteImport } from './routes/_authenticated/dashboard.leads'
+import { Route as AuthenticatedDashboardCategoriesRouteImport } from './routes/_authenticated/dashboard.categories'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
+import { Route as AuthenticatedDashboardAuditLogRouteImport } from './routes/_authenticated/dashboard.audit-log'
+import { Route as AuthenticatedDashboardArticlesRouteImport } from './routes/_authenticated/dashboard.articles'
+import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
 import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
 import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/public/admin/categories'
 import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
+import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
 import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
 import { Route as ApiPublicAdminAnalyticsSummaryRouteImport } from './routes/api/public/admin/analytics.summary'
+import { Route as AuthenticatedDashboardArticlesIdEditRouteImport } from './routes/_authenticated/dashboard.articles.$id.edit'
 import { Route as ApiPublicAdminArticlesIdPublishRouteImport } from './routes/api/public/admin/articles.$id.publish'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -109,6 +123,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardSubmitCompanyRoute =
   AuthenticatedDashboardSubmitCompanyRouteImport.update({
     id: '/submit-company',
@@ -127,10 +147,40 @@ const AuthenticatedDashboardMyCompaniesRoute =
     path: '/my-companies',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardLeadsRoute =
+  AuthenticatedDashboardLeadsRouteImport.update({
+    id: '/leads',
+    path: '/leads',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardCategoriesRoute =
+  AuthenticatedDashboardCategoriesRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardBuyerRoute =
   AuthenticatedDashboardBuyerRouteImport.update({
     id: '/buyer',
     path: '/buyer',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardAuditLogRoute =
+  AuthenticatedDashboardAuditLogRouteImport.update({
+    id: '/audit-log',
+    path: '/audit-log',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardArticlesRoute =
+  AuthenticatedDashboardArticlesRouteImport.update({
+    id: '/articles',
+    path: '/articles',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardAnalyticsRoute =
+  AuthenticatedDashboardAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const ApiPublicAdminLeadsRoute = ApiPublicAdminLeadsRouteImport.update({
@@ -149,6 +199,12 @@ const ApiPublicAdminArticlesRoute = ApiPublicAdminArticlesRouteImport.update({
   path: '/api/public/admin/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardArticlesNewRoute =
+  AuthenticatedDashboardArticlesNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedDashboardArticlesRoute,
+  } as any)
 const ApiPublicAdminArticlesIdRoute =
   ApiPublicAdminArticlesIdRouteImport.update({
     id: '/$id',
@@ -160,6 +216,12 @@ const ApiPublicAdminAnalyticsSummaryRoute =
     id: '/api/public/admin/analytics/summary',
     path: '/api/public/admin/analytics/summary',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedDashboardArticlesIdEditRoute =
+  AuthenticatedDashboardArticlesIdEditRouteImport.update({
+    id: '/$id/edit',
+    path: '/$id/edit',
+    getParentRoute: () => AuthenticatedDashboardArticlesRoute,
   } as any)
 const ApiPublicAdminArticlesIdPublishRoute =
   ApiPublicAdminArticlesIdPublishRouteImport.update({
@@ -178,18 +240,27 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/province/$slug': typeof ProvinceSlugRoute
+  '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
+  '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
+  '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
+  '/dashboard/leads': typeof AuthenticatedDashboardLeadsRoute
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
+  '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
@@ -204,18 +275,26 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRoute
-  '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/province/$slug': typeof ProvinceSlugRoute
+  '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
+  '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
+  '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
+  '/dashboard/leads': typeof AuthenticatedDashboardLeadsRoute
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
+  '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
@@ -232,18 +311,27 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/province/$slug': typeof ProvinceSlugRoute
+  '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
+  '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
+  '/_authenticated/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
+  '/_authenticated/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
+  '/_authenticated/dashboard/leads': typeof AuthenticatedDashboardLeadsRoute
   '/_authenticated/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
   '/_authenticated/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
+  '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
@@ -260,18 +348,27 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/sitemap.xml'
+    | '/unauthorized'
     | '/admin'
     | '/dashboard'
     | '/company/$slug'
     | '/industry/$slug'
     | '/province/$slug'
+    | '/dashboard/analytics'
+    | '/dashboard/articles'
+    | '/dashboard/audit-log'
     | '/dashboard/buyer'
+    | '/dashboard/categories'
+    | '/dashboard/leads'
     | '/dashboard/my-companies'
     | '/dashboard/owner'
     | '/dashboard/submit-company'
+    | '/dashboard/'
+    | '/dashboard/articles/new'
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
+    | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
     | '/api/public/admin/articles/$id/publish'
@@ -286,18 +383,26 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/sitemap.xml'
+    | '/unauthorized'
     | '/admin'
-    | '/dashboard'
     | '/company/$slug'
     | '/industry/$slug'
     | '/province/$slug'
+    | '/dashboard/analytics'
+    | '/dashboard/articles'
+    | '/dashboard/audit-log'
     | '/dashboard/buyer'
+    | '/dashboard/categories'
+    | '/dashboard/leads'
     | '/dashboard/my-companies'
     | '/dashboard/owner'
     | '/dashboard/submit-company'
+    | '/dashboard'
+    | '/dashboard/articles/new'
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
+    | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
     | '/api/public/admin/articles/$id/publish'
@@ -313,18 +418,27 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/sitemap.xml'
+    | '/unauthorized'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/company/$slug'
     | '/industry/$slug'
     | '/province/$slug'
+    | '/_authenticated/dashboard/analytics'
+    | '/_authenticated/dashboard/articles'
+    | '/_authenticated/dashboard/audit-log'
     | '/_authenticated/dashboard/buyer'
+    | '/_authenticated/dashboard/categories'
+    | '/_authenticated/dashboard/leads'
     | '/_authenticated/dashboard/my-companies'
     | '/_authenticated/dashboard/owner'
     | '/_authenticated/dashboard/submit-company'
+    | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/articles/new'
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
+    | '/_authenticated/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
     | '/api/public/admin/articles/$id/publish'
@@ -341,6 +455,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  UnauthorizedRoute: typeof UnauthorizedRoute
   CompanySlugRoute: typeof CompanySlugRoute
   IndustrySlugRoute: typeof IndustrySlugRoute
   ProvinceSlugRoute: typeof ProvinceSlugRoute
@@ -352,6 +467,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -457,6 +579,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/submit-company': {
       id: '/_authenticated/dashboard/submit-company'
       path: '/submit-company'
@@ -478,11 +607,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardMyCompaniesRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/leads': {
+      id: '/_authenticated/dashboard/leads'
+      path: '/leads'
+      fullPath: '/dashboard/leads'
+      preLoaderRoute: typeof AuthenticatedDashboardLeadsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/categories': {
+      id: '/_authenticated/dashboard/categories'
+      path: '/categories'
+      fullPath: '/dashboard/categories'
+      preLoaderRoute: typeof AuthenticatedDashboardCategoriesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/buyer': {
       id: '/_authenticated/dashboard/buyer'
       path: '/buyer'
       fullPath: '/dashboard/buyer'
       preLoaderRoute: typeof AuthenticatedDashboardBuyerRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/audit-log': {
+      id: '/_authenticated/dashboard/audit-log'
+      path: '/audit-log'
+      fullPath: '/dashboard/audit-log'
+      preLoaderRoute: typeof AuthenticatedDashboardAuditLogRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/articles': {
+      id: '/_authenticated/dashboard/articles'
+      path: '/articles'
+      fullPath: '/dashboard/articles'
+      preLoaderRoute: typeof AuthenticatedDashboardArticlesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/analytics': {
+      id: '/_authenticated/dashboard/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/analytics'
+      preLoaderRoute: typeof AuthenticatedDashboardAnalyticsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/api/public/admin/leads': {
@@ -506,6 +670,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAdminArticlesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard/articles/new': {
+      id: '/_authenticated/dashboard/articles/new'
+      path: '/new'
+      fullPath: '/dashboard/articles/new'
+      preLoaderRoute: typeof AuthenticatedDashboardArticlesNewRouteImport
+      parentRoute: typeof AuthenticatedDashboardArticlesRoute
+    }
     '/api/public/admin/articles/$id': {
       id: '/api/public/admin/articles/$id'
       path: '/$id'
@@ -520,6 +691,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAdminAnalyticsSummaryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard/articles/$id/edit': {
+      id: '/_authenticated/dashboard/articles/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/dashboard/articles/$id/edit'
+      preLoaderRoute: typeof AuthenticatedDashboardArticlesIdEditRouteImport
+      parentRoute: typeof AuthenticatedDashboardArticlesRoute
+    }
     '/api/public/admin/articles/$id/publish': {
       id: '/api/public/admin/articles/$id/publish'
       path: '/publish'
@@ -530,21 +708,53 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedDashboardArticlesRouteChildren {
+  AuthenticatedDashboardArticlesNewRoute: typeof AuthenticatedDashboardArticlesNewRoute
+  AuthenticatedDashboardArticlesIdEditRoute: typeof AuthenticatedDashboardArticlesIdEditRoute
+}
+
+const AuthenticatedDashboardArticlesRouteChildren: AuthenticatedDashboardArticlesRouteChildren =
+  {
+    AuthenticatedDashboardArticlesNewRoute:
+      AuthenticatedDashboardArticlesNewRoute,
+    AuthenticatedDashboardArticlesIdEditRoute:
+      AuthenticatedDashboardArticlesIdEditRoute,
+  }
+
+const AuthenticatedDashboardArticlesRouteWithChildren =
+  AuthenticatedDashboardArticlesRoute._addFileChildren(
+    AuthenticatedDashboardArticlesRouteChildren,
+  )
+
 interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
+  AuthenticatedDashboardArticlesRoute: typeof AuthenticatedDashboardArticlesRouteWithChildren
+  AuthenticatedDashboardAuditLogRoute: typeof AuthenticatedDashboardAuditLogRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
+  AuthenticatedDashboardCategoriesRoute: typeof AuthenticatedDashboardCategoriesRoute
+  AuthenticatedDashboardLeadsRoute: typeof AuthenticatedDashboardLeadsRoute
   AuthenticatedDashboardMyCompaniesRoute: typeof AuthenticatedDashboardMyCompaniesRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
   AuthenticatedDashboardSubmitCompanyRoute: typeof AuthenticatedDashboardSubmitCompanyRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
+    AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
+    AuthenticatedDashboardArticlesRoute:
+      AuthenticatedDashboardArticlesRouteWithChildren,
+    AuthenticatedDashboardAuditLogRoute: AuthenticatedDashboardAuditLogRoute,
     AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
+    AuthenticatedDashboardCategoriesRoute:
+      AuthenticatedDashboardCategoriesRoute,
+    AuthenticatedDashboardLeadsRoute: AuthenticatedDashboardLeadsRoute,
     AuthenticatedDashboardMyCompaniesRoute:
       AuthenticatedDashboardMyCompaniesRoute,
     AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
     AuthenticatedDashboardSubmitCompanyRoute:
       AuthenticatedDashboardSubmitCompanyRoute,
+    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
 
 const AuthenticatedDashboardRouteWithChildren =
@@ -604,6 +814,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  UnauthorizedRoute: UnauthorizedRoute,
   CompanySlugRoute: CompanySlugRoute,
   IndustrySlugRoute: IndustrySlugRoute,
   ProvinceSlugRoute: ProvinceSlugRoute,
