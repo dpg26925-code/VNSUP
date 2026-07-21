@@ -109,6 +109,8 @@ function SubmitCompanyPage() {
       address: d.address || null,
       description: d.description || null,
       capabilities: caps,
+      stock_exchange: d.stock_exchange || null,
+      stock_ticker: d.stock_ticker ? d.stock_ticker.toUpperCase() : null,
       verified: false,
       featured: false,
       source: "user",
