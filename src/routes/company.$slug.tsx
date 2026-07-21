@@ -30,7 +30,7 @@ export const Route = createFileRoute("/company/$slug")({
   head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [{ title: "Không tìm thấy nhà máy" }, { name: "robots", content: "noindex" }] };
     const c = loaderData;
-    const title = `${c.name} | ${c.industry ?? "Sản xuất"} tại ${c.province ?? "Việt Nam"} | FactoryHub`;
+    const title = `${c.name} | ${c.industry ?? "Sản xuất"} tại ${c.province ?? "Việt Nam"} | VNSupplier`;
     const desc = truncate(c.ai_summary ?? c.description, 155);
     const url = abs(`/company/${params.slug}`);
     const breadcrumbs: { "@type": "ListItem"; position: number; name: string; item: string }[] = [
@@ -435,7 +435,7 @@ function ClaimCard({ companyId, companyName }: { companyId: string; companyName:
       ) : status === "sent" ? (
         <div className="mt-3 rounded-md border border-success/30 bg-success/10 p-3 text-xs">
           <div className="font-semibold text-success">✓ Đã gửi yêu cầu</div>
-          <p className="mt-1 text-muted-foreground">Admin FactoryHub sẽ liên hệ xác minh trong 1–2 ngày làm việc.</p>
+          <p className="mt-1 text-muted-foreground">Admin VNSupplier sẽ liên hệ xác minh trong 1–2 ngày làm việc.</p>
         </div>
       ) : status === "exists" ? (
         <div className="mt-3 rounded-md border bg-card p-3 text-xs text-muted-foreground">

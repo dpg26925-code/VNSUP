@@ -16,7 +16,7 @@ const searchSchema = z.object({
   sort: z.enum(["featured", "name", "province", "industry"]).optional(),
 });
 
-const SEARCH_TITLE = "Tìm nhà máy sản xuất | FactoryHub Vietnam";
+const SEARCH_TITLE = "Tìm nhà máy sản xuất | VNSupplier";
 const SEARCH_DESC = "Tìm nhà máy Việt Nam theo ngành, tỉnh, quy mô và năng lực sản xuất.";
 const SEARCH_URL = abs("/search");
 

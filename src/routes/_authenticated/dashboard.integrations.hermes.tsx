@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated/dashboard/integrations/hermes")({
   head: () => ({
     meta: [
-      { title: "Tích hợp Hermes | FactoryHub Admin" },
+      { title: "Tích hợp Hermes | VNSupplier Admin" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -77,7 +77,7 @@ function HermesIntegrationPage() {
     <div className="mx-auto max-w-4xl space-y-8 p-6">
       <header className="space-y-2">
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Tích hợp</p>
-        <h1 className="text-2xl font-bold">Hermes → FactoryHub Admin API</h1>
+        <h1 className="text-2xl font-bold">Hermes → VNSupplier Admin API</h1>
         <p className="text-sm text-muted-foreground">
           Hướng dẫn kết nối Hermes với Admin API v2 đang chạy trên TanStack server routes (không cần deploy Edge Function).
         </p>

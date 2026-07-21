@@ -6,7 +6,7 @@ import { FileCheck2, Check, XCircle, Clock, CheckCircle2, XOctagon, Eye, Mail } 
 export const Route = createFileRoute("/_authenticated/dashboard/admin/claims")({
   head: () => ({
     meta: [
-      { title: "Yêu cầu Claim | FactoryHub Admin" },
+      { title: "Yêu cầu Claim | VNSupplier Admin" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

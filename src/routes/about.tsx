@@ -6,8 +6,8 @@ import { Mail, Shield, Database, Users } from "lucide-react";
 export const Route = createFileRoute("/about")({
   head: () => {
     const url = abs("/about");
-    const title = "Giới thiệu FactoryHub Vietnam — Danh bạ nhà máy sản xuất";
-    const desc = "FactoryHub Vietnam kết nối buyer với nhà máy sản xuất trên toàn quốc. Tìm hiểu sứ mệnh, chính sách dữ liệu và cách liên hệ.";
+    const title = "Giới thiệu VNSupplier — Danh bạ nhà máy sản xuất";
+    const desc = "VNSupplier kết nối buyer với nhà máy sản xuất trên toàn quốc. Tìm hiểu sứ mệnh, chính sách dữ liệu và cách liên hệ.";
     return {
       meta: [
         { title },
@@ -29,7 +29,7 @@ function AboutPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 py-12">
-        <h1 className="text-3xl font-bold md:text-4xl">Giới thiệu FactoryHub</h1>
+        <h1 className="text-3xl font-bold md:text-4xl">Giới thiệu VNSupplier</h1>
         <p className="mt-3 text-lg text-muted-foreground">
           Danh bạ nhà máy sản xuất Việt Nam, giúp buyer trong nước và quốc tế tìm đúng đối tác nhanh chóng, minh bạch.
         </p>
@@ -37,7 +37,7 @@ function AboutPage() {
         <section className="mt-10 space-y-3">
           <div className="inline-flex items-center gap-2 text-primary"><Users className="h-5 w-5" /><h2 className="text-xl font-semibold">Sứ mệnh</h2></div>
           <p className="text-sm leading-relaxed text-foreground/90">
-            Chúng tôi tin rằng ngành sản xuất Việt Nam xứng đáng có một hạ tầng dữ liệu mở, đáng tin cậy. FactoryHub tổng hợp thông tin nhà máy theo ngành và địa phương, chuẩn hóa hồ sơ và cung cấp kênh liên hệ trực tiếp cho buyer.
+            Chúng tôi tin rằng ngành sản xuất Việt Nam xứng đáng có một hạ tầng dữ liệu mở, đáng tin cậy. VNSupplier tổng hợp thông tin nhà máy theo ngành và địa phương, chuẩn hóa hồ sơ và cung cấp kênh liên hệ trực tiếp cho buyer.
           </p>
         </section>
 
@@ -54,7 +54,7 @@ function AboutPage() {
         <section className="mt-8 space-y-3">
           <div className="inline-flex items-center gap-2 text-primary"><Shield className="h-5 w-5" /><h2 className="text-xl font-semibold">Quyền riêng tư</h2></div>
           <p className="text-sm leading-relaxed text-foreground/90">
-            Yêu cầu báo giá của buyer chỉ được chuyển tới nhà máy tương ứng và đội ngũ vận hành FactoryHub. Chúng tôi lưu tối thiểu thông tin cần thiết để xử lý yêu cầu và tuân thủ quy định pháp luật hiện hành về bảo vệ dữ liệu cá nhân.
+            Yêu cầu báo giá của buyer chỉ được chuyển tới nhà máy tương ứng và đội ngũ vận hành VNSupplier. Chúng tôi lưu tối thiểu thông tin cần thiết để xử lý yêu cầu và tuân thủ quy định pháp luật hiện hành về bảo vệ dữ liệu cá nhân.
           </p>
         </section>
 

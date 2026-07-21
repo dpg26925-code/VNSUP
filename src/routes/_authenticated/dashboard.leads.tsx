@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { adminApi } from "@/lib/admin-client";
 
 export const Route = createFileRoute("/_authenticated/dashboard/leads")({
-  head: () => ({ meta: [{ title: "Leads | FactoryHub Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Leads | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   component: LeadsPage,
 });
 

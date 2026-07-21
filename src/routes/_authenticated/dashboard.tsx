@@ -6,7 +6,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Admin | FactoryHub" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Admin | VNSupplier" }, { name: "robots", content: "noindex" }] }),
   component: DashboardLayout,
 });
 
@@ -55,7 +55,7 @@ function DashboardLayout() {
           <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background px-3">
             {hasAdminRole && <SidebarTrigger />}
             <Link to="/" className="text-sm font-semibold">
-              FactoryHub {hasAdminRole && <span className="text-muted-foreground font-normal">/ Admin</span>}
+              VNSupplier {hasAdminRole && <span className="text-muted-foreground font-normal">/ Admin</span>}
             </Link>
             <div className="ml-auto flex items-center gap-3 text-xs">
               <span className="hidden text-muted-foreground sm:inline">{email}</span>

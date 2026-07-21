@@ -135,7 +135,7 @@ export const Route = createFileRoute("/api/public/webhooks/payos")({
                 },
                 body: JSON.stringify({
                   to: email,
-                  subject: `FactoryHub - Xác nhận thanh toán ${plan.name}`,
+                  subject: `VNSupplier - Xác nhận thanh toán ${plan.name}`,
                   html: `<h2>Cảm ơn bạn!</h2>
                     <p>Đơn hàng <strong>#${d.orderCode}</strong> đã thanh toán thành công.</p>
                     <ul>

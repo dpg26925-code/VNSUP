@@ -6,8 +6,8 @@ import { BadgeCheck } from "lucide-react";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Đăng nhập | FactoryHub Vietnam" },
-      { name: "description", content: "Đăng nhập hoặc đăng ký tài khoản FactoryHub Vietnam." },
+      { title: "Đăng nhập | VNSupplier" },
+      { name: "description", content: "Đăng nhập hoặc đăng ký tài khoản VNSupplier." },
     ],
   }),
   component: AuthPage,
@@ -84,7 +84,7 @@ function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-10">
       <div className="w-full max-w-md space-y-6 rounded-2xl border bg-card p-6 shadow-sm">
         <div className="text-center">
-          <Link to="/" className="text-sm font-bold text-brand">FactoryHub</Link>
+          <Link to="/" className="text-sm font-bold text-brand">VNSupplier</Link>
           <h1 className="mt-4 text-2xl font-semibold">
             {mode === "signin" ? "Đăng nhập" : "Đăng ký"}
           </h1>
@@ -95,7 +95,7 @@ function AuthPage() {
 
         <div className="rounded-lg border border-brand/20 bg-brand-soft/40 p-3 text-center text-xs">
           <div className="inline-flex items-center gap-1.5 font-semibold text-brand">
-            <BadgeCheck className="h-3.5 w-3.5" /> 2,400+ nhà máy đã tham gia FactoryHub
+            <BadgeCheck className="h-3.5 w-3.5" /> 2,400+ nhà máy đã tham gia VNSupplier
           </div>
         </div>
 
@@ -162,7 +162,7 @@ function AuthPage() {
         </div>
 
         <p className="text-center text-[11px] text-muted-foreground">
-          Bằng cách tiếp tục, bạn đồng ý với <Link to="/about" className="underline">Điều khoản</Link> của FactoryHub.
+          Bằng cách tiếp tục, bạn đồng ý với <Link to="/about" className="underline">Điều khoản</Link> của VNSupplier.
         </p>
       </div>
     </div>

@@ -56,7 +56,7 @@ export const Route = createFileRoute("/api/public/hooks/expire-subscriptions")({
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
                 body: JSON.stringify({
                   to: email,
-                  subject: "FactoryHub - Nhắc gia hạn gói dịch vụ",
+                  subject: "VNSupplier - Nhắc gia hạn gói dịch vụ",
                   html: `<p>Gói <strong>${s.plan_type}</strong> của bạn sẽ hết hạn vào <strong>${new Date(s.expires_at).toLocaleDateString("vi-VN")}</strong>.</p>
                     <p><a href="https://vnsupplier.cloud/dashboard/subscriptions">Gia hạn ngay</a></p>`,
                 }),

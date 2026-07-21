@@ -12,7 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
-const SITE_TITLE = "FactoryHub Vietnam — Danh bạ nhà máy sản xuất";
+const SITE_TITLE = "VNSupplier — Danh bạ nhà máy sản xuất";
 const SITE_DESC =
   "Nền tảng AI giúp tìm kiếm và phân tích doanh nghiệp sản xuất Việt Nam: CNC, ép nhựa, điện tử SMT, kim loại, bao bì, cao su, dệt may.";
 
@@ -26,7 +26,7 @@ function NotFoundComponent() {
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <Link to="/search" className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Tìm nhà máy</Link>
           <Link to="/" className="rounded-md border px-4 py-2 text-sm font-semibold hover:bg-accent">Về trang chủ</Link>
-          <Link to="/about" className="rounded-md border px-4 py-2 text-sm font-semibold hover:bg-accent">Về FactoryHub</Link>
+          <Link to="/about" className="rounded-md border px-4 py-2 text-sm font-semibold hover:bg-accent">Về VNSupplier</Link>
         </div>
       </div>
     </div>
@@ -60,9 +60,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: SITE_TITLE },
       { name: "description", content: SITE_DESC },
-      { name: "author", content: "FactoryHub Vietnam" },
+      { name: "author", content: "VNSupplier" },
       { name: "robots", content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" },
-      { property: "og:site_name", content: "FactoryHub Vietnam" },
+      { property: "og:site_name", content: "VNSupplier" },
       { property: "og:locale", content: "vi_VN" },
       { property: "og:title", content: SITE_TITLE },
       { property: "og:description", content: SITE_DESC },
@@ -84,8 +84,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "FactoryHub Vietnam",
-          alternateName: "VNSupplier",
+          name: "VNSupplier",
+          alternateName: "vnsupplier.cloud",
           url: "https://vnsupplier.cloud",
           logo: "https://vnsupplier.cloud/favicon.ico",
           areaServed: "VN",

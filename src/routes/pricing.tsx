@@ -4,7 +4,7 @@ import { Check, Star, BadgeCheck, Bell, X, Minus } from "lucide-react";
 import { abs } from "@/lib/factory";
 import { useState } from "react";
 
-const TITLE = "Bảng giá | FactoryHub Vietnam";
+const TITLE = "Bảng giá | VNSupplier";
 const DESC = "Gói dịch vụ cho nhà máy: Featured Listing, Verified Badge, Lead Notification. Minh bạch, không hợp đồng dài hạn.";
 const URL_ = abs("/pricing");
 
@@ -64,7 +64,7 @@ const COMPARISON: { label: string; featured: boolean | string; verified: boolean
 const FAQ = [
   { q: "Tôi có thể hủy gói bất cứ lúc nào không?", a: "Có. Không hợp đồng dài hạn, hủy trong dashboard và không bị tính phí tháng tiếp theo." },
   { q: "Có thể kết hợp nhiều gói không?", a: "Có. Bạn có thể mua đồng thời Featured + Verified + Lead Notification để đạt hiệu quả tối đa." },
-  { q: "Làm sao để được xác thực?", a: "Sau khi đăng ký gói Verified, đội ngũ FactoryHub sẽ đối chiếu GPKD, địa chỉ nhà xưởng và liên hệ trong 24-48h." },
+  { q: "Làm sao để được xác thực?", a: "Sau khi đăng ký gói Verified, đội ngũ VNSupplier sẽ đối chiếu GPKD, địa chỉ nhà xưởng và liên hệ trong 24-48h." },
   { q: "Lead có được đảm bảo chất lượng không?", a: "Chúng tôi lọc spam và chỉ chuyển các yêu cầu buyer khớp với ngành/tỉnh bạn đã khai báo. Lead không phù hợp có thể báo cáo để hoàn credit." },
   { q: "Có xuất hóa đơn VAT không?", a: "Có. Hóa đơn điện tử VAT phát hành trong 3 ngày làm việc sau khi thanh toán." },
 ];
