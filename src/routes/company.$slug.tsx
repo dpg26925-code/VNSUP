@@ -179,8 +179,12 @@ function CompanyPage() {
 
         {/* Hero header with gradient banner */}
         <div className="overflow-hidden rounded-2xl border bg-card">
-          <div className="relative h-32 bg-gradient-to-br from-primary via-primary to-brand md:h-40">
-            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(255,255,255,0.3) 0, transparent 35%)" }} />
+          <div className="relative h-32 overflow-hidden bg-gradient-to-br from-primary via-primary to-brand md:h-48">
+            {c.cover_url ? (
+              <img src={c.cover_url} alt={`Banner ${c.name}`} className="h-full w-full object-cover" loading="lazy" />
+            ) : (
+              <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(255,255,255,0.3) 0, transparent 35%)" }} />
+            )}
             {c.logo_url ? (
               <img src={c.logo_url} alt={`Logo ${c.name}`} className="absolute -bottom-8 left-6 h-20 w-20 rounded-2xl border-4 border-card bg-background object-contain p-1.5 shadow-md" />
             ) : (
