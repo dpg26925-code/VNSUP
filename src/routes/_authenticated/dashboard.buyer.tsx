@@ -16,13 +16,18 @@ function BuyerDashboard() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       const uid = data.user?.id;
-      if (!uid) return;
-      supabase.from("saved_searches").select("id", { count: "exact", head: true }).eq("user_id", uid)
-        .then(({ count }) => setSaved(count ?? 0));
-      supabase.from("leads").select("id", { count: "exact", head: true }).eq("buyer_user_id", uid)
-        .then(({ count }) => setLeads(count ?? 0));
+      const email = data.user?.email;
+      if (uid) {
+        supabase.from("saved_searches").select("id", { count: "exact", head: true }).eq("user_id", uid)
+          .then(({ count }) => setSaved(count ?? 0));
+      }
+      if (email) {
+        supabase.from("leads").select("id", { count: "exact", head: true }).eq("email", email)
+          .then(({ count }) => setLeads(count ?? 0));
+      }
     });
   }, []);
+
 
   return (
     <div className="min-h-screen bg-background">
