@@ -53,6 +53,7 @@ function AdminPage() {
       verified: !!edit.verified, featured: !!edit.featured,
       stock_exchange: edit.stock_exchange || null,
       stock_ticker: edit.stock_ticker ? String(edit.stock_ticker).toUpperCase() : null,
+      logo_url: edit.logo_url || null,
     };
     if (edit.id) {
       await supabase.from("companies").update(payload).eq("id", edit.id);
