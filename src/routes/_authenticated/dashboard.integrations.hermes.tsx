@@ -104,10 +104,13 @@ function HermesIntegrationPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">3. Cấp quyền cho user Hermes</h2>
         <p className="text-sm text-muted-foreground">
-          Chạy trong Supabase SQL Editor, thay <code className="rounded bg-muted px-1">&lt;HERMES_USER_ID&gt;</code> bằng UID
-          trong <code className="rounded bg-muted px-1">auth.users</code>:
+          Chọn vai trò và phạm vi bên dưới, hệ thống sẽ sinh SQL tương ứng để bạn copy vào Supabase SQL Editor.
         </p>
-        <Code>{grantSql}</Code>
+        <RoleGrantBuilder />
+        <details className="rounded-lg border p-3 text-sm">
+          <summary className="cursor-pointer font-medium">Ví dụ mẫu (editor + 2 chuyên mục)</summary>
+          <div className="mt-2"><Code>{grantSql}</Code></div>
+        </details>
       </section>
 
       <section className="space-y-3">
@@ -307,4 +310,121 @@ function EndpointTester() {
     </div>
   );
 }
+
+type RoleKey = "admin" | "publisher" | "editor" | "user" | "viewer";
+
+function RoleGrantBuilder() {
+  const [userId, setUserId] = useState("");
+  const [role, setRole] = useState<RoleKey>("editor");
+  const [categories, setCategories] = useState("tin-tuc, huong-dan");
+  const [canPublish, setCanPublish] = useState(false);
+  const [canDelete, setCanDelete] = useState(false);
+  const [canManageUsers, setCanManageUsers] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const uid = userId.trim() || "<HERMES_USER_ID>";
+  const cats = categories
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const needsCats = role === "editor" && cats.length > 0;
+  const catsSql = needsCats
+    ? `ARRAY[${cats.map((c) => `'${c.replace(/'/g, "''")}'`).join(",")}]`
+    : "NULL";
+
+  const sql = `-- Cấp quyền '${role}' cho user Hermes
+INSERT INTO public.user_roles (
+  user_id, role, allowed_categories, can_publish, can_delete, can_manage_users
+) VALUES (
+  '${uid}',
+  '${role}',
+  ${catsSql},
+  ${canPublish},
+  ${canDelete},
+  ${canManageUsers}
+)
+ON CONFLICT (user_id, role) DO UPDATE SET
+  allowed_categories = EXCLUDED.allowed_categories,
+  can_publish        = EXCLUDED.can_publish,
+  can_delete         = EXCLUDED.can_delete,
+  can_manage_users   = EXCLUDED.can_manage_users;`;
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(sql);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* noop */
+    }
+  };
+
+  return (
+    <div className="space-y-3 rounded-lg border p-4">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="space-y-1 text-sm">
+          <span className="font-medium">User ID (auth.users.id)</span>
+          <input
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            placeholder="00000000-0000-0000-0000-000000000000"
+            className="w-full rounded-md border bg-background px-3 py-1.5 text-sm font-mono"
+          />
+        </label>
+        <label className="space-y-1 text-sm">
+          <span className="font-medium">Vai trò</span>
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value as RoleKey)}
+            className="w-full rounded-md border bg-background px-2 py-1.5 text-sm"
+          >
+            {(["admin", "publisher", "editor", "user", "viewer"] as RoleKey[]).map((r) => (
+              <option key={r} value={r}>{r}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <label className="block space-y-1 text-sm">
+        <span className="font-medium">
+          Chuyên mục được phép <span className="text-muted-foreground">(chỉ áp dụng cho editor, cách nhau bằng dấu phẩy)</span>
+        </span>
+        <input
+          value={categories}
+          onChange={(e) => setCategories(e.target.value)}
+          placeholder="tin-tuc, huong-dan"
+          disabled={role !== "editor"}
+          className="w-full rounded-md border bg-background px-3 py-1.5 text-sm font-mono disabled:opacity-50"
+        />
+      </label>
+
+      <div className="flex flex-wrap gap-4 text-sm">
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={canPublish} onChange={(e) => setCanPublish(e.target.checked)} />
+          can_publish
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={canDelete} onChange={(e) => setCanDelete(e.target.checked)} />
+          can_delete
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={canManageUsers} onChange={(e) => setCanManageUsers(e.target.checked)} />
+          can_manage_users
+        </label>
+      </div>
+
+      <pre className="overflow-x-auto rounded-lg border bg-muted/40 p-3 text-xs leading-relaxed">
+        <code>{sql}</code>
+      </pre>
+
+      <div className="flex items-center gap-2">
+        <Button size="sm" onClick={copy}>{copied ? "Đã copy ✓" : "Copy SQL"}</Button>
+        <span className="text-xs text-muted-foreground">
+          Dán vào Supabase → SQL Editor → Run
+        </span>
+      </div>
+    </div>
+  );
+}
+
 
