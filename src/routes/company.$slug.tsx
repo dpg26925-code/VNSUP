@@ -66,6 +66,8 @@ export const Route = createFileRoute("/company/$slug")({
             "@id": url,
             name: c.name,
             url,
+            logo: c.logo_url ?? undefined,
+            image: c.logo_url ?? undefined,
             address: c.address ? {
               "@type": "PostalAddress",
               streetAddress: c.address,
