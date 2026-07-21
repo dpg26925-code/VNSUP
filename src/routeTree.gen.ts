@@ -38,6 +38,7 @@ import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_a
 import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
 import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/public/admin/categories'
 import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
+import { Route as AuthenticatedDashboardIntegrationsHermesRouteImport } from './routes/_authenticated/dashboard.integrations.hermes'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
 import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
 import { Route as ApiPublicAdminAnalyticsSummaryRouteImport } from './routes/api/public/admin/analytics.summary'
@@ -199,6 +200,12 @@ const ApiPublicAdminArticlesRoute = ApiPublicAdminArticlesRouteImport.update({
   path: '/api/public/admin/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardIntegrationsHermesRoute =
+  AuthenticatedDashboardIntegrationsHermesRouteImport.update({
+    id: '/integrations/hermes',
+    path: '/integrations/hermes',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardArticlesNewRoute =
   AuthenticatedDashboardArticlesNewRouteImport.update({
     id: '/new',
@@ -257,6 +264,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
+  '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
@@ -291,6 +299,7 @@ export interface FileRoutesByTo {
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
+  '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
@@ -328,6 +337,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
+  '/_authenticated/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
@@ -365,6 +375,7 @@ export interface FileRouteTypes {
     | '/dashboard/submit-company'
     | '/dashboard/'
     | '/dashboard/articles/new'
+    | '/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
@@ -399,6 +410,7 @@ export interface FileRouteTypes {
     | '/dashboard/submit-company'
     | '/dashboard'
     | '/dashboard/articles/new'
+    | '/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
@@ -435,6 +447,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/submit-company'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/articles/new'
+    | '/_authenticated/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
@@ -670,6 +683,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAdminArticlesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard/integrations/hermes': {
+      id: '/_authenticated/dashboard/integrations/hermes'
+      path: '/integrations/hermes'
+      fullPath: '/dashboard/integrations/hermes'
+      preLoaderRoute: typeof AuthenticatedDashboardIntegrationsHermesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/articles/new': {
       id: '/_authenticated/dashboard/articles/new'
       path: '/new'
@@ -737,6 +757,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
   AuthenticatedDashboardSubmitCompanyRoute: typeof AuthenticatedDashboardSubmitCompanyRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedDashboardIntegrationsHermesRoute: typeof AuthenticatedDashboardIntegrationsHermesRoute
 }
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
@@ -755,6 +776,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardSubmitCompanyRoute:
       AuthenticatedDashboardSubmitCompanyRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+    AuthenticatedDashboardIntegrationsHermesRoute:
+      AuthenticatedDashboardIntegrationsHermesRoute,
   }
 
 const AuthenticatedDashboardRouteWithChildren =
