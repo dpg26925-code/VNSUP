@@ -136,7 +136,12 @@ function CompanyPage() {
                 {c.founded_year && <span>Thành lập {c.founded_year}</span>}
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
+              {c.stock_ticker && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary" title={c.stock_exchange ? `Niêm yết trên ${c.stock_exchange}` : "Đã niêm yết"}>
+                  {c.stock_exchange ?? "STOCK"}: {c.stock_ticker}
+                </span>
+              )}
               {c.verified && <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2.5 py-1 text-xs font-medium text-success"><BadgeCheck className="h-3.5 w-3.5" /> Đã xác thực</span>}
               {c.featured && <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700"><Star className="h-3.5 w-3.5" /> Nổi bật</span>}
             </div>
