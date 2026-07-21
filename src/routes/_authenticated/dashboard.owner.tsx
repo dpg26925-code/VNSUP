@@ -15,14 +15,15 @@ function OwnerDashboard() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      const uid = data.user?.id;
-      if (!uid) return;
-      supabase.from("company_claims").select("id", { count: "exact", head: true }).eq("user_id", uid)
+      const email = data.user?.email;
+      if (!email) return;
+      supabase.from("company_claims").select("id", { count: "exact", head: true }).eq("requester_email", email)
         .then(({ count }) => setClaims(count ?? 0));
       supabase.from("leads").select("id", { count: "exact", head: true })
         .then(({ count }) => setLeads(count ?? 0));
     });
   }, []);
+
 
   return (
     <div className="min-h-screen bg-background">
