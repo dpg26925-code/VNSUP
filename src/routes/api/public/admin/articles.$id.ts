@@ -111,8 +111,9 @@ export const Route = createFileRoute("/api/public/admin/articles/$id")({
       PUT: async (evt) => updateArticle(evt, "put"),
 
       DELETE: async ({ request, params }) => {
-        const ctx = await requireAdmin(request, "publisher");
+        const ctx = await requireAdmin(request, "editor");
         if (ctx instanceof Response) return ctx;
+        if (!ctx.canDelete) return json({ error: "forbidden", message: "You cannot delete" }, 403);
 
         const { data, error } = await ctx.supabase
           .from("articles")
