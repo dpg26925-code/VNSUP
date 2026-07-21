@@ -91,8 +91,30 @@ export const Route = createFileRoute("/company/$slug")({
       ],
     };
   },
+  notFoundComponent: CompanyNotFound,
   component: CompanyPage,
 });
+
+function CompanyNotFound() {
+  const { slug } = Route.useParams();
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <div className="mx-auto max-w-2xl px-4 py-20 text-center">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">404 · Không tìm thấy</p>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight">Không có nhà máy với đường dẫn này</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Slug <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">{slug}</code> không khớp hồ sơ đã duyệt nào. Có thể liên kết đã cũ hoặc bạn gõ nhầm.
+        </p>
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <Link to="/search" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Tìm nhà máy</Link>
+          <Link to="/" className="rounded-lg border px-4 py-2 text-sm font-semibold hover:bg-secondary">Về trang chủ</Link>
+        </div>
+      </div>
+      <SiteFooter />
+    </div>
+  );
+}
 
 
 function CompanyPage() {
