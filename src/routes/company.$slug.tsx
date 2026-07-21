@@ -279,17 +279,98 @@ function CompanyPage() {
 
             {products.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
-                <h2 className="mb-3 text-lg font-semibold">Sản phẩm</h2>
-                <ul className="grid gap-2 sm:grid-cols-2">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Package className="h-5 w-5 text-brand" />Sản phẩm & dịch vụ</h2>
+                <ul className="grid gap-3 sm:grid-cols-2">
                   {products.map((p) => (
-                    <li key={p.id} className="rounded border p-3 text-sm">
-                      <div className="font-medium">{p.name}</div>
-                      {p.category && <div className="text-xs text-muted-foreground">{p.category}</div>}
+                    <li key={p.id} className="rounded-lg border bg-background p-3.5 text-sm transition hover:border-brand/40">
+                      <div className="font-semibold">{p.name}</div>
+                      {p.category && <div className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{p.category}</div>}
+                      {p.description && <p className="mt-1.5 line-clamp-2 text-xs text-muted-foreground">{p.description}</p>}
                     </li>
                   ))}
                 </ul>
               </section>
             )}
+
+            {certs.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Award className="h-5 w-5 text-brand" />Chứng nhận</h2>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {certs.map((cert, i) => (
+                    <div key={i} className="flex items-start gap-2.5 rounded-md border border-success/20 bg-success/5 p-3">
+                      <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold">{cert.name}</div>
+                        {(cert.issuer || cert.year) && (
+                          <div className="text-[11px] text-muted-foreground">{[cert.issuer, cert.year].filter(Boolean).join(" · ")}</div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {gallery.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><ImageIcon className="h-5 w-5 text-brand" />Hình ảnh nhà máy</h2>
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {gallery.slice(0, 9).map((url, i) => (
+                    <a key={i} href={url} target="_blank" rel="noopener" className="group relative aspect-square overflow-hidden rounded-lg border bg-secondary">
+                      <img src={url} alt={`Ảnh nhà máy ${c.name} ${i + 1}`} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
+                    </a>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {videoEmbed && (
+              <section className="overflow-hidden rounded-lg border bg-card">
+                <div className="flex items-center gap-2 p-4">
+                  <h2 className="flex items-center gap-2 text-lg font-semibold"><Play className="h-5 w-5 text-brand" />Video giới thiệu</h2>
+                </div>
+                <div className="aspect-video w-full bg-black">
+                  <iframe src={videoEmbed} title={`Video ${c.name}`} className="h-full w-full border-0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+                </div>
+              </section>
+            )}
+
+            {faqs.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><HelpCircle className="h-5 w-5 text-brand" />Câu hỏi thường gặp</h2>
+                <div className="divide-y">
+                  {faqs.map((f, i) => (
+                    <details key={i} className="group py-3">
+                      <summary className="flex cursor-pointer items-start justify-between gap-3 text-sm font-semibold marker:content-none">
+                        <span>{f.q}</span>
+                        <span className="text-muted-foreground transition group-open:rotate-45">+</span>
+                      </summary>
+                      <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {updates.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Newspaper className="h-5 w-5 text-brand" />Tin tức & cập nhật</h2>
+                <ul className="space-y-3">
+                  {updates.map((u) => (
+                    <li key={u.id} className="rounded-md border-l-2 border-brand bg-secondary/40 p-3">
+                      <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                        {u.update_type && <span className="rounded bg-brand/10 px-1.5 py-0.5 font-semibold text-brand">{u.update_type}</span>}
+                        {u.published_at && <span>{new Date(u.published_at).toLocaleDateString("vi-VN")}</span>}
+                      </div>
+                      <div className="mt-1 text-sm font-semibold">{u.title}</div>
+                      {u.content && <p className="mt-1 line-clamp-3 text-xs text-muted-foreground">{u.content}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+
 
             {/* Map */}
             {(c.address || c.province) && (
