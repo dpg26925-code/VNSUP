@@ -40,6 +40,13 @@ const schema = z.object({
   address: z.string().max(500).optional().or(z.literal("")),
   description: z.string().max(2000).optional().or(z.literal("")),
   capabilities: z.string().max(500).optional().or(z.literal("")),
+  revenue_range: z.string().optional().or(z.literal("")),
+  company_type: z.string().optional().or(z.literal("")),
+  cover_url: z.string().url("URL banner không hợp lệ").max(500).optional().or(z.literal("")),
+  video_url: z.string().url("URL video không hợp lệ").max(500).optional().or(z.literal("")),
+  certifications: z.string().max(2000).optional().or(z.literal("")),
+  gallery_urls: z.string().max(3000).optional().or(z.literal("")),
+  faqs: z.string().max(5000).optional().or(z.literal("")),
   stock_exchange: z.enum(["", "HOSE", "HNX", "UPCOM", "Khác"]).optional(),
   stock_ticker: z
     .string()
@@ -52,6 +59,7 @@ const schema = z.object({
   message: "Vui lòng chọn sàn niêm yết",
   path: ["stock_exchange"],
 });
+
 
 function slugify(s: string) {
   return s
