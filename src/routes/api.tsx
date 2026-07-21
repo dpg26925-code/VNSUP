@@ -78,7 +78,7 @@ function ApiPage() {
 
         <p className="mt-6 text-sm text-muted-foreground">
           Cần cấp quyền hoặc trợ giúp tích hợp? Gửi email{" "}
-          <a href="mailto:hello@factoryhub.vn" className="text-primary hover:underline">hello@factoryhub.vn</a>{" "}
+          <a href="mailto:hello@vnsupplier.cloud" className="text-primary hover:underline">hello@vnsupplier.cloud</a>{" "}
           hoặc xem thêm trang <Link to="/about" className="text-primary hover:underline">giới thiệu</Link>.
         </p>
       </main>

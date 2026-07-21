@@ -179,7 +179,7 @@ function PricingPage() {
         </section>
 
         <div className="mt-10 rounded-lg border bg-muted/40 p-6 text-sm text-muted-foreground">
-          Cần gói doanh nghiệp cho nhiều nhà máy? Liên hệ <a href="mailto:sales@factoryhub.vn" className="text-primary hover:underline">sales@factoryhub.vn</a>.
+          Cần gói doanh nghiệp cho nhiều nhà máy? Liên hệ <a href="mailto:sales@vnsupplier.cloud" className="text-primary hover:underline">sales@vnsupplier.cloud</a>.
         </div>
       </div>
       <SiteFooter />

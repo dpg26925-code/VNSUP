@@ -62,7 +62,7 @@ function AboutPage() {
           <div className="inline-flex items-center gap-2 text-primary"><Mail className="h-5 w-5" /><h2 className="text-xl font-semibold">Liên hệ</h2></div>
           <p className="text-sm leading-relaxed text-foreground/90">
             Mọi thắc mắc, hợp tác hoặc yêu cầu cập nhật dữ liệu, vui lòng gửi về{" "}
-            <a href="mailto:hello@factoryhub.vn" className="font-semibold text-primary hover:underline">hello@factoryhub.vn</a>.
+            <a href="mailto:hello@vnsupplier.cloud" className="font-semibold text-primary hover:underline">hello@vnsupplier.cloud</a>.
           </p>
           <p className="text-sm text-muted-foreground">
             Đối tác kỹ thuật quan tâm tới API tích hợp, xem <Link to="/api" className="text-primary hover:underline">tài liệu API</Link>.

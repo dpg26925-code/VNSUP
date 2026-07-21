@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Factory, LogIn, LogOut, Shield, Search } from "lucide-react";
+import { Factory, LogIn, LogOut, Shield, Search, Facebook, Linkedin, Youtube, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -81,11 +81,12 @@ export function SiteHeader() {
 }
 
 export function SiteFooter() {
+  const year = new Date().getFullYear();
   return (
     <footer className="mt-24 border-t border-border bg-background">
       <div className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid gap-12 md:grid-cols-4">
-          <div className="md:col-span-2">
+        <div className="grid gap-12 md:grid-cols-3">
+          <div>
             <div className="flex items-center gap-2">
               <div className="grid h-7 w-7 place-items-center rounded-md bg-brand text-brand-foreground">
                 <Factory className="h-3.5 w-3.5" strokeWidth={1.75} />
@@ -93,8 +94,22 @@ export function SiteFooter() {
               <span className="font-bold tracking-tight">VNSupplier</span>
             </div>
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-              Danh bạ AI nhà máy & nhà cung cấp sản xuất Việt Nam. Tìm đối tác OEM/ODM theo năng lực thực tế tại vnsupplier.cloud.
+              Danh bạ AI nhà máy & nhà cung cấp sản xuất Việt Nam.
             </p>
+            <div className="mt-5 flex items-center gap-3 text-muted-foreground">
+              <a href="https://zalo.me/vnsupplier" target="_blank" rel="noreferrer" aria-label="Zalo" className="hover:text-foreground">
+                <MessageCircle className="h-5 w-5" strokeWidth={1.75} />
+              </a>
+              <a href="https://www.linkedin.com/company/vnsupplier" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="hover:text-foreground">
+                <Linkedin className="h-5 w-5" strokeWidth={1.75} />
+              </a>
+              <a href="https://facebook.com/vnsupplier" target="_blank" rel="noreferrer" aria-label="Facebook" className="hover:text-foreground">
+                <Facebook className="h-5 w-5" strokeWidth={1.75} />
+              </a>
+              <a href="https://youtube.com/@vnsupplier" target="_blank" rel="noreferrer" aria-label="YouTube" className="hover:text-foreground">
+                <Youtube className="h-5 w-5" strokeWidth={1.75} />
+              </a>
+            </div>
           </div>
           <div>
             <div className="text-sm font-semibold">Khám phá</div>
@@ -103,20 +118,29 @@ export function SiteFooter() {
               <li><Link to="/industry/$slug" params={{ slug: "cnc" }} className="hover:text-foreground">CNC</Link></li>
               <li><Link to="/industry/$slug" params={{ slug: "nhua" }} className="hover:text-foreground">Ép nhựa</Link></li>
               <li><Link to="/industry/$slug" params={{ slug: "dien-tu" }} className="hover:text-foreground">Điện tử SMT</Link></li>
+              <li><Link to="/industry/$slug" params={{ slug: "kim-loai" }} className="hover:text-foreground">Kim loại</Link></li>
+              <li><Link to="/industry/$slug" params={{ slug: "bao-bi" }} className="hover:text-foreground">Bao bì</Link></li>
             </ul>
           </div>
           <div>
             <div className="text-sm font-semibold">Khu vực</div>
             <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
-              <li><Link to="/province/$slug" params={{ slug: "binh-duong" }} className="hover:text-foreground">Bình Dương</Link></li>
-              <li><Link to="/province/$slug" params={{ slug: "dong-nai" }} className="hover:text-foreground">Đồng Nai</Link></li>
+              <li><Link to="/province/$slug" params={{ slug: "ha-noi" }} className="hover:text-foreground">Hà Nội</Link></li>
+              <li><Link to="/province/$slug" params={{ slug: "tp-hcm" }} className="hover:text-foreground">TP.HCM</Link></li>
+              <li><Link to="/province/$slug" params={{ slug: "hai-phong" }} className="hover:text-foreground">Hải Phòng</Link></li>
               <li><Link to="/province/$slug" params={{ slug: "bac-ninh" }} className="hover:text-foreground">Bắc Ninh</Link></li>
+              <li><Link to="/province/$slug" params={{ slug: "dong-nai" }} className="hover:text-foreground">Đồng Nai</Link></li>
+              <li><Link to="/province/$slug" params={{ slug: "tp-hcm" }} className="hover:text-foreground">Bình Dương</Link></li>
             </ul>
           </div>
         </div>
-        <div className="mt-12 flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:justify-between">
-          <div>© {new Date().getFullYear()} VNSupplier — Vietnam Supplier Network. Mọi quyền được bảo lưu.</div>
-          <div>hello@vnsupplier.cloud</div>
+        <div className="mt-12 border-t border-border pt-6 text-center text-xs text-muted-foreground">
+          <div>© {year} VNSupplier. All rights reserved.</div>
+          <div className="mt-1">
+            <Link to="/" hash="terms" className="hover:text-foreground">Điều khoản</Link>
+            <span className="mx-2">|</span>
+            <Link to="/" hash="privacy" className="hover:text-foreground">Chính sách bảo mật</Link>
+          </div>
         </div>
       </div>
     </footer>
