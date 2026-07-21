@@ -5,7 +5,13 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const SITE_URL = process.env.SITE_URL || "https://cheerful-wave-works.lovable.app";
 
 const CreateInput = z.object({
-  plan: z.enum(["featured_listing", "verified_badge", "lead_notification"]),
+  plan: z.enum([
+    "featured_listing",
+    "verified_badge",
+    "lead_notification",
+    "profile_verification",
+    "profile_claim",
+  ]),
   companyId: z.string().uuid().optional(),
 });
 
@@ -20,12 +26,17 @@ export const createPayment = createServerFn({ method: "POST" })
 
     if (plan.scope === "company") {
       if (!data.companyId) throw new Error("Vui lòng chọn công ty áp dụng gói");
-      // Verify user owns the company
       const { data: co, error } = await context.supabase
         .from("companies").select("id, name, submitted_by").eq("id", data.companyId).maybeSingle();
       if (error || !co) throw new Error("Không tìm thấy công ty");
-      if (co.submitted_by && co.submitted_by !== context.userId) {
-        throw new Error("Bạn không sở hữu công ty này");
+      if (plan.ownership === "owner") {
+        if (co.submitted_by && co.submitted_by !== context.userId) {
+          throw new Error("Bạn không sở hữu công ty này");
+        }
+      } else if (plan.ownership === "claimable") {
+        if (co.submitted_by && co.submitted_by !== context.userId) {
+          throw new Error("Công ty này đã có chủ sở hữu, không thể claim");
+        }
       }
     }
 

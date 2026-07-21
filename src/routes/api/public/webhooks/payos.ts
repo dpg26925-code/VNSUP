@@ -93,9 +93,30 @@ export const Route = createFileRoute("/api/public/webhooks/payos")({
             patch.verified_expires_at = expiresAt.toISOString();
           } else if (order.plan_type === "lead_notification") {
             patch.lead_notify_expires_at = expiresAt.toISOString();
+          } else if (order.plan_type === "profile_verification") {
+            // Gói Xác Minh Hồ Sơ: admin sẽ rà soát; đánh dấu chờ xác minh + gắn badge tạm
+            patch.is_verified = true;
+            patch.verified_expires_at = expiresAt.toISOString();
+          } else if (order.plan_type === "profile_claim") {
+            // Gói Claim Hồ Sơ: tự động gán quyền sở hữu cho user đã thanh toán
+            patch.submitted_by = order.user_id;
           }
           if (Object.keys(patch).length) {
             await supabaseAdmin.from("companies").update(patch).eq("id", order.company_id);
+          }
+
+          // Với profile_claim: tạo bản ghi claim đã duyệt để phục vụ audit
+          if (order.plan_type === "profile_claim") {
+            const { data: userInfo } = await supabaseAdmin.auth.admin.getUserById(order.user_id);
+            await supabaseAdmin.from("company_claims").insert({
+              company_id: order.company_id,
+              user_id: order.user_id,
+              requester_email: userInfo?.user?.email ?? "unknown@payos",
+              requester_name: (userInfo?.user?.user_metadata?.full_name as string) ?? null,
+              note: `Auto-approved qua thanh toán payOS #${d.orderCode}`,
+              status: "approved",
+              reviewed_at: now.toISOString(),
+            });
           }
         }
 

@@ -770,7 +770,12 @@ export type Database = {
       app_role: "admin" | "user" | "editor" | "publisher" | "viewer"
       claim_status: "pending" | "approved" | "rejected"
       payment_status: "pending" | "paid" | "cancelled" | "failed" | "expired"
-      plan_type: "featured_listing" | "verified_badge" | "lead_notification"
+      plan_type:
+        | "featured_listing"
+        | "verified_badge"
+        | "lead_notification"
+        | "profile_verification"
+        | "profile_claim"
       post_status: "draft" | "pending" | "published" | "archived"
       subscription_status: "active" | "expired" | "cancelled"
     }
@@ -903,7 +908,13 @@ export const Constants = {
       app_role: ["admin", "user", "editor", "publisher", "viewer"],
       claim_status: ["pending", "approved", "rejected"],
       payment_status: ["pending", "paid", "cancelled", "failed", "expired"],
-      plan_type: ["featured_listing", "verified_badge", "lead_notification"],
+      plan_type: [
+        "featured_listing",
+        "verified_badge",
+        "lead_notification",
+        "profile_verification",
+        "profile_claim",
+      ],
       post_status: ["draft", "pending", "published", "archived"],
       subscription_status: ["active", "expired", "cancelled"],
     },

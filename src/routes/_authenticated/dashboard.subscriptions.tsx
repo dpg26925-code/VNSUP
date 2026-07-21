@@ -2,13 +2,16 @@ import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { createPayment, listMyOrders, listMySubscriptions, listMyCompanies } from "@/lib/payments.functions";
-import { Star, BadgeCheck, Bell, Loader2, ExternalLink } from "lucide-react";
+import { Star, BadgeCheck, Bell, ShieldCheck, FileCheck2, Loader2, ExternalLink } from "lucide-react";
 
 const PLANS = [
-  { key: "featured_listing", name: "Featured Listing", price: 499000, icon: Star, scope: "company" as const, desc: "Hiển thị nổi bật + huy hiệu Featured cho 1 công ty (30 ngày)" },
-  { key: "verified_badge",   name: "Verified Badge",   price: 299000, icon: BadgeCheck, scope: "company" as const, desc: "Huy hiệu xác minh cho 1 công ty (30 ngày)" },
-  { key: "lead_notification",name: "Lead Notification",price: 199000, icon: Bell, scope: "account" as const, desc: "Nhận thông báo lead theo tài khoản (30 ngày)" },
+  { key: "featured_listing",     name: "Featured Listing",  price: 499000, icon: Star,        scope: "company" as const, ownership: "owner"     as const, unit: "/tháng",    desc: "Hiển thị nổi bật + huy hiệu Featured cho 1 công ty (30 ngày)" },
+  { key: "verified_badge",       name: "Verified Badge",    price: 299000, icon: BadgeCheck,  scope: "company" as const, ownership: "owner"     as const, unit: "/tháng",    desc: "Huy hiệu xác minh cho 1 công ty (30 ngày)" },
+  { key: "lead_notification",    name: "Lead Notification", price: 199000, icon: Bell,        scope: "account" as const, ownership: "owner"     as const, unit: "/tháng",    desc: "Nhận thông báo lead theo tài khoản (30 ngày)" },
+  { key: "profile_verification", name: "Xác Minh Hồ Sơ",    price: 500000, icon: ShieldCheck, scope: "company" as const, ownership: "owner"     as const, unit: " · trọn đời", desc: "Admin xác minh hồ sơ doanh nghiệp của bạn và gắn huy hiệu Verified vĩnh viễn" },
+  { key: "profile_claim",        name: "Claim Hồ Sơ",       price: 500000, icon: FileCheck2,  scope: "company" as const, ownership: "claimable" as const, unit: " · trọn đời", desc: "Nhận quyền sở hữu ngay một trang doanh nghiệp do admin tạo sẵn (chưa có chủ)" },
 ] as const;
 
 export const Route = createFileRoute("/_authenticated/dashboard/subscriptions")({

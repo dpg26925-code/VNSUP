@@ -92,9 +92,11 @@ export function generateOrderCode(): number {
 }
 
 export const PLAN_CATALOG = {
-  featured_listing: { name: "Featured Listing", amount: 499000, scope: "company" as const, days: 30 },
-  verified_badge:   { name: "Verified Badge",   amount: 299000, scope: "company" as const, days: 30 },
-  lead_notification:{ name: "Lead Notification",amount: 199000, scope: "account" as const, days: 30 },
+  featured_listing:     { name: "Featured Listing",     amount: 499000, scope: "company" as const, days: 30,   ownership: "owner" as const },
+  verified_badge:       { name: "Verified Badge",       amount: 299000, scope: "company" as const, days: 30,   ownership: "owner" as const },
+  lead_notification:    { name: "Lead Notification",    amount: 199000, scope: "account" as const, days: 30,   ownership: "owner" as const },
+  profile_verification: { name: "Xác Minh Hồ Sơ",       amount: 500000, scope: "company" as const, days: 3650, ownership: "owner" as const },
+  profile_claim:        { name: "Claim Hồ Sơ",          amount: 500000, scope: "company" as const, days: 3650, ownership: "claimable" as const },
 } as const;
 
 export type PlanKey = keyof typeof PLAN_CATALOG;
