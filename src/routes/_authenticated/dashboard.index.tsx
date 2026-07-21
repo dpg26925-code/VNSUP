@@ -16,7 +16,7 @@ type Summary = {
 };
 type Article = { id: string; title: string; slug: string; status: string; updated_at: string };
 
-type SavedSearch = { id: string; name: string | null; query: unknown; created_at: string };
+type SavedSearch = { id: string; query: string | null; filters: unknown; created_at: string };
 type Lead = { id: string; company_id: string; message: string; created_at: string; companies?: { name: string; slug: string } | null };
 
 function OverviewPage() {
