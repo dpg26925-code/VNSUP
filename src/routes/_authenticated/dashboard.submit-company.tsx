@@ -39,6 +39,17 @@ const schema = z.object({
   address: z.string().max(500).optional().or(z.literal("")),
   description: z.string().max(2000).optional().or(z.literal("")),
   capabilities: z.string().max(500).optional().or(z.literal("")),
+  stock_exchange: z.enum(["", "HOSE", "HNX", "UPCOM", "Khác"]).optional(),
+  stock_ticker: z
+    .string()
+    .trim()
+    .max(10)
+    .regex(/^[A-Z0-9]{2,10}$/, "Mã chứng khoán 2–10 ký tự, chỉ chữ IN HOA và số")
+    .optional()
+    .or(z.literal("")),
+}).refine((v) => !v.stock_ticker || !!v.stock_exchange, {
+  message: "Vui lòng chọn sàn niêm yết",
+  path: ["stock_exchange"],
 });
 
 function slugify(s: string) {
