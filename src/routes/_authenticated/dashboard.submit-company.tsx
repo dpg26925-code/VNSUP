@@ -34,6 +34,7 @@ const schema = z.object({
     .nullable()
     .transform((v) => (v === "" || v == null ? null : Number(v))),
   website: z.string().url("URL không hợp lệ").max(255).optional().or(z.literal("")),
+  logo_url: z.string().url("URL logo không hợp lệ").max(500).optional().or(z.literal("")),
   phone: z.string().max(50).optional().or(z.literal("")),
   email: z.string().email("Email không hợp lệ").max(255).optional().or(z.literal("")),
   address: z.string().max(500).optional().or(z.literal("")),
