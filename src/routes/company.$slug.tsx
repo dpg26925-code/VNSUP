@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
-import { industrySlug, provinceSlug, truncate } from "@/lib/factory";
+import { industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
 import { BadgeCheck, Globe, Mail, MapPin, Phone, Sparkles, Star, Users } from "lucide-react";
 
 type Company = {
@@ -25,11 +25,25 @@ async function loadCompany(slug: string) {
 
 export const Route = createFileRoute("/company/$slug")({
   loader: async ({ params }) => loadCompany(params.slug),
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [{ title: "Không tìm thấy nhà máy" }, { name: "robots", content: "noindex" }] };
     const c = loaderData;
     const title = `${c.name} | ${c.industry ?? "Sản xuất"} tại ${c.province ?? "Việt Nam"} | FactoryHub`;
     const desc = truncate(c.ai_summary ?? c.description, 155);
+    const url = abs(`/company/${params.slug}`);
+    const breadcrumbs: { "@type": "ListItem"; position: number; name: string; item: string }[] = [
+      { "@type": "ListItem", position: 1, name: "Trang chủ", item: abs("/") },
+    ];
+    if (c.industry) {
+      const iSlug = industrySlug(c.industry);
+      if (iSlug) breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: c.industry, item: abs(`/industry/${iSlug}`) });
+    }
+    if (c.province) {
+      const pSlug = provinceSlug(c.province);
+      if (pSlug) breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: c.province, item: abs(`/province/${pSlug}`) });
+    }
+    breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: c.name, item: url });
+
     return {
       meta: [
         { title },
@@ -37,21 +51,39 @@ export const Route = createFileRoute("/company/$slug")({
         { property: "og:title", content: `${c.name} — ${c.sub_industry ?? c.industry ?? ""}` },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
       ],
+      links: [{ rel: "canonical", href: url }],
       scripts: [
         {
           type: "application/ld+json",
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
+            "@id": url,
             name: c.name,
-            address: c.address ?? undefined,
+            url,
+            address: c.address ? {
+              "@type": "PostalAddress",
+              streetAddress: c.address,
+              addressLocality: c.district ?? undefined,
+              addressRegion: c.province ?? undefined,
+              addressCountry: "VN",
+            } : undefined,
             telephone: c.phone ?? undefined,
             email: c.email ?? undefined,
-            url: c.website ?? undefined,
+            sameAs: c.website ? [c.website] : undefined,
             areaServed: c.province ?? undefined,
             foundingDate: c.founded_year ? String(c.founded_year) : undefined,
             description: desc,
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: breadcrumbs,
           }),
         },
       ],
@@ -59,6 +91,7 @@ export const Route = createFileRoute("/company/$slug")({
   },
   component: CompanyPage,
 });
+
 
 function CompanyPage() {
   const c = Route.useLoaderData() as Company;
