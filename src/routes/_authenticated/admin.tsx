@@ -49,13 +49,39 @@ function AdminPage() {
 
   async function save() {
     if (!edit || !edit.name || !edit.slug) return;
+    const parseLines = (v: unknown): string[] =>
+      typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : Array.isArray(v) ? (v as string[]) : [];
+    const parseCsv = (v: unknown): string[] =>
+      typeof v === "string" ? v.split(",").map((s) => s.trim()).filter(Boolean) : Array.isArray(v) ? (v as string[]) : [];
+    const parseCerts = (v: unknown) => {
+      if (Array.isArray(v)) return v;
+      if (typeof v !== "string") return [];
+      return v.split("\n").map((l) => l.trim()).filter(Boolean).map((line) => {
+        const [name, issuer, year] = line.split("|").map((s) => s.trim());
+        return { name, ...(issuer ? { issuer } : {}), ...(year ? { year } : {}) };
+      });
+    };
+    const parseFaqs = (v: unknown) => {
+      if (Array.isArray(v)) return v;
+      if (typeof v !== "string") return [];
+      return v.split(/\n\n+/).map((block) => {
+        const [q, ...aLines] = block.split("\n");
+        return { q: (q ?? "").trim(), a: aLines.join("\n").trim() };
+      }).filter((f) => f.q && f.a);
+    };
     const payload: any = {
       name: edit.name, slug: edit.slug, province: edit.province ?? null, industry: edit.industry ?? null,
       sub_industry: edit.sub_industry ?? null, employee_range: edit.employee_range ?? null,
       founded_year: edit.founded_year ? Number(edit.founded_year) : null,
+      revenue_range: edit.revenue_range || null, company_type: edit.company_type || null,
       website: edit.website || null, phone: edit.phone || null, email: edit.email || null,
       address: edit.address || null, description: edit.description || null, ai_summary: edit.ai_summary || null,
-      capabilities: typeof edit.capabilities === "string" ? (edit.capabilities as string).split(",").map((s) => s.trim()).filter(Boolean) : (edit.capabilities ?? []),
+      capabilities: parseCsv(edit.capabilities),
+      certifications: parseCerts(edit.certifications),
+      gallery_urls: parseLines(edit.gallery_urls),
+      faqs: parseFaqs(edit.faqs),
+      video_url: edit.video_url || null,
+      cover_url: edit.cover_url || null,
       verified: !!edit.verified, featured: !!edit.featured,
       stock_exchange: edit.stock_exchange || null,
       stock_ticker: edit.stock_ticker ? String(edit.stock_ticker).toUpperCase() : null,
@@ -66,6 +92,7 @@ function AdminPage() {
     } else {
       await supabase.from("companies").insert({ ...payload, status: "approved", source: "admin" });
     }
+
     setEdit(null); load();
   }
 
