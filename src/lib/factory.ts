@@ -10,6 +10,7 @@ export const PROVINCES: { slug: string; name: string }[] = [
   { slug: "bac-ninh", name: "Bắc Ninh" },
   { slug: "tp-hcm", name: "TP.HCM" },
   { slug: "hai-phong", name: "Hải Phòng" },
+  { slug: "tay-ninh", name: "Tây Ninh" },
 ];
 
 export const INDUSTRIES: { slug: string; name: string; desc: string }[] = [
