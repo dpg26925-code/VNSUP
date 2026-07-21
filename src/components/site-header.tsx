@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Factory, LogIn, LogOut, Shield, Search } from "lucide-react";
+import { Factory, LogIn, LogOut, Shield, Search, Facebook, Linkedin, Youtube, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
 
