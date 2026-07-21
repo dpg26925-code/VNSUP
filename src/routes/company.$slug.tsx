@@ -4,20 +4,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
-import { BadgeCheck, Globe, Mail, MapPin, Phone, Sparkles, Star, Users, ShieldQuestion } from "lucide-react";
+import { BadgeCheck, Building2, Calendar, DollarSign, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package } from "lucide-react";
+
+type FAQ = { q: string; a: string };
+type Certification = { name: string; issuer?: string; year?: number | string };
 
 type Company = {
   id: string; slug: string; name: string;
   province: string | null; district: string | null;
   industry: string | null; sub_industry: string | null;
   employee_range: string | null; founded_year: number | null;
+  revenue_range: string | null; company_type: string | null;
   website: string | null; phone: string | null; email: string | null; address: string | null;
-  logo_url: string | null;
+  logo_url: string | null; cover_url: string | null; video_url: string | null;
   description: string | null; ai_summary: string | null;
-  capabilities: unknown; verified: boolean; featured: boolean;
+  capabilities: unknown; certifications: unknown; gallery_urls: unknown; faqs: unknown;
+  verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   submitted_by: string | null;
 };
+
 
 async function loadCompany(slug: string) {
   const { data, error } = await supabase.from("companies").select("*").eq("slug", slug).maybeSingle();
