@@ -69,6 +69,7 @@ function SubmitCompanyPage() {
     name: "", slug: "", province: "", industry: "", sub_industry: "",
     employee_range: "", founded_year: "", website: "", phone: "", email: "",
     address: "", description: "", capabilities: "",
+    stock_exchange: "", stock_ticker: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
