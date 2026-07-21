@@ -14,6 +14,7 @@ type Company = {
   website: string | null; phone: string | null; email: string | null; address: string | null;
   description: string | null; ai_summary: string | null;
   capabilities: unknown; verified: boolean; featured: boolean;
+  stock_exchange: string | null; stock_ticker: string | null;
 };
 
 async function loadCompany(slug: string) {
