@@ -196,6 +196,18 @@ function SubmitCompanyPage() {
             <F label="Năng lực (cách nhau bằng dấu phẩy)" full hint="VD: CNC 5-trục, Ép phun, ISO 9001">
               <input className="input" value={form.capabilities} onChange={(e) => set("capabilities", e.target.value)} />
             </F>
+            <F label="Sàn niêm yết" err={errors.stock_exchange} hint="Bỏ trống nếu chưa niêm yết">
+              <select className="input" value={form.stock_exchange} onChange={(e) => set("stock_exchange", e.target.value)}>
+                <option value="">— Chưa niêm yết —</option>
+                <option value="HOSE">HOSE</option>
+                <option value="HNX">HNX</option>
+                <option value="UPCOM">UPCOM</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </F>
+            <F label="Mã chứng khoán" err={errors.stock_ticker} hint="VD: VNM, HPG, FPT">
+              <input className="input" style={{ textTransform: "uppercase" }} maxLength={10} value={form.stock_ticker} onChange={(e) => set("stock_ticker", e.target.value.toUpperCase())} />
+            </F>
 
             {errors._root && (
               <div className="md:col-span-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
