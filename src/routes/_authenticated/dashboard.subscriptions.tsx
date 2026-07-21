@@ -43,22 +43,39 @@ function SubscriptionsPage() {
   const ordersQ = useQuery({ queryKey: ["my-orders"], queryFn: () => listOrders() });
   const subsQ = useQuery({ queryKey: ["my-subs"], queryFn: () => listSubs() });
 
+  const claimableQ = useQuery({
+    queryKey: ["claimable-companies"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("companies")
+        .select("id, name, slug, province")
+        .is("submitted_by", null)
+        .eq("status", "approved")
+        .order("name")
+        .limit(500);
+      return data ?? [];
+    },
+    enabled: selectedPlan === "profile_claim",
+  });
+
+  const currentPlan = PLANS.find((p) => p.key === selectedPlan)!;
+  const needCompany = currentPlan.scope === "company";
+  const useClaimable = currentPlan.ownership === "claimable";
+  const companyOptions = useClaimable ? (claimableQ.data ?? []) : (companiesQ.data ?? []);
+
+  useEffect(() => { setCompanyId(""); }, [selectedPlan]);
   useEffect(() => {
-    if (companiesQ.data?.length && !companyId) setCompanyId(companiesQ.data[0].id);
-  }, [companiesQ.data, companyId]);
+    if (companyOptions.length && !companyId) setCompanyId(companyOptions[0].id);
+  }, [companyOptions, companyId]);
 
   const buyMut = useMutation({
     mutationFn: async () => {
-      const plan = PLANS.find((p) => p.key === selectedPlan)!;
-      return create({ data: { plan: plan.key as any, companyId: plan.scope === "company" ? companyId || undefined : undefined } });
+      return create({ data: { plan: currentPlan.key as any, companyId: needCompany ? companyId || undefined : undefined } });
     },
     onSuccess: (res) => {
       window.location.href = res.checkoutUrl;
     },
   });
-
-  const currentPlan = PLANS.find((p) => p.key === selectedPlan)!;
-  const needCompany = currentPlan.scope === "company";
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -66,7 +83,7 @@ function SubscriptionsPage() {
       <p className="mt-1 text-sm text-muted-foreground">Chọn gói và thanh toán qua chuyển khoản VietQR (payOS).</p>
 
       {/* Chọn gói */}
-      <section className="mt-6 grid gap-4 md:grid-cols-3">
+      <section className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {PLANS.map((p) => {
           const Icon = p.icon;
           const active = selectedPlan === p.key;
@@ -80,7 +97,7 @@ function SubscriptionsPage() {
                 <Icon className="h-5 w-5 text-primary" />
                 <div className="font-semibold">{p.name}</div>
               </div>
-              <div className="mt-3 text-2xl font-bold">{fmtVnd(p.price)}<span className="text-sm font-normal text-muted-foreground">/tháng</span></div>
+              <div className="mt-3 text-2xl font-bold">{fmtVnd(p.price)}<span className="text-sm font-normal text-muted-foreground">{p.unit}</span></div>
               <p className="mt-2 text-xs text-muted-foreground">{p.desc}</p>
             </button>
           );
@@ -91,19 +108,25 @@ function SubscriptionsPage() {
       <section className="mt-6 rounded-xl border bg-card p-5">
         {needCompany && (
           <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium">Áp dụng cho công ty</label>
-            {companiesQ.isLoading ? (
+            <label className="mb-2 block text-sm font-medium">
+              {useClaimable ? "Chọn doanh nghiệp muốn claim (chưa có chủ sở hữu)" : "Áp dụng cho công ty của bạn"}
+            </label>
+            {(useClaimable ? claimableQ.isLoading : companiesQ.isLoading) ? (
               <div className="text-sm text-muted-foreground">Đang tải...</div>
-            ) : companiesQ.data?.length ? (
+            ) : companyOptions.length ? (
               <select
                 value={companyId}
                 onChange={(e) => setCompanyId(e.target.value)}
                 className="w-full rounded-md border bg-background px-3 py-2 text-sm"
               >
-                {companiesQ.data.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                {companyOptions.map((c: any) => (
+                  <option key={c.id} value={c.id}>{c.name}{c.province ? ` — ${c.province}` : ""}</option>
+                ))}
               </select>
+            ) : useClaimable ? (
+              <p className="text-sm text-muted-foreground">Không còn doanh nghiệp nào chưa có chủ sở hữu. Vui lòng thử lại sau.</p>
             ) : (
-              <p className="text-sm text-muted-foreground">Bạn chưa có công ty nào. <a href="/dashboard/companies/new" className="text-primary underline">Đăng ký hồ sơ công ty</a> trước khi mua gói.</p>
+              <p className="text-sm text-muted-foreground">Bạn chưa có công ty nào. <a href="/dashboard/submit-company" className="text-primary underline">Gửi hồ sơ công ty</a> trước khi mua gói.</p>
             )}
           </div>
         )}
@@ -120,6 +143,7 @@ function SubscriptionsPage() {
           <p className="mt-3 text-sm text-red-600">{(buyMut.error as Error).message}</p>
         )}
       </section>
+
 
       {/* Subscriptions đang hoạt động */}
       <section className="mt-10">
