@@ -168,13 +168,19 @@ function HomePage() {
           <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Tỉnh thành trọng điểm</h2>
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-          {PROVINCES.map((p) => (
+          {PROVINCES.filter((p) => [
+            "tp-hcm","ha-noi","binh-duong","dong-nai","hai-phong",
+            "bac-ninh","da-nang","long-an","hung-yen","quang-ninh",
+          ].includes(p.slug)).map((p) => (
             <Link key={p.slug} to="/province/$slug" params={{ slug: p.slug }}
               className="group flex items-center justify-between rounded-xl border border-border bg-card px-4 py-4 transition hover:border-brand/50 hover:shadow-sm">
               <span className="font-medium">{p.name}</span>
               <ArrowUpRight className="h-4 w-4 text-muted-foreground transition group-hover:text-brand" strokeWidth={2} />
             </Link>
           ))}
+        </div>
+        <div className="mt-6 text-center">
+          <Link to="/search" className="text-sm font-medium text-brand hover:underline">Xem tất cả tỉnh thành →</Link>
         </div>
       </section>
 
