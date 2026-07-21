@@ -133,6 +133,8 @@ export type Database = {
           slug: string
           source: string
           status: string
+          stock_exchange: string | null
+          stock_ticker: string | null
           sub_industry: string | null
           submitted_by: string | null
           updated_at: string
@@ -162,6 +164,8 @@ export type Database = {
           slug: string
           source?: string
           status?: string
+          stock_exchange?: string | null
+          stock_ticker?: string | null
           sub_industry?: string | null
           submitted_by?: string | null
           updated_at?: string
@@ -191,6 +195,8 @@ export type Database = {
           slug?: string
           source?: string
           status?: string
+          stock_exchange?: string | null
+          stock_ticker?: string | null
           sub_industry?: string | null
           submitted_by?: string | null
           updated_at?: string

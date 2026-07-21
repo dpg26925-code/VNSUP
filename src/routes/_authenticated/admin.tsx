@@ -11,6 +11,7 @@ type Row = {
   website: string | null; phone: string | null; email: string | null; address: string | null;
   description: string | null; ai_summary: string | null; capabilities: unknown;
   verified: boolean; featured: boolean;
+  stock_exchange: string | null; stock_ticker: string | null;
   status: string | null; submitted_by: string | null; rejection_reason: string | null;
 };
 
@@ -49,6 +50,8 @@ function AdminPage() {
       address: edit.address || null, description: edit.description || null, ai_summary: edit.ai_summary || null,
       capabilities: typeof edit.capabilities === "string" ? (edit.capabilities as string).split(",").map((s) => s.trim()).filter(Boolean) : (edit.capabilities ?? []),
       verified: !!edit.verified, featured: !!edit.featured,
+      stock_exchange: edit.stock_exchange || null,
+      stock_ticker: edit.stock_ticker ? String(edit.stock_ticker).toUpperCase() : null,
     };
     if (edit.id) {
       await supabase.from("companies").update(payload).eq("id", edit.id);
@@ -186,6 +189,18 @@ function AdminPage() {
               <Field label="Năng lực (cách nhau bằng dấu phẩy)" full>
                 <input value={Array.isArray(edit.capabilities) ? (edit.capabilities as string[]).join(", ") : String(edit.capabilities ?? "")}
                   onChange={(e) => setEdit({ ...edit, capabilities: e.target.value as any })} className="input" />
+              </Field>
+              <Field label="Sàn niêm yết">
+                <select value={edit.stock_exchange ?? ""} onChange={(e) => setEdit({ ...edit, stock_exchange: e.target.value || null })} className="input">
+                  <option value="">— Chưa niêm yết —</option>
+                  <option value="HOSE">HOSE</option>
+                  <option value="HNX">HNX</option>
+                  <option value="UPCOM">UPCOM</option>
+                  <option value="Khác">Khác</option>
+                </select>
+              </Field>
+              <Field label="Mã chứng khoán">
+                <input value={edit.stock_ticker ?? ""} maxLength={10} style={{ textTransform: "uppercase" }} onChange={(e) => setEdit({ ...edit, stock_ticker: e.target.value.toUpperCase() })} className="input" placeholder="VD: VNM" />
               </Field>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.verified} onChange={(e) => setEdit({ ...edit, verified: e.target.checked })} /> Đã xác thực</label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.featured} onChange={(e) => setEdit({ ...edit, featured: e.target.checked })} /> Nổi bật</label>

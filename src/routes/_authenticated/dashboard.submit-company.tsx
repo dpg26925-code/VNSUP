@@ -39,6 +39,17 @@ const schema = z.object({
   address: z.string().max(500).optional().or(z.literal("")),
   description: z.string().max(2000).optional().or(z.literal("")),
   capabilities: z.string().max(500).optional().or(z.literal("")),
+  stock_exchange: z.enum(["", "HOSE", "HNX", "UPCOM", "Khác"]).optional(),
+  stock_ticker: z
+    .string()
+    .trim()
+    .max(10)
+    .regex(/^[A-Z0-9]{2,10}$/, "Mã chứng khoán 2–10 ký tự, chỉ chữ IN HOA và số")
+    .optional()
+    .or(z.literal("")),
+}).refine((v) => !v.stock_ticker || !!v.stock_exchange, {
+  message: "Vui lòng chọn sàn niêm yết",
+  path: ["stock_exchange"],
 });
 
 function slugify(s: string) {
@@ -58,6 +69,7 @@ function SubmitCompanyPage() {
     name: "", slug: "", province: "", industry: "", sub_industry: "",
     employee_range: "", founded_year: "", website: "", phone: "", email: "",
     address: "", description: "", capabilities: "",
+    stock_exchange: "", stock_ticker: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -97,6 +109,8 @@ function SubmitCompanyPage() {
       address: d.address || null,
       description: d.description || null,
       capabilities: caps,
+      stock_exchange: d.stock_exchange || null,
+      stock_ticker: d.stock_ticker ? d.stock_ticker.toUpperCase() : null,
       verified: false,
       featured: false,
       source: "user",
@@ -181,6 +195,18 @@ function SubmitCompanyPage() {
             </F>
             <F label="Năng lực (cách nhau bằng dấu phẩy)" full hint="VD: CNC 5-trục, Ép phun, ISO 9001">
               <input className="input" value={form.capabilities} onChange={(e) => set("capabilities", e.target.value)} />
+            </F>
+            <F label="Sàn niêm yết" err={errors.stock_exchange} hint="Bỏ trống nếu chưa niêm yết">
+              <select className="input" value={form.stock_exchange} onChange={(e) => set("stock_exchange", e.target.value)}>
+                <option value="">— Chưa niêm yết —</option>
+                <option value="HOSE">HOSE</option>
+                <option value="HNX">HNX</option>
+                <option value="UPCOM">UPCOM</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </F>
+            <F label="Mã chứng khoán" err={errors.stock_ticker} hint="VD: VNM, HPG, FPT">
+              <input className="input" style={{ textTransform: "uppercase" }} maxLength={10} value={form.stock_ticker} onChange={(e) => set("stock_ticker", e.target.value.toUpperCase())} />
             </F>
 
             {errors._root && (
