@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
+import { SkeletonCard, EmptyState } from "@/components/skeleton-card";
 import { PROVINCES, provinceBySlug, abs } from "@/lib/factory";
 
 export const Route = createFileRoute("/province/$slug")({
@@ -64,8 +65,15 @@ function ProvincePage() {
           <Link to="/" className="hover:text-foreground">Trang chủ</Link> <span className="mx-1">/</span>
           <span className="text-foreground">{p.name}</span>
         </nav>
-        <h1 className="text-2xl font-bold md:text-3xl">Nhà máy tại {p.name}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Danh sách các nhà máy sản xuất đang hoạt động tại {p.name}, cập nhật từ FactoryHub.</p>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold md:text-3xl">Nhà máy tại {p.name}</h1>
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+              {p.name} là một trong những trung tâm sản xuất trọng điểm của Việt Nam. Danh sách dưới đây là các nhà máy đã được xác thực hoặc gửi hồ sơ trên FactoryHub.
+            </p>
+          </div>
+          {!loading && <div className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{rows.length} nhà máy</div>}
+        </div>
 
         <div className="mt-4 flex flex-wrap gap-2 text-xs">
           {PROVINCES.filter((x) => x.slug !== p.slug).map((x) => (
@@ -74,14 +82,20 @@ function ProvincePage() {
         </div>
 
         <div className="mt-6">
-          {loading ? <div className="text-sm text-muted-foreground">Đang tải…</div> :
-            rows.length === 0 ? <div className="rounded-md border bg-card p-8 text-center text-muted-foreground">Chưa có nhà máy tại tỉnh này.</div> :
+          {loading ? (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, k) => <SkeletonCard key={k} />)}
+            </div>
+          ) : rows.length === 0 ? (
+            <EmptyState title="Chưa có nhà máy tại tỉnh này" description="Chúng tôi đang cập nhật dữ liệu. Bạn có thể xem tỉnh khác." />
+          ) : (
             <>
               <div className="mb-3 text-sm text-muted-foreground">{rows.length} nhà máy</div>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {rows.map((c) => <CompanyCard key={c.slug} {...c} />)}
               </div>
-            </>}
+            </>
+          )}
         </div>
       </div>
       <SiteFooter />

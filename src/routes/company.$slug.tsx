@@ -117,19 +117,29 @@ function CompanyNotFound() {
 }
 
 
+function initials(name: string) {
+  return name.replace(/(Công ty|TNHH|Cổ phần|CP|MTV)/gi, "").trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase() ?? "").join("") || "F";
+}
+
 function CompanyPage() {
   const c = Route.useLoaderData() as Company;
   const caps = Array.isArray(c.capabilities) ? (c.capabilities as string[]) : [];
   const [similar, setSimilar] = useState<CompanyCardProps[]>([]);
+  const [showAllSimilar, setShowAllSimilar] = useState(false);
   const [products, setProducts] = useState<{ id: string; name: string; category: string | null; description: string | null }[]>([]);
 
   useEffect(() => {
     supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured")
-      .eq("industry", c.industry ?? "").neq("id", c.id).limit(4)
+      .eq("industry", c.industry ?? "").neq("id", c.id).limit(12)
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
     supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)
       .then(({ data }) => setProducts(data ?? []));
   }, [c.id, c.industry]);
+
+  const mapQuery = encodeURIComponent([c.name, c.address, c.district, c.province].filter(Boolean).join(", "));
+  const mapEmbed = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
+  const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+  const shownSimilar = showAllSimilar ? similar : similar.slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background">
@@ -145,40 +155,48 @@ function CompanyPage() {
           <span className="text-foreground">{c.name}</span>
         </nav>
 
-        {/* Header */}
-        <div className="rounded-lg border bg-card p-6">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h1 className="text-2xl font-bold md:text-3xl">{c.name}</h1>
-              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                {c.province && <span className="inline-flex items-center gap-1"><MapPin className="h-4 w-4" />{c.province}{c.district && `, ${c.district}`}</span>}
-                {c.industry && (
-                  <Link to="/industry/$slug" params={{ slug: industrySlug(c.industry) || "cnc" }} className="rounded bg-secondary px-2 py-0.5 text-xs font-medium hover:bg-primary hover:text-primary-foreground">{c.industry}{c.sub_industry ? ` · ${c.sub_industry}` : ""}</Link>
-                )}
-                {c.employee_range && <span className="inline-flex items-center gap-1"><Users className="h-4 w-4" />{c.employee_range}</span>}
-                {c.founded_year && <span>Thành lập {c.founded_year}</span>}
-              </div>
+        {/* Hero header with gradient banner */}
+        <div className="overflow-hidden rounded-2xl border bg-card">
+          <div className="relative h-32 bg-gradient-to-br from-primary via-primary to-brand md:h-40">
+            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(255,255,255,0.3) 0, transparent 35%)" }} />
+            <div className="absolute -bottom-8 left-6 grid h-20 w-20 place-items-center rounded-2xl border-4 border-card bg-gradient-to-br from-brand to-primary text-2xl font-bold text-primary-foreground shadow-md">
+              {initials(c.name)}
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="absolute right-4 top-4 flex flex-wrap gap-2">
+              {c.verified && <span className="inline-flex items-center gap-1 rounded-full bg-success px-2.5 py-1 text-xs font-semibold text-success-foreground shadow"><BadgeCheck className="h-3.5 w-3.5" fill="currentColor" strokeWidth={2.25} /> Đã xác thực</span>}
+              {c.featured && <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-brand-foreground shadow"><Star className="h-3.5 w-3.5" fill="currentColor" /> Nổi bật</span>}
+            </div>
+          </div>
+          <div className="px-6 pb-6 pt-12">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h1 className="text-2xl font-bold md:text-3xl">{c.name}</h1>
+                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                  {c.province && <span className="inline-flex items-center gap-1"><MapPin className="h-4 w-4" />{c.province}{c.district && `, ${c.district}`}</span>}
+                  {c.industry && (
+                    <Link to="/industry/$slug" params={{ slug: industrySlug(c.industry) || "cnc" }} className="rounded bg-secondary px-2 py-0.5 text-xs font-medium hover:bg-primary hover:text-primary-foreground">{c.industry}{c.sub_industry ? ` · ${c.sub_industry}` : ""}</Link>
+                  )}
+                  {c.employee_range && <span className="inline-flex items-center gap-1"><Users className="h-4 w-4" />{c.employee_range}</span>}
+                  {c.founded_year && <span>Thành lập {c.founded_year}</span>}
+                </div>
+              </div>
               {c.stock_ticker && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary" title={c.stock_exchange ? `Niêm yết trên ${c.stock_exchange}` : "Đã niêm yết"}>
                   {c.stock_exchange ?? "STOCK"}: {c.stock_ticker}
                 </span>
               )}
-              {c.verified && <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2.5 py-1 text-xs font-medium text-success"><BadgeCheck className="h-3.5 w-3.5" /> Đã xác thực</span>}
-              {c.featured && <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700"><Star className="h-3.5 w-3.5" /> Nổi bật</span>}
             </div>
-          </div>
 
-          {/* AI Summary */}
-          {c.ai_summary && (
-            <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
-              <div className="mb-1 inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
-                <Sparkles className="h-3 w-3" /> AI Summary
+            {/* AI Summary */}
+            {c.ai_summary && (
+              <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
+                <div className="mb-1 inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
+                  <Sparkles className="h-3 w-3" /> AI Summary
+                </div>
+                <p className="text-sm leading-relaxed">{c.ai_summary}</p>
               </div>
-              <p className="text-sm leading-relaxed">{c.ai_summary}</p>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         <div className="mt-6 grid gap-6 md:grid-cols-3">
@@ -190,16 +208,40 @@ function CompanyPage() {
               </section>
             )}
 
-            {caps.length > 0 && (
-              <section className="rounded-lg border bg-card p-6">
-                <h2 className="mb-3 text-lg font-semibold">Năng lực sản xuất</h2>
-                <div className="flex flex-wrap gap-2">
-                  {caps.map((cap) => (
-                    <span key={cap} className="rounded-md border bg-background px-2.5 py-1 text-sm">{cap}</span>
-                  ))}
-                </div>
-              </section>
-            )}
+            <section className="rounded-lg border bg-card p-6">
+              <h2 className="mb-3 text-lg font-semibold">Năng lực sản xuất</h2>
+              {caps.length > 0 ? (
+                <>
+                  <div className="flex flex-wrap gap-2">
+                    {caps.map((cap) => (
+                      <span key={cap} className="inline-flex items-center gap-1 rounded-md border border-brand/30 bg-brand-soft px-2.5 py-1 text-sm font-medium text-brand">
+                        <BadgeCheck className="h-3.5 w-3.5" strokeWidth={2.25} />{cap}
+                      </span>
+                    ))}
+                  </div>
+                  <dl className="mt-5 grid gap-3 border-t pt-5 text-sm sm:grid-cols-2">
+                    <div className="rounded-md bg-secondary/50 p-3">
+                      <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Quy mô</dt>
+                      <dd className="mt-1 font-medium">{c.employee_range ?? "Chưa cập nhật"} lao động</dd>
+                    </div>
+                    <div className="rounded-md bg-secondary/50 p-3">
+                      <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ngành</dt>
+                      <dd className="mt-1 font-medium">{c.industry ?? "-"}{c.sub_industry ? ` · ${c.sub_industry}` : ""}</dd>
+                    </div>
+                    <div className="rounded-md bg-secondary/50 p-3">
+                      <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Kinh nghiệm</dt>
+                      <dd className="mt-1 font-medium">{c.founded_year ? `${new Date().getFullYear() - c.founded_year}+ năm` : "Chưa cập nhật"}</dd>
+                    </div>
+                    <div className="rounded-md bg-secondary/50 p-3">
+                      <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Vị trí</dt>
+                      <dd className="mt-1 font-medium">{c.province ?? "-"}</dd>
+                    </div>
+                  </dl>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">Nhà máy chưa cập nhật danh sách năng lực chi tiết. Vui lòng liên hệ trực tiếp để trao đổi.</p>
+              )}
+            </section>
 
             {products.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
@@ -212,6 +254,23 @@ function CompanyPage() {
                     </li>
                   ))}
                 </ul>
+              </section>
+            )}
+
+            {/* Map */}
+            {(c.address || c.province) && (
+              <section className="overflow-hidden rounded-lg border bg-card">
+                <div className="flex items-center justify-between p-4">
+                  <h2 className="text-lg font-semibold">Vị trí nhà máy</h2>
+                  <a href={mapLink} target="_blank" rel="noopener" className="text-xs font-semibold text-brand hover:underline">Mở Google Maps →</a>
+                </div>
+                <iframe
+                  title={`Bản đồ ${c.name}`}
+                  src={mapEmbed}
+                  className="h-64 w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </section>
             )}
           </div>
@@ -233,10 +292,20 @@ function CompanyPage() {
 
         {similar.length > 0 && (
           <section className="mt-10">
-            <h2 className="mb-4 text-lg font-semibold">Nhà cung cấp tương tự</h2>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {similar.map((s) => <CompanyCard key={s.slug} {...s} />)}
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Nhà cung cấp tương tự</h2>
+              <span className="text-xs text-muted-foreground">{similar.length} kết quả</span>
             </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {shownSimilar.map((s) => <CompanyCard key={s.slug} {...s} />)}
+            </div>
+            {similar.length > 4 && (
+              <div className="mt-4 text-center">
+                <button onClick={() => setShowAllSimilar((v) => !v)} className="rounded-md border px-4 py-2 text-sm font-semibold hover:border-brand hover:text-brand">
+                  {showAllSimilar ? "Thu gọn" : `Xem thêm ${similar.length - 4} nhà máy`}
+                </button>
+              </div>
+            )}
           </section>
         )}
       </div>
@@ -266,22 +335,30 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
     setForm({ name: "", email: "", phone: "", company: "", message: "" });
   }
 
+  const inputCls = "w-full rounded-md border bg-background px-3 py-2 outline-none transition focus:ring-2 focus:ring-primary/20";
+
   return (
     <section className="rounded-lg border bg-card p-5">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Liên hệ {companyName}</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Yêu cầu báo giá</h3>
+      <p className="mt-1 text-xs text-muted-foreground">Gửi trực tiếp đến {companyName}. Phản hồi trong 24h.</p>
       {status === "sent" ? (
-        <div className="mt-3 rounded-md bg-success/10 p-3 text-sm text-success">Đã gửi. Nhà máy sẽ liên hệ lại sớm.</div>
+        <div className="mt-4 rounded-md border border-success/30 bg-success/10 p-4 text-sm">
+          <div className="font-semibold text-success">✓ Đã gửi yêu cầu</div>
+          <p className="mt-1 text-muted-foreground">{companyName} sẽ liên hệ lại qua email/điện thoại bạn đã cung cấp.</p>
+          <button onClick={() => setStatus("idle")} className="mt-3 text-xs font-semibold text-primary hover:underline">Gửi yêu cầu khác</button>
+        </div>
       ) : (
         <form onSubmit={submit} className="mt-3 space-y-2 text-sm">
-          <input required maxLength={100} placeholder="Họ và tên *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full rounded-md border bg-background px-3 py-2 outline-none" />
-          <input required type="email" maxLength={200} placeholder="Email *" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full rounded-md border bg-background px-3 py-2 outline-none" />
-          <input maxLength={30} placeholder="Số điện thoại" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-md border bg-background px-3 py-2 outline-none" />
-          <input maxLength={150} placeholder="Công ty" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="w-full rounded-md border bg-background px-3 py-2 outline-none" />
-          <textarea required maxLength={2000} rows={4} placeholder="Mô tả nhu cầu (số lượng, ngành, thời gian giao) *" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full rounded-md border bg-background px-3 py-2 outline-none" />
-          {err && <p className="text-xs text-destructive">{err}</p>}
-          <button disabled={status === "sending"} className="w-full rounded-md bg-primary py-2 font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
-            {status === "sending" ? "Đang gửi…" : "Gửi yêu cầu"}
+          <input required maxLength={100} placeholder="Họ và tên (VD: Nguyễn Văn A) *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
+          <input required type="email" maxLength={200} placeholder="Email công việc (VD: buyer@congty.com) *" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} />
+          <input maxLength={30} placeholder="Số điện thoại (VD: 0901 234 567)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputCls} />
+          <input maxLength={150} placeholder="Tên công ty (VD: Công ty ABC)" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputCls} />
+          <textarea required maxLength={2000} rows={4} placeholder="Mô tả nhu cầu: sản phẩm, số lượng/tháng, ngành, thời gian giao hàng… *" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputCls} />
+          {err && <div className="rounded-md border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">{err}</div>}
+          <button disabled={status === "sending"} className="w-full rounded-md bg-primary py-2.5 font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
+            {status === "sending" ? "Đang gửi…" : "Gửi yêu cầu báo giá"}
           </button>
+          <p className="text-center text-[11px] text-muted-foreground">Miễn phí · Không spam · Bảo mật thông tin</p>
         </form>
       )}
     </section>

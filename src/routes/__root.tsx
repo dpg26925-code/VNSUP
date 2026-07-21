@@ -19,14 +19,14 @@ const SITE_DESC =
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold">Không tìm thấy trang</h2>
-        <p className="mt-2 text-sm text-muted-foreground">Trang bạn tìm không tồn tại hoặc đã bị di chuyển.</p>
-        <div className="mt-6">
-          <Link to="/" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-            Về trang chủ
-          </Link>
+      <div className="max-w-lg text-center">
+        <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-primary to-brand text-2xl font-bold text-primary-foreground shadow-md">404</div>
+        <h1 className="mt-6 text-2xl font-bold tracking-tight">Không tìm thấy trang</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Trang bạn tìm không tồn tại hoặc đã bị di chuyển. Thử tìm nhà máy hoặc quay lại trang chủ.</p>
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <Link to="/search" className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Tìm nhà máy</Link>
+          <Link to="/" className="rounded-md border px-4 py-2 text-sm font-semibold hover:bg-accent">Về trang chủ</Link>
+          <Link to="/about" className="rounded-md border px-4 py-2 text-sm font-semibold hover:bg-accent">Về FactoryHub</Link>
         </div>
       </div>
     </div>

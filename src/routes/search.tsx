@@ -4,6 +4,7 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
+import { SkeletonCard, EmptyState } from "@/components/skeleton-card";
 import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES, abs } from "@/lib/factory";
 import { Filter, Search as SearchIcon, X } from "lucide-react";
 
@@ -12,6 +13,7 @@ const searchSchema = z.object({
   industry: z.string().optional(),
   province: z.string().optional(),
   size: z.string().optional(),
+  sort: z.enum(["featured", "name", "province", "industry"]).optional(),
 });
 
 const SEARCH_TITLE = "Tìm nhà máy sản xuất | FactoryHub Vietnam";
@@ -34,36 +36,48 @@ export const Route = createFileRoute("/search")({
   component: SearchPage,
 });
 
-
 function SearchPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const [q, setQ] = useState(search.q ?? "");
   const [rows, setRows] = useState<CompanyCardProps[]>([]);
+  const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => setQ(search.q ?? ""), [search.q]);
 
   useEffect(() => {
+    supabase.from("companies").select("id", { count: "exact", head: true })
+      .then(({ count }) => setTotal(count ?? 0));
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
+    const sort = search.sort ?? "featured";
     let qb = supabase.from("companies")
       .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured")
-      .order("featured", { ascending: false })
-      .order("verified", { ascending: false })
       .limit(60);
+    if (sort === "featured") qb = qb.order("featured", { ascending: false }).order("verified", { ascending: false });
+    else if (sort === "name") qb = qb.order("name", { ascending: true });
+    else if (sort === "province") qb = qb.order("province", { ascending: true });
+    else if (sort === "industry") qb = qb.order("industry", { ascending: true });
     if (search.q) qb = qb.or(`name.ilike.%${search.q}%,description.ilike.%${search.q}%,industry.ilike.%${search.q}%,sub_industry.ilike.%${search.q}%`);
     if (search.industry) qb = qb.eq("industry", search.industry);
     if (search.province) qb = qb.eq("province", search.province);
     if (search.size) qb = qb.eq("employee_range", search.size);
     qb.then(({ data }) => { setRows((data ?? []) as CompanyCardProps[]); setLoading(false); });
-  }, [search.q, search.industry, search.province, search.size]);
+  }, [search.q, search.industry, search.province, search.size, search.sort]);
 
   function apply(next: Partial<typeof search>) {
     navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, ...next }) as any, replace: true });
   }
 
   const activeCount = useMemo(() => [search.industry, search.province, search.size].filter(Boolean).length, [search]);
+  const activeChips: { label: string; clear: () => void }[] = [];
+  if (search.industry) activeChips.push({ label: `Ngành: ${search.industry}`, clear: () => apply({ industry: undefined }) });
+  if (search.province) activeChips.push({ label: `Tỉnh: ${search.province}`, clear: () => apply({ province: undefined }) });
+  if (search.size) activeChips.push({ label: `Quy mô: ${search.size}`, clear: () => apply({ size: undefined }) });
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,6 +92,17 @@ function SearchPage() {
             <Filter className="h-4 w-4" /> Lọc {activeCount > 0 && <span className="rounded-full bg-primary px-1.5 text-xs text-primary-foreground">{activeCount}</span>}
           </button>
         </form>
+
+        {/* Mobile horizontal filter chips */}
+        <div className="mt-3 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:hidden">
+          {INDUSTRIES.map((i) => {
+            const on = search.industry === i.name;
+            return (
+              <button key={i.slug} onClick={() => apply({ industry: on ? undefined : i.name })}
+                className={"shrink-0 rounded-full border px-3 py-1 text-xs transition " + (on ? "border-primary bg-primary text-primary-foreground" : "hover:border-primary")}>{i.name}</button>
+            );
+          })}
+        </div>
 
         <div className="mt-4 grid gap-4 md:grid-cols-[220px,1fr]">
           <aside className={(showFilters ? "block " : "hidden ") + "md:block"}>
@@ -95,15 +120,47 @@ function SearchPage() {
           </aside>
 
           <div>
-            <div className="mb-3 text-sm text-muted-foreground">
-              {loading ? "Đang tải…" : `${rows.length} kết quả`}
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+              <div className="text-sm text-muted-foreground">
+                {loading ? "Đang tải…" : (
+                  <><span className="font-semibold text-foreground">{rows.length}</span>{total > 0 && <>/{total}</>} nhà máy</>
+                )}
+              </div>
+              <div className="flex items-center gap-2 text-xs">
+                <label className="text-muted-foreground">Sắp xếp:</label>
+                <select
+                  value={search.sort ?? "featured"}
+                  onChange={(e) => apply({ sort: e.target.value as any })}
+                  className="rounded-md border bg-card px-2 py-1"
+                >
+                  <option value="featured">Nổi bật</option>
+                  <option value="name">Tên A→Z</option>
+                  <option value="province">Tỉnh/TP</option>
+                  <option value="industry">Ngành</option>
+                </select>
+              </div>
             </div>
+
+            {activeChips.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-1.5">
+                {activeChips.map((c) => (
+                  <button key={c.label} onClick={c.clear} className="inline-flex items-center gap-1 rounded-full border bg-secondary px-2.5 py-0.5 text-xs hover:border-destructive hover:text-destructive">
+                    {c.label} <X className="h-3 w-3" />
+                  </button>
+                ))}
+              </div>
+            )}
+
             {loading ? (
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 6 }).map((_, i) => <div key={i} className="h-40 animate-pulse rounded-lg border bg-card" />)}
+                {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : rows.length === 0 ? (
-              <div className="rounded-md border bg-card p-8 text-center text-muted-foreground">Không tìm thấy nhà máy phù hợp.</div>
+              <EmptyState
+                title="Không tìm thấy nhà máy phù hợp"
+                description="Thử bỏ bớt bộ lọc hoặc tìm với từ khóa khác."
+                action={<button onClick={() => { setQ(""); apply({ q: undefined, industry: undefined, province: undefined, size: undefined }); }} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Xóa toàn bộ bộ lọc</button>}
+              />
             ) : (
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {rows.map((c) => <CompanyCard key={c.slug} {...c} />)}
