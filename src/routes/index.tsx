@@ -4,10 +4,11 @@ import { Search, ArrowRight, Building2, Cpu, Factory, Package, Scissors, Wrench,
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
-import { INDUSTRIES, PROVINCES } from "@/lib/factory";
+import { INDUSTRIES, PROVINCES, SITE_URL, abs } from "@/lib/factory";
 
 const HOME_TITLE = "FactoryHub Vietnam — Tìm nhà máy sản xuất bằng AI";
 const HOME_DESC = "Danh bạ 2,400+ nhà máy Việt Nam. Tìm theo năng lực sản xuất, ngành, tỉnh. Có tóm tắt AI cho mỗi hồ sơ.";
+const HOME_URL = abs("/");
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,7 +17,9 @@ export const Route = createFileRoute("/")({
       { name: "description", content: HOME_DESC },
       { property: "og:title", content: HOME_TITLE },
       { property: "og:description", content: HOME_DESC },
+      { property: "og:url", content: HOME_URL },
     ],
+    links: [{ rel: "canonical", href: HOME_URL }],
     scripts: [
       {
         type: "application/ld+json",
@@ -24,10 +27,10 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "FactoryHub Vietnam",
-          url: "/",
+          url: SITE_URL,
           potentialAction: {
             "@type": "SearchAction",
-            target: "/search?q={query}",
+            target: `${SITE_URL}/search?q={query}`,
             "query-input": "required name=query",
           },
         }),
@@ -36,6 +39,7 @@ export const Route = createFileRoute("/")({
   }),
   component: HomePage,
 });
+
 
 const INDUSTRY_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
   nhua: Factory, cnc: Wrench, "dien-tu": Cpu, "kim-loai": Zap, "bao-bi": Package, "cao-su": Building2, "det-may": Scissors,
