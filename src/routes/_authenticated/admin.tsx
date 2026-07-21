@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
-import { Pencil, Plus, Trash2, X } from "lucide-react";
+import { Check, Pencil, Plus, Trash2, X, XCircle } from "lucide-react";
 
 type Row = {
   id: string; slug: string; name: string; province: string | null; industry: string | null;
@@ -11,6 +11,7 @@ type Row = {
   website: string | null; phone: string | null; email: string | null; address: string | null;
   description: string | null; ai_summary: string | null; capabilities: unknown;
   verified: boolean; featured: boolean;
+  status: string | null; submitted_by: string | null; rejection_reason: string | null;
 };
 
 export const Route = createFileRoute("/_authenticated/admin")({
