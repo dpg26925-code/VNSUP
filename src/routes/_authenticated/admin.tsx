@@ -183,6 +183,16 @@ function AdminPage() {
               </Field>
               <Field label="Năm thành lập"><input type="number" value={edit.founded_year ?? ""} onChange={(e) => setEdit({ ...edit, founded_year: e.target.value ? Number(e.target.value) : null })} className="input" /></Field>
               <Field label="Website"><input value={edit.website ?? ""} onChange={(e) => setEdit({ ...edit, website: e.target.value })} className="input" /></Field>
+              <Field label="Logo URL" full>
+                <div className="flex items-center gap-3">
+                  {edit.logo_url ? (
+                    <img src={edit.logo_url} alt="Logo preview" className="h-12 w-12 rounded-md border bg-background object-contain p-1" />
+                  ) : (
+                    <div className="grid h-12 w-12 place-items-center rounded-md border bg-muted text-[10px] text-muted-foreground">Logo</div>
+                  )}
+                  <input value={edit.logo_url ?? ""} onChange={(e) => setEdit({ ...edit, logo_url: e.target.value })} className="input" placeholder="https://.../logo.png" />
+                </div>
+              </Field>
               <Field label="Phone"><input value={edit.phone ?? ""} onChange={(e) => setEdit({ ...edit, phone: e.target.value })} className="input" /></Field>
               <Field label="Email"><input value={edit.email ?? ""} onChange={(e) => setEdit({ ...edit, email: e.target.value })} className="input" /></Field>
               <Field label="Địa chỉ" full><input value={edit.address ?? ""} onChange={(e) => setEdit({ ...edit, address: e.target.value })} className="input" /></Field>
