@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { adminApi } from "@/lib/admin-client";
-import { Building2, FileText, Inbox, Plus, Send } from "lucide-react";
+import { Building2, FileText, Inbox, Plus, Send, Bookmark, MessageSquare, Search } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
   head: () => ({ meta: [{ title: "Tổng quan | FactoryHub Admin" }, { name: "robots", content: "noindex" }] }),

@@ -18,6 +18,8 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ApiRouteImport } from './routes/api'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProvinceSlugRouteImport } from './routes/province.$slug'
@@ -88,6 +90,16 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiRoute = ApiRouteImport.update({
+  id: '/api',
+  path: '/api',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -185,20 +197,20 @@ const AuthenticatedDashboardAnalyticsRoute =
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const ApiPublicAdminLeadsRoute = ApiPublicAdminLeadsRouteImport.update({
-  id: '/api/public/admin/leads',
-  path: '/api/public/admin/leads',
-  getParentRoute: () => rootRouteImport,
+  id: '/public/admin/leads',
+  path: '/public/admin/leads',
+  getParentRoute: () => ApiRoute,
 } as any)
 const ApiPublicAdminCategoriesRoute =
   ApiPublicAdminCategoriesRouteImport.update({
-    id: '/api/public/admin/categories',
-    path: '/api/public/admin/categories',
-    getParentRoute: () => rootRouteImport,
+    id: '/public/admin/categories',
+    path: '/public/admin/categories',
+    getParentRoute: () => ApiRoute,
   } as any)
 const ApiPublicAdminArticlesRoute = ApiPublicAdminArticlesRouteImport.update({
-  id: '/api/public/admin/articles',
-  path: '/api/public/admin/articles',
-  getParentRoute: () => rootRouteImport,
+  id: '/public/admin/articles',
+  path: '/public/admin/articles',
+  getParentRoute: () => ApiRoute,
 } as any)
 const AuthenticatedDashboardIntegrationsHermesRoute =
   AuthenticatedDashboardIntegrationsHermesRouteImport.update({
@@ -220,9 +232,9 @@ const ApiPublicAdminArticlesIdRoute =
   } as any)
 const ApiPublicAdminAnalyticsSummaryRoute =
   ApiPublicAdminAnalyticsSummaryRouteImport.update({
-    id: '/api/public/admin/analytics/summary',
-    path: '/api/public/admin/analytics/summary',
-    getParentRoute: () => rootRouteImport,
+    id: '/public/admin/analytics/summary',
+    path: '/public/admin/analytics/summary',
+    getParentRoute: () => ApiRoute,
   } as any)
 const AuthenticatedDashboardArticlesIdEditRoute =
   AuthenticatedDashboardArticlesIdEditRouteImport.update({
@@ -239,6 +251,8 @@ const ApiPublicAdminArticlesIdPublishRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -275,6 +289,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -312,6 +328,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/about': typeof AboutRoute
+  '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -350,6 +368,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/api'
     | '/auth'
     | '/forgot-password'
     | '/login'
@@ -386,6 +406,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/api'
     | '/auth'
     | '/forgot-password'
     | '/login'
@@ -422,6 +444,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/about'
+    | '/api'
     | '/auth'
     | '/forgot-password'
     | '/login'
@@ -460,6 +484,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AboutRoute: typeof AboutRoute
+  ApiRoute: typeof ApiRouteWithChildren
   AuthRoute: typeof AuthRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
@@ -472,10 +498,6 @@ export interface RootRouteChildren {
   CompanySlugRoute: typeof CompanySlugRoute
   IndustrySlugRoute: typeof IndustrySlugRoute
   ProvinceSlugRoute: typeof ProvinceSlugRoute
-  ApiPublicAdminArticlesRoute: typeof ApiPublicAdminArticlesRouteWithChildren
-  ApiPublicAdminCategoriesRoute: typeof ApiPublicAdminCategoriesRoute
-  ApiPublicAdminLeadsRoute: typeof ApiPublicAdminLeadsRoute
-  ApiPublicAdminAnalyticsSummaryRoute: typeof ApiPublicAdminAnalyticsSummaryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -541,6 +563,20 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api': {
+      id: '/api'
+      path: '/api'
+      fullPath: '/api'
+      preLoaderRoute: typeof ApiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -664,24 +700,24 @@ declare module '@tanstack/react-router' {
     }
     '/api/public/admin/leads': {
       id: '/api/public/admin/leads'
-      path: '/api/public/admin/leads'
+      path: '/public/admin/leads'
       fullPath: '/api/public/admin/leads'
       preLoaderRoute: typeof ApiPublicAdminLeadsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiRoute
     }
     '/api/public/admin/categories': {
       id: '/api/public/admin/categories'
-      path: '/api/public/admin/categories'
+      path: '/public/admin/categories'
       fullPath: '/api/public/admin/categories'
       preLoaderRoute: typeof ApiPublicAdminCategoriesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiRoute
     }
     '/api/public/admin/articles': {
       id: '/api/public/admin/articles'
-      path: '/api/public/admin/articles'
+      path: '/public/admin/articles'
       fullPath: '/api/public/admin/articles'
       preLoaderRoute: typeof ApiPublicAdminArticlesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiRoute
     }
     '/_authenticated/dashboard/integrations/hermes': {
       id: '/_authenticated/dashboard/integrations/hermes'
@@ -706,10 +742,10 @@ declare module '@tanstack/react-router' {
     }
     '/api/public/admin/analytics/summary': {
       id: '/api/public/admin/analytics/summary'
-      path: '/api/public/admin/analytics/summary'
+      path: '/public/admin/analytics/summary'
       fullPath: '/api/public/admin/analytics/summary'
       preLoaderRoute: typeof ApiPublicAdminAnalyticsSummaryRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiRoute
     }
     '/_authenticated/dashboard/articles/$id/edit': {
       id: '/_authenticated/dashboard/articles/$id/edit'
@@ -826,9 +862,27 @@ const ApiPublicAdminArticlesRouteWithChildren =
     ApiPublicAdminArticlesRouteChildren,
   )
 
+interface ApiRouteChildren {
+  ApiPublicAdminArticlesRoute: typeof ApiPublicAdminArticlesRouteWithChildren
+  ApiPublicAdminCategoriesRoute: typeof ApiPublicAdminCategoriesRoute
+  ApiPublicAdminLeadsRoute: typeof ApiPublicAdminLeadsRoute
+  ApiPublicAdminAnalyticsSummaryRoute: typeof ApiPublicAdminAnalyticsSummaryRoute
+}
+
+const ApiRouteChildren: ApiRouteChildren = {
+  ApiPublicAdminArticlesRoute: ApiPublicAdminArticlesRouteWithChildren,
+  ApiPublicAdminCategoriesRoute: ApiPublicAdminCategoriesRoute,
+  ApiPublicAdminLeadsRoute: ApiPublicAdminLeadsRoute,
+  ApiPublicAdminAnalyticsSummaryRoute: ApiPublicAdminAnalyticsSummaryRoute,
+}
+
+const ApiRouteWithChildren = ApiRoute._addFileChildren(ApiRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AboutRoute: AboutRoute,
+  ApiRoute: ApiRouteWithChildren,
   AuthRoute: AuthRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
@@ -841,10 +895,6 @@ const rootRouteChildren: RootRouteChildren = {
   CompanySlugRoute: CompanySlugRoute,
   IndustrySlugRoute: IndustrySlugRoute,
   ProvinceSlugRoute: ProvinceSlugRoute,
-  ApiPublicAdminArticlesRoute: ApiPublicAdminArticlesRouteWithChildren,
-  ApiPublicAdminCategoriesRoute: ApiPublicAdminCategoriesRoute,
-  ApiPublicAdminLeadsRoute: ApiPublicAdminLeadsRoute,
-  ApiPublicAdminAnalyticsSummaryRoute: ApiPublicAdminAnalyticsSummaryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
