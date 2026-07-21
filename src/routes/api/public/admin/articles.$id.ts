@@ -62,7 +62,7 @@ export const Route = createFileRoute("/api/public/admin/articles/$id")({
 
         const { data, error } = await ctx.supabase
           .from("articles")
-          .update(patch)
+          .update(patch as never)
           .eq("id", params.id)
           .select()
           .single();
