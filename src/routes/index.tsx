@@ -6,7 +6,7 @@ import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { INDUSTRIES, PROVINCES, SITE_URL, abs } from "@/lib/factory";
 
-const HOME_TITLE = "VNSupplier.cloud — Danh bạ nhà máy & nhà cung cấp Việt Nam bằng AI";
+const HOME_TITLE = "VNSupplier — Danh bạ nhà máy & nhà cung cấp Việt Nam bằng AI";
 const HOME_DESC = "vnsupplier.cloud: tìm 2,400+ nhà máy Việt Nam theo năng lực sản xuất, ngành, tỉnh. CNC, ép nhựa, SMT PCBA, kim loại, bao bì, cao su, dệt may — có tóm tắt AI cho mỗi hồ sơ.";
 const HOME_URL = abs("/");
 
@@ -76,7 +76,7 @@ function HomePage() {
             Tìm nhà cung cấp<br className="hidden md:block" /> sản xuất Việt Nam <span className="text-brand">bằng AI</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
-            VNSupplier.cloud kết nối buyer với nhà máy đã xác thực trong 24 giờ. Hồ sơ năng lực chi tiết, tóm tắt AI, liên hệ trực tiếp không qua trung gian.
+            VNSupplier kết nối buyer với nhà máy đã xác thực trong 24 giờ. Hồ sơ năng lực chi tiết, tóm tắt AI, liên hệ trực tiếp không qua trung gian.
           </p>
 
           <form
