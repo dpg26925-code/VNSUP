@@ -50,6 +50,8 @@ function AdminPage() {
       address: edit.address || null, description: edit.description || null, ai_summary: edit.ai_summary || null,
       capabilities: typeof edit.capabilities === "string" ? (edit.capabilities as string).split(",").map((s) => s.trim()).filter(Boolean) : (edit.capabilities ?? []),
       verified: !!edit.verified, featured: !!edit.featured,
+      stock_exchange: edit.stock_exchange || null,
+      stock_ticker: edit.stock_ticker ? String(edit.stock_ticker).toUpperCase() : null,
     };
     if (edit.id) {
       await supabase.from("companies").update(payload).eq("id", edit.id);
