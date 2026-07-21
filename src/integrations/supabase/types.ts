@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      capabilities: {
+        Row: {
+          category: string | null
+          company_id: string
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          category?: string | null
+          company_id: string
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: string | null
+          company_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capabilities_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       celebrities: {
         Row: {
           achievements: string[]
@@ -77,6 +109,245 @@ export type Database = {
         }
         Relationships: []
       }
+      companies: {
+        Row: {
+          address: string | null
+          ai_summary: string | null
+          capabilities: Json
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          district: string | null
+          email: string | null
+          employee_range: string | null
+          featured: boolean
+          founded_year: number | null
+          id: string
+          industry: string | null
+          last_verified_at: string | null
+          logo_url: string | null
+          name: string
+          phone: string | null
+          province: string | null
+          slug: string
+          source: string
+          sub_industry: string | null
+          updated_at: string
+          verified: boolean
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          ai_summary?: string | null
+          capabilities?: Json
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          district?: string | null
+          email?: string | null
+          employee_range?: string | null
+          featured?: boolean
+          founded_year?: number | null
+          id?: string
+          industry?: string | null
+          last_verified_at?: string | null
+          logo_url?: string | null
+          name: string
+          phone?: string | null
+          province?: string | null
+          slug: string
+          source?: string
+          sub_industry?: string | null
+          updated_at?: string
+          verified?: boolean
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          ai_summary?: string | null
+          capabilities?: Json
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          district?: string | null
+          email?: string | null
+          employee_range?: string | null
+          featured?: boolean
+          founded_year?: number | null
+          id?: string
+          industry?: string | null
+          last_verified_at?: string | null
+          logo_url?: string | null
+          name?: string
+          phone?: string | null
+          province?: string | null
+          slug?: string
+          source?: string
+          sub_industry?: string | null
+          updated_at?: string
+          verified?: boolean
+          website?: string | null
+        }
+        Relationships: []
+      }
+      company_claims: {
+        Row: {
+          company_id: string
+          created_at: string
+          id: string
+          note: string | null
+          requester_email: string
+          requester_name: string | null
+          reviewed_at: string | null
+          status: Database["public"]["Enums"]["claim_status"]
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          requester_email: string
+          requester_name?: string | null
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["claim_status"]
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          requester_email?: string
+          requester_name?: string | null
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["claim_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_claims_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_updates: {
+        Row: {
+          company_id: string
+          content: string | null
+          created_at: string
+          id: string
+          published_at: string
+          title: string
+          update_type: string
+        }
+        Insert: {
+          company_id: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          published_at?: string
+          title: string
+          update_type: string
+        }
+        Update: {
+          company_id?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          published_at?: string
+          title?: string
+          update_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_updates_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          company: string | null
+          company_id: string
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone: string | null
+          source_page: string | null
+        }
+        Insert: {
+          company?: string | null
+          company_id: string
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone?: string | null
+          source_page?: string | null
+        }
+        Update: {
+          company?: string | null
+          company_id?: string
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string | null
+          source_page?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string | null
+          company_id: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          category?: string | null
+          company_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: string | null
+          company_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -101,6 +372,30 @@ export type Database = {
           email?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      saved_searches: {
+        Row: {
+          created_at: string
+          filters: Json
+          id: string
+          query: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          filters?: Json
+          id?: string
+          query?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          filters?: Json
+          id?: string
+          query?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -140,6 +435,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      claim_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -268,6 +564,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      claim_status: ["pending", "approved", "rejected"],
     },
   },
 } as const

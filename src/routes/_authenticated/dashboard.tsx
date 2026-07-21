@@ -1,74 +1,47 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { SiteHeader, SiteFooter } from "@/components/site-header";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({
-    meta: [
-      { title: "Bảng điều khiển" },
-      { name: "description", content: "Trang cá nhân của bạn." },
-    ],
-  }),
+  head: () => ({ meta: [{ title: "Dashboard | FactoryHub" }, { name: "robots", content: "noindex" }] }),
   component: Dashboard,
 });
 
-interface Profile {
-  id: string;
-  email: string | null;
-  display_name: string | null;
-  avatar_url: string | null;
-}
-
 function Dashboard() {
-  const navigate = useNavigate();
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState<string>("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
-      const { data } = await supabase
-        .from("profiles")
-        .select("id, email, display_name, avatar_url")
-        .eq("id", userData.user.id)
-        .maybeSingle();
-      setProfile(data);
-      setLoading(false);
-    })();
+    supabase.auth.getUser().then(({ data }) => {
+      setEmail(data.user?.email ?? "");
+      if (data.user) {
+        supabase.from("user_roles").select("role").eq("user_id", data.user.id).eq("role", "admin").maybeSingle()
+          .then(({ data: r }) => setIsAdmin(!!r));
+      }
+    });
   }, []);
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    navigate({ to: "/auth", replace: true });
-  };
-
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="mx-auto max-w-2xl space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Bảng điều khiển</h1>
-          <button
-            onClick={signOut}
-            className="rounded-md border px-3 py-1.5 text-sm hover:bg-accent"
-          >
-            Đăng xuất
-          </button>
-        </div>
-
-        <div className="rounded-lg border bg-card p-6">
-          {loading ? (
-            <p className="text-sm text-muted-foreground">Đang tải...</p>
-          ) : profile ? (
-            <div className="space-y-2">
-              <p><span className="text-muted-foreground">Tên:</span> {profile.display_name ?? "—"}</p>
-              <p><span className="text-muted-foreground">Email:</span> {profile.email}</p>
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">Chưa có hồ sơ</p>
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <div className="mx-auto max-w-5xl px-4 py-8">
+        <h1 className="text-2xl font-bold">Xin chào {email}</h1>
+        <p className="mt-1 text-muted-foreground">Bảng điều khiển tài khoản FactoryHub.</p>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <Link to="/search" className="rounded-lg border bg-card p-5 hover:border-primary">
+            <div className="font-semibold">Tìm nhà máy</div>
+            <div className="mt-1 text-sm text-muted-foreground">Khám phá danh bạ nhà máy sản xuất.</div>
+          </Link>
+          {isAdmin && (
+            <Link to="/admin" className="rounded-lg border border-primary/40 bg-primary/5 p-5">
+              <div className="font-semibold text-primary">Quản lý dữ liệu</div>
+              <div className="mt-1 text-sm text-muted-foreground">Thêm/sửa/xóa hồ sơ nhà máy.</div>
+            </Link>
           )}
         </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

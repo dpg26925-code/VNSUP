@@ -1,574 +1,178 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, Shield, ArrowLeft, Save, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { SiteHeader } from "@/components/site-header";
+import { SiteHeader, SiteFooter } from "@/components/site-header";
+import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
+import { Pencil, Plus, Trash2, X } from "lucide-react";
+
+type Row = {
+  id: string; slug: string; name: string; province: string | null; industry: string | null;
+  sub_industry: string | null; employee_range: string | null; founded_year: number | null;
+  website: string | null; phone: string | null; email: string | null; address: string | null;
+  description: string | null; ai_summary: string | null; capabilities: unknown;
+  verified: boolean; featured: boolean;
+};
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({
-    meta: [
-      { title: "Quản lý — Người nổi tiếng" },
-      { name: "robots", content: "noindex" },
-    ],
-  }),
+  head: () => ({ meta: [{ title: "Quản lý | FactoryHub" }, { name: "robots", content: "noindex" }] }),
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+    const { data: r } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id).eq("role", "admin").maybeSingle();
+    if (!r) throw redirect({ to: "/dashboard" });
+  },
   component: AdminPage,
 });
 
-type Celeb = {
-  id: string;
-  slug: string;
-  name: string;
-  stage_name: string | null;
-  avatar_url: string | null;
-  cover_url: string | null;
-  bio: string | null;
-  nationality: string | null;
-  birth_date: string | null;
-  category: string;
-  achievements: string[];
-  socials: Record<string, string>;
-  featured: boolean;
-  published: boolean;
-};
-
-const emptyForm: Omit<Celeb, "id"> = {
-  slug: "",
-  name: "",
-  stage_name: "",
-  avatar_url: "",
-  cover_url: "",
-  bio: "",
-  nationality: "",
-  birth_date: "",
-  category: "singer",
-  achievements: [],
-  socials: {},
-  featured: false,
-  published: true,
-};
-
 function AdminPage() {
-  const qc = useQueryClient();
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [editing, setEditing] = useState<Celeb | null>(null);
-  const [showForm, setShowForm] = useState(false);
+  const [rows, setRows] = useState<Row[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [edit, setEdit] = useState<Partial<Row> | null>(null);
+  const [q, setQ] = useState("");
 
-  useEffect(() => {
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) return setIsAdmin(false);
-      const { data: role } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", data.user.id)
-        .eq("role", "admin")
-        .maybeSingle();
-      setIsAdmin(!!role);
-    });
-  }, []);
-
-  const { data: celebs = [], refetch } = useQuery({
-    queryKey: ["admin-celebrities"],
-    enabled: isAdmin === true,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("celebrities")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data as Celeb[];
-    },
-  });
-
-  if (isAdmin === null) {
-    return (
-      <div className="min-h-screen bg-background">
-        <SiteHeader />
-        <div className="p-10 text-center text-sm text-muted-foreground">
-          Đang kiểm tra quyền…
-        </div>
-      </div>
-    );
+  async function load() {
+    setLoading(true);
+    const { data } = await supabase.from("companies").select("*").order("updated_at", { ascending: false });
+    setRows((data ?? []) as Row[]); setLoading(false);
   }
+  useEffect(() => { load(); }, []);
 
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen bg-background text-foreground">
-        <SiteHeader />
-        <div className="mx-auto max-w-lg px-4 py-20 text-center">
-          <Shield className="mx-auto h-12 w-12 text-primary/70" />
-          <h1 className="mt-4 text-2xl font-bold">Bạn không phải Admin</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Để truy cập trang quản lý, tài khoản của bạn cần có vai trò{" "}
-            <code className="rounded bg-white/10 px-1.5 py-0.5">admin</code>{" "}
-            trong bảng <code>user_roles</code>.
-          </p>
-          <p className="mt-4 text-xs text-muted-foreground">
-            Chạy SQL sau trong Supabase (thay bằng user_id của bạn):
-            <br />
-            <code className="mt-2 inline-block rounded bg-white/10 px-2 py-1 text-[11px]">
-              INSERT INTO user_roles (user_id, role) VALUES
-              ('&lt;your-uid&gt;', 'admin');
-            </code>
-          </p>
-          <Link
-            to="/"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            <ArrowLeft className="h-4 w-4" /> Về trang chủ
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  async function handleDelete(id: string) {
-    if (!confirm("Xóa nhân vật này?")) return;
-    const { error } = await supabase.from("celebrities").delete().eq("id", id);
-    if (error) alert(error.message);
-    else {
-      refetch();
-      qc.invalidateQueries({ queryKey: ["celebrities"] });
+  async function save() {
+    if (!edit || !edit.name || !edit.slug) return;
+    const payload: any = {
+      name: edit.name, slug: edit.slug, province: edit.province ?? null, industry: edit.industry ?? null,
+      sub_industry: edit.sub_industry ?? null, employee_range: edit.employee_range ?? null,
+      founded_year: edit.founded_year ? Number(edit.founded_year) : null,
+      website: edit.website || null, phone: edit.phone || null, email: edit.email || null,
+      address: edit.address || null, description: edit.description || null, ai_summary: edit.ai_summary || null,
+      capabilities: typeof edit.capabilities === "string" ? (edit.capabilities as string).split(",").map((s) => s.trim()).filter(Boolean) : (edit.capabilities ?? []),
+      verified: !!edit.verified, featured: !!edit.featured,
+    };
+    if (edit.id) {
+      await supabase.from("companies").update(payload).eq("id", edit.id);
+    } else {
+      await supabase.from("companies").insert(payload);
     }
+    setEdit(null); load();
   }
+
+  async function remove(id: string) {
+    if (!confirm("Xóa nhà máy này?")) return;
+    await supabase.from("companies").delete().eq("id", id); load();
+  }
+
+  const filtered = rows.filter((r) => !q || r.name.toLowerCase().includes(q.toLowerCase()) || r.slug.includes(q.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background">
       <SiteHeader />
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        <div className="flex items-center justify-between">
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="mb-4 flex items-center justify-between gap-3">
           <div>
-            <h1 className="flex items-center gap-2 text-2xl font-bold">
-              <Shield className="h-6 w-6 text-primary" /> Dashboard quản lý
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Thêm, sửa, xóa hồ sơ người nổi tiếng
-            </p>
+            <h1 className="text-2xl font-bold">Quản lý nhà máy</h1>
+            <p className="text-sm text-muted-foreground">{rows.length} nhà máy trong hệ thống.</p>
           </div>
-          <button
-            onClick={() => {
-              setEditing(null);
-              setShowForm(true);
-            }}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90"
-          >
+          <button onClick={() => setEdit({ verified: false, featured: false, capabilities: [] })}
+            className="inline-flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
             <Plus className="h-4 w-4" /> Thêm mới
           </button>
         </div>
 
-        {/* Stats */}
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatCard label="Tổng hồ sơ" value={celebs.length} />
-          <StatCard
-            label="Đã xuất bản"
-            value={celebs.filter((c) => c.published).length}
-          />
-          <StatCard
-            label="Nổi bật"
-            value={celebs.filter((c) => c.featured).length}
-          />
-          <StatCard
-            label="Lĩnh vực"
-            value={new Set(celebs.map((c) => c.category)).size}
-          />
-        </div>
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Tìm theo tên hoặc slug…"
+          className="mb-4 w-full max-w-md rounded-md border bg-card px-3 py-2 text-sm outline-none" />
 
-        <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
+        <div className="overflow-x-auto rounded-md border bg-card">
           <table className="w-full text-sm">
-            <thead className="bg-white/5 text-left text-xs uppercase text-muted-foreground">
+            <thead className="border-b bg-muted/50 text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
-                <th className="px-4 py-3">Tên</th>
-                <th className="px-4 py-3">Slug</th>
-                <th className="px-4 py-3">Lĩnh vực</th>
-                <th className="px-4 py-3">Trạng thái</th>
-                <th className="px-4 py-3"></th>
+                <th className="p-3">Tên</th><th className="p-3">Slug</th><th className="p-3">Tỉnh</th>
+                <th className="p-3">Ngành</th><th className="p-3">Trạng thái</th><th className="p-3"></th>
               </tr>
             </thead>
             <tbody>
-              {celebs.map((c) => (
-                <tr key={c.id} className="border-t border-white/5">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      {c.avatar_url && (
-                        <img
-                          src={c.avatar_url}
-                          alt=""
-                          className="h-8 w-8 rounded-full object-cover"
-                        />
-                      )}
-                      <span>{c.stage_name || c.name}</span>
-                    </div>
+              {loading ? <tr><td colSpan={6} className="p-4 text-center text-muted-foreground">Đang tải…</td></tr> :
+              filtered.map((r) => (
+                <tr key={r.id} className="border-b last:border-0 hover:bg-accent/40">
+                  <td className="p-3 font-medium">{r.name}</td>
+                  <td className="p-3 font-mono text-xs text-muted-foreground">{r.slug}</td>
+                  <td className="p-3">{r.province}</td>
+                  <td className="p-3">{r.industry}</td>
+                  <td className="p-3">
+                    {r.verified && <span className="mr-1 rounded bg-success/10 px-1.5 py-0.5 text-[10px] text-success">Verified</span>}
+                    {r.featured && <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] text-amber-700">Featured</span>}
                   </td>
-                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                    {c.slug}
-                  </td>
-                  <td className="px-4 py-3">{c.category}</td>
-                  <td className="px-4 py-3">
-                    {c.published ? (
-                      <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs text-primary">
-                        Đã xuất bản
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs">
-                        Nháp
-                      </span>
-                    )}
-                    {c.featured && (
-                      <span className="ml-1 rounded-full bg-fuchsia-500/20 px-2 py-0.5 text-xs text-fuchsia-300">
-                        ★
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={() => {
-                        setEditing(c);
-                        setShowForm(true);
-                      }}
-                      className="mr-2 inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs hover:bg-white/20"
-                    >
-                      <Pencil className="h-3 w-3" /> Sửa
-                    </button>
-                    <button
-                      onClick={() => handleDelete(c.id)}
-                      className="inline-flex items-center gap-1 rounded-md bg-destructive/20 px-2 py-1 text-xs text-destructive hover:bg-destructive/30"
-                    >
-                      <Trash2 className="h-3 w-3" /> Xóa
-                    </button>
+                  <td className="p-3 text-right">
+                    <button onClick={() => setEdit(r)} className="mr-1 rounded p-1.5 hover:bg-accent"><Pencil className="h-4 w-4" /></button>
+                    <button onClick={() => remove(r.id)} className="rounded p-1.5 text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></button>
                   </td>
                 </tr>
               ))}
-              {celebs.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={5}
-                    className="px-4 py-10 text-center text-sm text-muted-foreground"
-                  >
-                    Chưa có nhân vật nào.
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {showForm && (
-        <CelebForm
-          initial={editing}
-          onClose={() => setShowForm(false)}
-          onSaved={() => {
-            setShowForm(false);
-            refetch();
-            qc.invalidateQueries({ queryKey: ["celebrities"] });
-          }}
-        />
+      {edit && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-4">
+          <div className="mt-8 w-full max-w-2xl rounded-lg border bg-card p-6 shadow-xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">{edit.id ? "Sửa nhà máy" : "Thêm nhà máy"}</h2>
+              <button onClick={() => setEdit(null)} className="rounded p-1 hover:bg-accent"><X className="h-5 w-5" /></button>
+            </div>
+            <div className="grid gap-3 md:grid-cols-2">
+              <Field label="Tên *"><input value={edit.name ?? ""} onChange={(e) => setEdit({ ...edit, name: e.target.value })} className="input" /></Field>
+              <Field label="Slug *"><input value={edit.slug ?? ""} onChange={(e) => setEdit({ ...edit, slug: e.target.value.toLowerCase().replace(/\s+/g, "-") })} className="input" /></Field>
+              <Field label="Tỉnh/TP">
+                <select value={edit.province ?? ""} onChange={(e) => setEdit({ ...edit, province: e.target.value || null })} className="input">
+                  <option value="">—</option>
+                  {PROVINCES.map((p) => <option key={p.slug} value={p.name}>{p.name}</option>)}
+                </select>
+              </Field>
+              <Field label="Ngành">
+                <select value={edit.industry ?? ""} onChange={(e) => setEdit({ ...edit, industry: e.target.value || null })} className="input">
+                  <option value="">—</option>
+                  {INDUSTRIES.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
+                </select>
+              </Field>
+              <Field label="Ngành phụ"><input value={edit.sub_industry ?? ""} onChange={(e) => setEdit({ ...edit, sub_industry: e.target.value })} className="input" /></Field>
+              <Field label="Số lao động">
+                <select value={edit.employee_range ?? ""} onChange={(e) => setEdit({ ...edit, employee_range: e.target.value || null })} className="input">
+                  <option value="">—</option>
+                  {EMPLOYEE_RANGES.map((r) => <option key={r}>{r}</option>)}
+                </select>
+              </Field>
+              <Field label="Năm thành lập"><input type="number" value={edit.founded_year ?? ""} onChange={(e) => setEdit({ ...edit, founded_year: e.target.value ? Number(e.target.value) : null })} className="input" /></Field>
+              <Field label="Website"><input value={edit.website ?? ""} onChange={(e) => setEdit({ ...edit, website: e.target.value })} className="input" /></Field>
+              <Field label="Phone"><input value={edit.phone ?? ""} onChange={(e) => setEdit({ ...edit, phone: e.target.value })} className="input" /></Field>
+              <Field label="Email"><input value={edit.email ?? ""} onChange={(e) => setEdit({ ...edit, email: e.target.value })} className="input" /></Field>
+              <Field label="Địa chỉ" full><input value={edit.address ?? ""} onChange={(e) => setEdit({ ...edit, address: e.target.value })} className="input" /></Field>
+              <Field label="Mô tả" full><textarea rows={3} value={edit.description ?? ""} onChange={(e) => setEdit({ ...edit, description: e.target.value })} className="input" /></Field>
+              <Field label="AI Summary" full><textarea rows={3} value={edit.ai_summary ?? ""} onChange={(e) => setEdit({ ...edit, ai_summary: e.target.value })} className="input" /></Field>
+              <Field label="Năng lực (cách nhau bằng dấu phẩy)" full>
+                <input value={Array.isArray(edit.capabilities) ? (edit.capabilities as string[]).join(", ") : String(edit.capabilities ?? "")}
+                  onChange={(e) => setEdit({ ...edit, capabilities: e.target.value as any })} className="input" />
+              </Field>
+              <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.verified} onChange={(e) => setEdit({ ...edit, verified: e.target.checked })} /> Đã xác thực</label>
+              <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.featured} onChange={(e) => setEdit({ ...edit, featured: e.target.checked })} /> Nổi bật</label>
+            </div>
+            <div className="mt-5 flex justify-end gap-2">
+              <button onClick={() => setEdit(null)} className="rounded-md border px-4 py-2 text-sm hover:bg-accent">Hủy</button>
+              <button onClick={save} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Lưu</button>
+            </div>
+          </div>
+        </div>
       )}
+      <style>{`.input{width:100%;border:1px solid var(--color-border);background:var(--color-background);border-radius:.375rem;padding:.5rem .75rem;font-size:.875rem;outline:none}`}</style>
+      <SiteFooter />
     </div>
   );
 }
 
-function CelebForm({
-  initial,
-  onClose,
-  onSaved,
-}: {
-  initial: Celeb | null;
-  onClose: () => void;
-  onSaved: () => void;
-}) {
-  const [form, setForm] = useState<Omit<Celeb, "id">>(() =>
-    initial
-      ? {
-          slug: initial.slug,
-          name: initial.name,
-          stage_name: initial.stage_name ?? "",
-          avatar_url: initial.avatar_url ?? "",
-          cover_url: initial.cover_url ?? "",
-          bio: initial.bio ?? "",
-          nationality: initial.nationality ?? "",
-          birth_date: initial.birth_date ?? "",
-          category: initial.category,
-          achievements: initial.achievements ?? [],
-          socials: initial.socials ?? {},
-          featured: initial.featured,
-          published: initial.published,
-        }
-      : emptyForm
-  );
-  const [achievementText, setAchievementText] = useState(
-    (initial?.achievements ?? []).join("\n")
-  );
-  const [socialsText, setSocialsText] = useState(
-    Object.entries(initial?.socials ?? {})
-      .map(([k, v]) => `${k}: ${v}`)
-      .join("\n")
-  );
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    setError(null);
-
-    const achievements = achievementText
-      .split("\n")
-      .map((s) => s.trim())
-      .filter(Boolean);
-
-    const socials: Record<string, string> = {};
-    for (const line of socialsText.split("\n")) {
-      const idx = line.indexOf(":");
-      if (idx > 0) {
-        const k = line.slice(0, idx).trim();
-        const v = line.slice(idx + 1).trim();
-        if (k && v) socials[k] = v;
-      }
-    }
-
-    const payload = {
-      ...form,
-      stage_name: form.stage_name || null,
-      avatar_url: form.avatar_url || null,
-      cover_url: form.cover_url || null,
-      bio: form.bio || null,
-      nationality: form.nationality || null,
-      birth_date: form.birth_date || null,
-      achievements,
-      socials,
-    };
-
-    const { error } = initial
-      ? await supabase.from("celebrities").update(payload).eq("id", initial.id)
-      : await supabase.from("celebrities").insert(payload);
-
-    setSaving(false);
-    if (error) setError(error.message);
-    else onSaved();
-  }
-
+function Field({ label, children, full }: { label: string; children: React.ReactNode; full?: boolean }) {
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4 backdrop-blur-sm">
-      <form
-        onSubmit={handleSubmit}
-        className="max-h-[90vh] w-full max-w-2xl overflow-auto rounded-3xl border border-white/10 bg-card p-6 shadow-2xl"
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold">
-            {initial ? "Sửa" : "Thêm"} nhân vật
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-full p-1 hover:bg-white/10"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="Slug (URL)*">
-            <input
-              required
-              value={form.slug}
-              onChange={(e) =>
-                setForm({ ...form, slug: e.target.value.toLowerCase() })
-              }
-              placeholder="son-tung-mtp"
-              className="input"
-            />
-          </Field>
-          <Field label="Lĩnh vực*">
-            <select
-              value={form.category}
-              onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="input"
-            >
-              <option value="singer">Ca sĩ</option>
-              <option value="actor">Diễn viên</option>
-              <option value="athlete">Vận động viên</option>
-              <option value="entrepreneur">Doanh nhân</option>
-              <option value="influencer">KOL</option>
-              <option value="other">Khác</option>
-            </select>
-          </Field>
-          <Field label="Tên thật*">
-            <input
-              required
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="input"
-            />
-          </Field>
-          <Field label="Nghệ danh">
-            <input
-              value={form.stage_name ?? ""}
-              onChange={(e) =>
-                setForm({ ...form, stage_name: e.target.value })
-              }
-              className="input"
-            />
-          </Field>
-          <Field label="Quốc tịch">
-            <input
-              value={form.nationality ?? ""}
-              onChange={(e) =>
-                setForm({ ...form, nationality: e.target.value })
-              }
-              className="input"
-            />
-          </Field>
-          <Field label="Ngày sinh">
-            <input
-              type="date"
-              value={form.birth_date ?? ""}
-              onChange={(e) =>
-                setForm({ ...form, birth_date: e.target.value })
-              }
-              className="input"
-            />
-          </Field>
-          <Field label="Ảnh đại diện (URL)">
-            <input
-              value={form.avatar_url ?? ""}
-              onChange={(e) =>
-                setForm({ ...form, avatar_url: e.target.value })
-              }
-              className="input"
-            />
-          </Field>
-          <Field label="Ảnh bìa (URL)">
-            <input
-              value={form.cover_url ?? ""}
-              onChange={(e) => setForm({ ...form, cover_url: e.target.value })}
-              className="input"
-            />
-          </Field>
-        </div>
-
-        <Field label="Tiểu sử" className="mt-3">
-          <textarea
-            rows={5}
-            value={form.bio ?? ""}
-            onChange={(e) => setForm({ ...form, bio: e.target.value })}
-            className="input"
-          />
-        </Field>
-
-        <Field label="Thành tích (mỗi dòng 1 mục)" className="mt-3">
-          <textarea
-            rows={4}
-            value={achievementText}
-            onChange={(e) => setAchievementText(e.target.value)}
-            className="input"
-            placeholder={"Giải thưởng Cống Hiến 2020\nQuán quân The Voice"}
-          />
-        </Field>
-
-        <Field
-          label="Mạng xã hội (mỗi dòng dạng &quot;Tên: URL&quot;)"
-          className="mt-3"
-        >
-          <textarea
-            rows={3}
-            value={socialsText}
-            onChange={(e) => setSocialsText(e.target.value)}
-            className="input"
-            placeholder={"Instagram: https://...\nYouTube: https://..."}
-          />
-        </Field>
-
-        <div className="mt-4 flex flex-wrap items-center gap-4">
-          <label className="inline-flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={form.published}
-              onChange={(e) =>
-                setForm({ ...form, published: e.target.checked })
-              }
-            />
-            Xuất bản
-          </label>
-          <label className="inline-flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={form.featured}
-              onChange={(e) =>
-                setForm({ ...form, featured: e.target.checked })
-              }
-            />
-            Nổi bật
-          </label>
-        </div>
-
-        {error && (
-          <p className="mt-3 rounded-lg bg-destructive/20 px-3 py-2 text-sm text-destructive">
-            {error}
-          </p>
-        )}
-
-        <div className="mt-5 flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20"
-          >
-            Hủy
-          </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-          >
-            <Save className="h-4 w-4" /> {saving ? "Đang lưu…" : "Lưu"}
-          </button>
-        </div>
-      </form>
-
-      <style>{`
-        .input {
-          width: 100%;
-          border-radius: 0.6rem;
-          border: 1px solid rgba(255,255,255,0.1);
-          background: rgba(255,255,255,0.05);
-          padding: 0.5rem 0.75rem;
-          font-size: 0.875rem;
-          color: inherit;
-          outline: none;
-        }
-        .input:focus { border-color: oklch(0.7 0.19 295); }
-      `}</style>
-    </div>
-  );
-}
-
-function Field({
-  label,
-  children,
-  className,
-}: {
-  label: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <label className={"block " + (className ?? "")}>
-      <span className="mb-1 block text-xs font-medium text-muted-foreground">
-        {label}
-      </span>
+    <div className={full ? "md:col-span-2" : ""}>
+      <label className="mb-1 block text-xs font-medium text-muted-foreground">{label}</label>
       {children}
-    </label>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-card/50 px-4 py-3">
-      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-        {label}
-      </div>
-      <div className="text-2xl font-bold text-primary">{value}</div>
     </div>
   );
 }
