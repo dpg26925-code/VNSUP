@@ -4,7 +4,7 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
-import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
+import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES, abs } from "@/lib/factory";
 import { Filter, Search as SearchIcon, X } from "lucide-react";
 
 const searchSchema = z.object({
@@ -14,18 +14,26 @@ const searchSchema = z.object({
   size: z.string().optional(),
 });
 
+const SEARCH_TITLE = "Tìm nhà máy sản xuất | FactoryHub Vietnam";
+const SEARCH_DESC = "Tìm nhà máy Việt Nam theo ngành, tỉnh, quy mô và năng lực sản xuất.";
+const SEARCH_URL = abs("/search");
+
 export const Route = createFileRoute("/search")({
   validateSearch: (s) => searchSchema.parse(s),
   head: () => ({
     meta: [
-      { title: "Tìm nhà máy sản xuất | FactoryHub Vietnam" },
-      { name: "description", content: "Tìm nhà máy Việt Nam theo ngành, tỉnh, quy mô và năng lực sản xuất." },
-      { property: "og:title", content: "Tìm nhà máy sản xuất | FactoryHub Vietnam" },
-      { property: "og:description", content: "Tìm nhà máy Việt Nam theo ngành, tỉnh, quy mô và năng lực sản xuất." },
+      { title: SEARCH_TITLE },
+      { name: "description", content: SEARCH_DESC },
+      { property: "og:title", content: SEARCH_TITLE },
+      { property: "og:description", content: SEARCH_DESC },
+      { property: "og:url", content: SEARCH_URL },
+      { name: "robots", content: "noindex,follow" },
     ],
+    links: [{ rel: "canonical", href: SEARCH_URL }],
   }),
   component: SearchPage,
 });
+
 
 function SearchPage() {
   const search = Route.useSearch();

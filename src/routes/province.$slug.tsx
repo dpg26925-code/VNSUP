@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
-import { PROVINCES, provinceBySlug } from "@/lib/factory";
+import { PROVINCES, provinceBySlug, abs } from "@/lib/factory";
 
 export const Route = createFileRoute("/province/$slug")({
   loader: ({ params }) => {
@@ -11,21 +11,36 @@ export const Route = createFileRoute("/province/$slug")({
     if (!p) throw notFound();
     return p;
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [{ title: "Không tìm thấy tỉnh" }, { name: "robots", content: "noindex" }] };
     const title = `Công ty sản xuất tại ${loaderData.name} | FactoryHub Vietnam`;
     const desc = `Danh sách nhà máy sản xuất tại ${loaderData.name}: CNC, ép nhựa, điện tử, kim loại, bao bì và nhiều ngành khác.`;
+    const url = abs(`/province/${params.slug}`);
     return {
       meta: [
         { title },
         { name: "description", content: desc },
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
+        { property: "og:url", content: url },
       ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [{
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Trang chủ", item: abs("/") },
+            { "@type": "ListItem", position: 2, name: loaderData.name, item: url },
+          ],
+        }),
+      }],
     };
   },
   component: ProvincePage,
 });
+
 
 function ProvincePage() {
   const p = Route.useLoaderData();

@@ -1,5 +1,9 @@
 // Shared constants + helpers for FactoryHub
 
+export const SITE_URL = "https://cheerful-wave-works.lovable.app";
+export const abs = (path: string) => `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+
+
 export const PROVINCES: { slug: string; name: string }[] = [
   { slug: "binh-duong", name: "Bình Dương" },
   { slug: "dong-nai", name: "Đồng Nai" },
