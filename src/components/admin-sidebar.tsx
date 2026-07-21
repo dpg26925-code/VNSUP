@@ -25,9 +25,10 @@ import {
 
 const items = [
   { title: "Tổng quan", url: "/dashboard", icon: Home, exact: true },
+  { title: "Doanh nghiệp mới", url: "/dashboard/admin/companies", icon: Building2 },
   { title: "Bài viết", url: "/dashboard/articles", icon: FileText },
   { title: "Chuyên mục", url: "/dashboard/categories", icon: FolderTree },
-  { title: "Doanh nghiệp", url: "/admin", icon: Building2 },
+  { title: "Quản lý doanh nghiệp", url: "/admin", icon: Building2 },
   { title: "Leads", url: "/dashboard/leads", icon: Inbox },
   { title: "Thống kê", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Nhật ký", url: "/dashboard/audit-log", icon: ScrollText },
