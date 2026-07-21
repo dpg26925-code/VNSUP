@@ -43,9 +43,8 @@ export const PROVINCES: { slug: string; name: string }[] = [
   { slug: "dong-thap", name: "Đồng Tháp" },
   { slug: "an-giang", name: "An Giang" },
   { slug: "ca-mau", name: "Cà Mau" },
-  // Giữ tương thích ngược với dữ liệu cũ
-  { slug: "binh-duong", name: "Bình Dương" },
 ];
+
 
 export const INDUSTRIES: { slug: string; name: string; desc: string }[] = [
   { slug: "nhua", name: "Nhựa", desc: "Ép phun, thổi, đùn, bao bì mềm và cứng." },
