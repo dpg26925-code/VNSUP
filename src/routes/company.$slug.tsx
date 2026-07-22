@@ -389,9 +389,12 @@ function CompanyPage() {
                 <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><ImageIcon className="h-5 w-5 text-brand" />Hình ảnh nhà máy</h2>
                 <div className="grid gap-2 sm:grid-cols-3">
                   {gallery.slice(0, 9).map((url, i) => (
-                    <a key={i} href={url} target="_blank" rel="noopener" className="group relative aspect-square overflow-hidden rounded-lg border bg-secondary">
+                    <button key={i} type="button" onClick={() => setLightboxIdx(i)} className="group relative aspect-[4/3] overflow-hidden rounded-lg border bg-secondary">
                       <img src={url} alt={`Ảnh nhà máy ${c.name} ${i + 1}`} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
-                    </a>
+                      <span className="absolute inset-0 grid place-items-center bg-black/0 text-transparent transition group-hover:bg-black/30 group-hover:text-white">
+                        <ImageIcon className="h-6 w-6" />
+                      </span>
+                    </button>
                   ))}
                 </div>
               </section>
