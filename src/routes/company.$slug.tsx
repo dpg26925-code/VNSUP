@@ -100,6 +100,13 @@ export const Route = createFileRoute("/company/$slug")({
             foundingDate: c.founded_year ? String(c.founded_year) : undefined,
             tickerSymbol: c.stock_ticker ? `${c.stock_exchange ?? ""}:${c.stock_ticker}`.replace(/^:/, "") : undefined,
             description: desc,
+            aggregateRating: (c as unknown as { _reviewCount: number; _ratingAvg: number })._reviewCount > 0 ? {
+              "@type": "AggregateRating",
+              ratingValue: (c as unknown as { _ratingAvg: number })._ratingAvg.toFixed(1),
+              reviewCount: (c as unknown as { _reviewCount: number })._reviewCount,
+              bestRating: 5,
+              worstRating: 1,
+            } : undefined,
           }),
         },
         {
