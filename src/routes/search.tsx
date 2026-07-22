@@ -87,7 +87,8 @@ function SearchPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <div className="mx-auto max-w-7xl px-4 py-6">
+      <Container className="py-6">
+
         <form onSubmit={(e) => { e.preventDefault(); apply({ q: q || undefined }); }} className="flex items-center gap-2 rounded-md border bg-card p-2">
           <SearchIcon className="ml-2 h-4 w-4 text-muted-foreground" />
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Từ khóa: CNC, ép nhựa, SMT…"
@@ -157,9 +158,7 @@ function SearchPage() {
             )}
 
             {loading ? (
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
-              </div>
+              <SkeletonGrid count={6} cols={3} />
             ) : rows.length === 0 ? (
               <EmptyState
                 title="Không tìm thấy nhà máy phù hợp"
@@ -167,9 +166,9 @@ function SearchPage() {
                 action={<button onClick={() => { setQ(""); apply({ q: undefined, industry: undefined, province: undefined, size: undefined }); }} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Xóa toàn bộ bộ lọc</button>}
               />
             ) : (
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <CardGrid cols={3}>
                 {rows.map((c) => <CompanyCard key={c.slug} {...c} />)}
-              </div>
+              </CardGrid>
             )}
           </div>
         </div>
