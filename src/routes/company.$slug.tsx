@@ -32,8 +32,17 @@ async function loadCompany(slug: string) {
   const { data, error } = await supabase.from("companies").select("*").eq("slug", slug).maybeSingle();
   if (error) throw error;
   if (!data) throw notFound();
-  return data as Company;
+  const { data: ratingRows } = await supabase
+    .from("company_reviews")
+    .select("rating")
+    .eq("company_id", (data as { id: string }).id)
+    .eq("status", "published");
+  const ratings = (ratingRows ?? []) as { rating: number }[];
+  const reviewCount = ratings.length;
+  const ratingAvg = reviewCount > 0 ? ratings.reduce((s, r) => s + r.rating, 0) / reviewCount : 0;
+  return { ...(data as Company), _reviewCount: reviewCount, _ratingAvg: ratingAvg };
 }
+
 
 export const Route = createFileRoute("/company/$slug")({
   loader: async ({ params }) => loadCompany(params.slug),
