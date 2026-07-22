@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { adminApi } from "@/lib/admin-client";
+import { CardGrid, Container, SectionHeader } from "@/components/primitives";
+import { EmptyState, ErrorState } from "@/components/skeleton-card";
 import { Building2, FileText, Inbox, Plus, Send, Bookmark, MessageSquare, Search } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
