@@ -4,10 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
-import { BadgeCheck, Building2, Calendar, DollarSign, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package } from "lucide-react";
+import { BadgeCheck, Building2, Calendar, DollarSign, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare } from "lucide-react";
 
 type FAQ = { q: string; a: string };
 type Certification = { name: string; issuer?: string; year?: number | string };
+type Review = { id: string; rating: number; title: string | null; content: string; reviewer_name: string | null; created_at: string; user_id: string };
 
 type Company = {
   id: string; slug: string; name: string;
@@ -19,10 +20,12 @@ type Company = {
   logo_url: string | null; cover_url: string | null; video_url: string | null;
   description: string | null; ai_summary: string | null;
   capabilities: unknown; certifications: unknown; gallery_urls: unknown; faqs: unknown;
+  export_markets: unknown;
   verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   submitted_by: string | null;
 };
+
 
 
 async function loadCompany(slug: string) {
