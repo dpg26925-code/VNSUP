@@ -1,0 +1,1 @@
+ALTER TABLE public.company_reviews ALTER COLUMN user_id DROP NOT NULL;
