@@ -172,7 +172,7 @@ function SearchPage() {
             )}
           </div>
         </div>
-      </div>
+      </Container>
       <SiteFooter />
     </div>
   );
