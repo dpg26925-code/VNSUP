@@ -142,14 +142,17 @@ function CompanyPage() {
     : [];
   const gallery: string[] = Array.isArray(c.gallery_urls) ? (c.gallery_urls as string[]).filter((u) => typeof u === "string" && u) : [];
   const faqs: FAQ[] = Array.isArray(c.faqs) ? (c.faqs as FAQ[]).filter((f) => f && f.q && f.a) : [];
+  const exportMarkets: string[] = Array.isArray(c.export_markets) ? (c.export_markets as string[]).filter((v) => typeof v === "string" && v) : [];
   const [similar, setSimilar] = useState<CompanyCardProps[]>([]);
   const [showAllSimilar, setShowAllSimilar] = useState(false);
   const [products, setProducts] = useState<{ id: string; name: string; category: string | null; description: string | null }[]>([]);
   const [updates, setUpdates] = useState<{ id: string; title: string; content: string | null; update_type: string | null; published_at: string | null }[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsVersion, setReviewsVersion] = useState(0);
 
   useEffect(() => {
     supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
-      .eq("industry", c.industry ?? "").neq("id", c.id).limit(12)
+      .eq("industry", c.industry ?? "").neq("id", c.id).limit(18)
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
     supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)
       .then(({ data }) => setProducts(data ?? []));
@@ -157,13 +160,19 @@ function CompanyPage() {
       .eq("company_id", c.id).not("published_at", "is", null)
       .order("published_at", { ascending: false }).limit(6)
       .then(({ data }) => setUpdates(data ?? []));
-  }, [c.id, c.industry]);
+    supabase.from("company_reviews").select("id,rating,title,content,reviewer_name,created_at,user_id")
+      .eq("company_id", c.id).eq("status", "published")
+      .order("created_at", { ascending: false }).limit(50)
+      .then(({ data }) => setReviews((data ?? []) as Review[]));
+  }, [c.id, c.industry, reviewsVersion]);
 
   const mapQuery = encodeURIComponent([c.name, c.address, c.district, c.province].filter(Boolean).join(", "));
   const mapEmbed = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
   const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
-  const shownSimilar = showAllSimilar ? similar : similar.slice(0, 4);
+  const shownSimilar = showAllSimilar ? similar : similar.slice(0, 6);
   const videoEmbed = getVideoEmbed(c.video_url);
+  const avgRating = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
+
 
 
   return (
