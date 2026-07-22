@@ -28,19 +28,31 @@ type Company = {
 
 
 
+type UpdateSeo = { id: string; title: string; content: string | null; published_at: string | null };
 async function loadCompany(slug: string) {
   const { data, error } = await supabase.from("companies").select("*").eq("slug", slug).maybeSingle();
   if (error) throw error;
   if (!data) throw notFound();
-  const { data: ratingRows } = await supabase
-    .from("company_reviews")
-    .select("rating")
-    .eq("company_id", (data as { id: string }).id)
-    .eq("status", "published");
+  const id = (data as { id: string }).id;
+  const [{ data: ratingRows }, { data: updateRows }] = await Promise.all([
+    supabase.from("company_reviews").select("rating").eq("company_id", id).eq("status", "published"),
+    supabase
+      .from("company_updates")
+      .select("id,title,content,published_at")
+      .eq("company_id", id)
+      .not("published_at", "is", null)
+      .order("published_at", { ascending: false })
+      .limit(10),
+  ]);
   const ratings = (ratingRows ?? []) as { rating: number }[];
   const reviewCount = ratings.length;
   const ratingAvg = reviewCount > 0 ? ratings.reduce((s, r) => s + r.rating, 0) / reviewCount : 0;
-  return { ...(data as Company), _reviewCount: reviewCount, _ratingAvg: ratingAvg };
+  return {
+    ...(data as Company),
+    _reviewCount: reviewCount,
+    _ratingAvg: ratingAvg,
+    _updatesSeo: (updateRows ?? []) as UpdateSeo[],
+  };
 }
 
 
@@ -128,6 +140,29 @@ export const Route = createFileRoute("/company/$slug")({
       });
     }
 
+    const updatesSeo = (c as unknown as { _updatesSeo?: UpdateSeo[] })._updatesSeo ?? [];
+    for (const u of updatesSeo) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: u.title,
+          datePublished: u.published_at ?? undefined,
+          dateModified: u.published_at ?? undefined,
+          articleBody: u.content ?? undefined,
+          mainEntityOfPage: url,
+          author: { "@type": "Organization", name: c.name },
+          publisher: {
+            "@type": "Organization",
+            name: "VNSupplier",
+            logo: { "@type": "ImageObject", url: abs("/favicon.ico") },
+          },
+          image: c.logo_url ?? undefined,
+        }),
+      });
+    }
+
     return {
       meta: [
         { title },
@@ -142,7 +177,11 @@ export const Route = createFileRoute("/company/$slug")({
         ] : []),
         { name: "twitter:card", content: "summary_large_image" },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [
+        { rel: "canonical", href: url },
+        { rel: "alternate", hreflang: "vi", href: url },
+        { rel: "alternate", hreflang: "x-default", href: url },
+      ],
       scripts,
     };
   },
