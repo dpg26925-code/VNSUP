@@ -132,7 +132,7 @@ function OverviewPage() {
             )}
           </section>
         </div>
-      </div>
+      </Container>
     );
   }
 
