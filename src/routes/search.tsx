@@ -4,7 +4,8 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
-import { SkeletonCard, EmptyState } from "@/components/skeleton-card";
+import { SkeletonGrid, EmptyState } from "@/components/skeleton-card";
+import { Container, CardGrid } from "@/components/primitives";
 import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES, abs } from "@/lib/factory";
 import { Filter, Search as SearchIcon, X } from "lucide-react";
 
