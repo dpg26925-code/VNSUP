@@ -65,6 +65,69 @@ export const Route = createFileRoute("/company/$slug")({
     }
     breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: c.name, item: url });
 
+    const faqList = Array.isArray(c.faqs)
+      ? (c.faqs as { q?: string; a?: string }[]).filter((f) => f && f.q && f.a)
+      : [];
+
+    const scripts: { type: string; children: string }[] = [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "@id": url,
+          name: c.name,
+          url,
+          logo: c.logo_url ?? undefined,
+          image: c.logo_url ?? undefined,
+          address: c.address ? {
+            "@type": "PostalAddress",
+            streetAddress: c.address,
+            addressLocality: c.district ?? undefined,
+            addressRegion: c.province ?? undefined,
+            addressCountry: "VN",
+          } : undefined,
+          telephone: c.phone ?? undefined,
+          email: c.email ?? undefined,
+          sameAs: c.website ? [c.website] : undefined,
+          areaServed: c.province ?? undefined,
+          foundingDate: c.founded_year ? String(c.founded_year) : undefined,
+          tickerSymbol: c.stock_ticker ? `${c.stock_exchange ?? ""}:${c.stock_ticker}`.replace(/^:/, "") : undefined,
+          description: desc,
+          aggregateRating: (c as unknown as { _reviewCount: number; _ratingAvg: number })._reviewCount > 0 ? {
+            "@type": "AggregateRating",
+            ratingValue: (c as unknown as { _ratingAvg: number })._ratingAvg.toFixed(1),
+            reviewCount: (c as unknown as { _reviewCount: number })._reviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          } : undefined,
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: breadcrumbs,
+        }),
+      },
+    ];
+
+    if (faqList.length > 0) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqList.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      });
+    }
+
     return {
       meta: [
         { title },
@@ -73,51 +136,14 @@ export const Route = createFileRoute("/company/$slug")({
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
+        ...(c.logo_url ? [
+          { property: "og:image", content: c.logo_url },
+          { name: "twitter:image", content: c.logo_url },
+        ] : []),
+        { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: url }],
-      scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "LocalBusiness",
-            "@id": url,
-            name: c.name,
-            url,
-            logo: c.logo_url ?? undefined,
-            image: c.logo_url ?? undefined,
-            address: c.address ? {
-              "@type": "PostalAddress",
-              streetAddress: c.address,
-              addressLocality: c.district ?? undefined,
-              addressRegion: c.province ?? undefined,
-              addressCountry: "VN",
-            } : undefined,
-            telephone: c.phone ?? undefined,
-            email: c.email ?? undefined,
-            sameAs: c.website ? [c.website] : undefined,
-            areaServed: c.province ?? undefined,
-            foundingDate: c.founded_year ? String(c.founded_year) : undefined,
-            tickerSymbol: c.stock_ticker ? `${c.stock_exchange ?? ""}:${c.stock_ticker}`.replace(/^:/, "") : undefined,
-            description: desc,
-            aggregateRating: (c as unknown as { _reviewCount: number; _ratingAvg: number })._reviewCount > 0 ? {
-              "@type": "AggregateRating",
-              ratingValue: (c as unknown as { _ratingAvg: number })._ratingAvg.toFixed(1),
-              reviewCount: (c as unknown as { _reviewCount: number })._reviewCount,
-              bestRating: 5,
-              worstRating: 1,
-            } : undefined,
-          }),
-        },
-        {
-          type: "application/ld+json",
-          children: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: breadcrumbs,
-          }),
-        },
-      ],
+      scripts,
     };
   },
   notFoundComponent: CompanyNotFound,
