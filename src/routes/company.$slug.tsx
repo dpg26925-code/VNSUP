@@ -28,19 +28,31 @@ type Company = {
 
 
 
+type UpdateSeo = { id: string; title: string; content: string | null; published_at: string | null };
 async function loadCompany(slug: string) {
   const { data, error } = await supabase.from("companies").select("*").eq("slug", slug).maybeSingle();
   if (error) throw error;
   if (!data) throw notFound();
-  const { data: ratingRows } = await supabase
-    .from("company_reviews")
-    .select("rating")
-    .eq("company_id", (data as { id: string }).id)
-    .eq("status", "published");
+  const id = (data as { id: string }).id;
+  const [{ data: ratingRows }, { data: updateRows }] = await Promise.all([
+    supabase.from("company_reviews").select("rating").eq("company_id", id).eq("status", "published"),
+    supabase
+      .from("company_updates")
+      .select("id,title,content,published_at")
+      .eq("company_id", id)
+      .not("published_at", "is", null)
+      .order("published_at", { ascending: false })
+      .limit(10),
+  ]);
   const ratings = (ratingRows ?? []) as { rating: number }[];
   const reviewCount = ratings.length;
   const ratingAvg = reviewCount > 0 ? ratings.reduce((s, r) => s + r.rating, 0) / reviewCount : 0;
-  return { ...(data as Company), _reviewCount: reviewCount, _ratingAvg: ratingAvg };
+  return {
+    ...(data as Company),
+    _reviewCount: reviewCount,
+    _ratingAvg: ratingAvg,
+    _updatesSeo: (updateRows ?? []) as UpdateSeo[],
+  };
 }
 
 

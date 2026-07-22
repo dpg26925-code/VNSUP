@@ -11,6 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
+import { Route as SitemapProvincesDotxmlRouteImport } from './routes/sitemap-provinces[.]xml'
+import { Route as SitemapIndustriesDotxmlRouteImport } from './routes/sitemap-industries[.]xml'
+import { Route as SitemapCompaniesDotxmlRouteImport } from './routes/sitemap-companies[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
@@ -62,6 +66,26 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapStaticDotxmlRoute = SitemapStaticDotxmlRouteImport.update({
+  id: '/sitemap-static.xml',
+  path: '/sitemap-static.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapProvincesDotxmlRoute = SitemapProvincesDotxmlRouteImport.update({
+  id: '/sitemap-provinces.xml',
+  path: '/sitemap-provinces.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapIndustriesDotxmlRoute = SitemapIndustriesDotxmlRouteImport.update({
+  id: '/sitemap-industries.xml',
+  path: '/sitemap-industries.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapCompaniesDotxmlRoute = SitemapCompaniesDotxmlRouteImport.update({
+  id: '/sitemap-companies.xml',
+  path: '/sitemap-companies.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -306,6 +330,10 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/sitemap-companies.xml': typeof SitemapCompaniesDotxmlRoute
+  '/sitemap-industries.xml': typeof SitemapIndustriesDotxmlRoute
+  '/sitemap-provinces.xml': typeof SitemapProvincesDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -351,6 +379,10 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/sitemap-companies.xml': typeof SitemapCompaniesDotxmlRoute
+  '/sitemap-industries.xml': typeof SitemapIndustriesDotxmlRoute
+  '/sitemap-provinces.xml': typeof SitemapProvincesDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -397,6 +429,10 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/sitemap-companies.xml': typeof SitemapCompaniesDotxmlRoute
+  '/sitemap-industries.xml': typeof SitemapIndustriesDotxmlRoute
+  '/sitemap-provinces.xml': typeof SitemapProvincesDotxmlRoute
+  '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -444,6 +480,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/search'
+    | '/sitemap-companies.xml'
+    | '/sitemap-industries.xml'
+    | '/sitemap-provinces.xml'
+    | '/sitemap-static.xml'
     | '/sitemap.xml'
     | '/unauthorized'
     | '/admin'
@@ -489,6 +529,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/search'
+    | '/sitemap-companies.xml'
+    | '/sitemap-industries.xml'
+    | '/sitemap-provinces.xml'
+    | '/sitemap-static.xml'
     | '/sitemap.xml'
     | '/unauthorized'
     | '/admin'
@@ -534,6 +578,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/search'
+    | '/sitemap-companies.xml'
+    | '/sitemap-industries.xml'
+    | '/sitemap-provinces.xml'
+    | '/sitemap-static.xml'
     | '/sitemap.xml'
     | '/unauthorized'
     | '/_authenticated/admin'
@@ -581,6 +629,10 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
+  SitemapCompaniesDotxmlRoute: typeof SitemapCompaniesDotxmlRoute
+  SitemapIndustriesDotxmlRoute: typeof SitemapIndustriesDotxmlRoute
+  SitemapProvincesDotxmlRoute: typeof SitemapProvincesDotxmlRoute
+  SitemapStaticDotxmlRoute: typeof SitemapStaticDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   CompanySlugRoute: typeof CompanySlugRoute
@@ -604,6 +656,34 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-static.xml': {
+      id: '/sitemap-static.xml'
+      path: '/sitemap-static.xml'
+      fullPath: '/sitemap-static.xml'
+      preLoaderRoute: typeof SitemapStaticDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-provinces.xml': {
+      id: '/sitemap-provinces.xml'
+      path: '/sitemap-provinces.xml'
+      fullPath: '/sitemap-provinces.xml'
+      preLoaderRoute: typeof SitemapProvincesDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-industries.xml': {
+      id: '/sitemap-industries.xml'
+      path: '/sitemap-industries.xml'
+      fullPath: '/sitemap-industries.xml'
+      preLoaderRoute: typeof SitemapIndustriesDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-companies.xml': {
+      id: '/sitemap-companies.xml'
+      path: '/sitemap-companies.xml'
+      fullPath: '/sitemap-companies.xml'
+      preLoaderRoute: typeof SitemapCompaniesDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -1043,6 +1123,10 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
+  SitemapCompaniesDotxmlRoute: SitemapCompaniesDotxmlRoute,
+  SitemapIndustriesDotxmlRoute: SitemapIndustriesDotxmlRoute,
+  SitemapProvincesDotxmlRoute: SitemapProvincesDotxmlRoute,
+  SitemapStaticDotxmlRoute: SitemapStaticDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   CompanySlugRoute: CompanySlugRoute,
