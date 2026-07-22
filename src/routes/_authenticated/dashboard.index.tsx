@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { adminApi } from "@/lib/admin-client";
+import { CardGrid, Container, SectionHeader } from "@/components/primitives";
+import { EmptyState, ErrorState } from "@/components/skeleton-card";
 import { Building2, FileText, Inbox, Plus, Send, Bookmark, MessageSquare, Search } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -69,15 +71,17 @@ function OverviewPage() {
 
   if (!hasAdminRole) {
     return (
-      <div className="mx-auto max-w-5xl px-4 py-8">
-        <h1 className="text-2xl font-bold">Bảng điều khiển</h1>
-        <p className="mt-1 text-muted-foreground">Quản lý tìm kiếm đã lưu, yêu cầu báo giá và hồ sơ doanh nghiệp của bạn.</p>
+      <Container size="md" className="py-8">
+        <SectionHeader
+          title="Bảng điều khiển"
+          description="Quản lý tìm kiếm đã lưu, yêu cầu báo giá và hồ sơ doanh nghiệp của bạn."
+        />
 
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <CardGrid cols={3}>
           <QuickLink to="/search" icon={Search} title="Tìm nhà máy" desc="Lọc theo ngành, tỉnh, quy mô." />
           <QuickLink to="/dashboard/submit-company" icon={Send} title="Gửi doanh nghiệp" desc="Đăng ký hồ sơ nhà máy để admin duyệt." />
           <QuickLink to="/dashboard/my-companies" icon={Building2} title="Doanh nghiệp của tôi" desc="Theo dõi trạng thái duyệt & lead inbox." />
-        </div>
+        </CardGrid>
 
         <div className="mt-8 grid gap-6 md:grid-cols-2">
           <section className="rounded-lg border bg-card p-5">
@@ -128,7 +132,7 @@ function OverviewPage() {
             )}
           </section>
         </div>
-      </div>
+      </Container>
     );
   }
 
