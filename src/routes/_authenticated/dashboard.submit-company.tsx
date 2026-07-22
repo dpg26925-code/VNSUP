@@ -139,6 +139,7 @@ function SubmitCompanyPage() {
       certifications: certs,
       gallery_urls: gallery,
       faqs: faqs,
+      export_markets: (d.export_markets || "").split(",").map((s) => s.trim()).filter(Boolean),
       stock_exchange: d.stock_exchange || null,
       stock_ticker: d.stock_ticker ? d.stock_ticker.toUpperCase() : null,
       verified: false,
