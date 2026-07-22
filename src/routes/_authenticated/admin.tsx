@@ -12,7 +12,7 @@ type Row = {
   website: string | null; phone: string | null; email: string | null; address: string | null;
   logo_url: string | null; cover_url: string | null; video_url: string | null;
   description: string | null; ai_summary: string | null; capabilities: unknown;
-  certifications: unknown; gallery_urls: unknown; faqs: unknown;
+  certifications: unknown; gallery_urls: unknown; faqs: unknown; export_markets: unknown;
   verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   status: string | null; submitted_by: string | null; rejection_reason: string | null;
