@@ -214,6 +214,18 @@ function CompanyPage() {
   const shownSimilar = showAllSimilar ? similar : similar.slice(0, 6);
   const videoEmbed = getVideoEmbed(c.video_url);
   const avgRating = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxIdx(null);
+      else if (e.key === "ArrowRight") setLightboxIdx((i) => (i === null ? i : (i + 1) % gallery.length));
+      else if (e.key === "ArrowLeft") setLightboxIdx((i) => (i === null ? i : (i - 1 + gallery.length) % gallery.length));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxIdx, gallery.length]);
 
 
 
