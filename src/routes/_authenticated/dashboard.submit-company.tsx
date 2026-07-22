@@ -264,6 +264,9 @@ function SubmitCompanyPage() {
             <F label="Câu hỏi thường gặp (FAQ)" full hint="Câu hỏi ở dòng đầu, trả lời ở dòng sau; cách nhau bằng 1 dòng trống">
               <textarea rows={5} className="input" value={form.faqs} onChange={(e) => set("faqs", e.target.value)} placeholder={"MOQ tối thiểu là bao nhiêu?\nMOQ 500-1000 sản phẩm tuỳ loại.\n\nThời gian sản xuất trung bình?\nKhoảng 15-30 ngày làm việc."} />
             </F>
+            <F label="Thị trường xuất khẩu" full err={errors.export_markets} hint="Phân tách bằng dấu phẩy. VD: Mỹ, EU, Nhật Bản, Hàn Quốc">
+              <input className="input" value={form.export_markets} onChange={(e) => set("export_markets", e.target.value)} placeholder="Mỹ, EU, Nhật Bản" />
+            </F>
 
             <F label="Sàn niêm yết" err={errors.stock_exchange} hint="Bỏ trống nếu chưa niêm yết">
               <select className="input" value={form.stock_exchange} onChange={(e) => set("stock_exchange", e.target.value)}>
