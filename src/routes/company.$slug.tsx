@@ -400,13 +400,15 @@ function CompanyPage() {
               </section>
             )}
 
-            <ReviewsSection
-              companyId={c.id}
-              companyName={c.name}
-              reviews={reviews}
-              avgRating={avgRating}
-              onChange={() => setReviewsVersion((v) => v + 1)}
-            />
+            <div id="reviews" className="scroll-mt-20">
+              <ReviewsSection
+                companyId={c.id}
+                companyName={c.name}
+                reviews={reviews}
+                avgRating={avgRating}
+                onChange={() => setReviewsVersion((v) => v + 1)}
+              />
+            </div>
 
 
             {updates.length > 0 && (
