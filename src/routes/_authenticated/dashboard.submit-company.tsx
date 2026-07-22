@@ -47,6 +47,7 @@ const schema = z.object({
   certifications: z.string().max(2000).optional().or(z.literal("")),
   gallery_urls: z.string().max(3000).optional().or(z.literal("")),
   faqs: z.string().max(5000).optional().or(z.literal("")),
+  export_markets: z.string().max(500).optional().or(z.literal("")),
   stock_exchange: z.enum(["", "HOSE", "HNX", "UPCOM", "Khác"]).optional(),
   stock_ticker: z
     .string()
