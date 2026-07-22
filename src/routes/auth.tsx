@@ -71,11 +71,30 @@ function AuthPage() {
 
   const google = async () => {
     setError(null);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/dashboard` },
-    });
-    if (error) setError(error.message);
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
+      });
+
+      if (error) throw error;
+    } catch (err) {
+      const rawMessage = err instanceof Error ? err.message : "Đăng nhập Google thất bại";
+      const isProviderDisabled = /provider is not enabled|unsupported provider/i.test(rawMessage);
+      setError(
+        isProviderDisabled
+          ? "Google OAuth chưa được bật đúng trong Supabase Auth. Hãy kiểm tra Authentication → Providers → Google đã Enable, có Client ID/Secret và đã Save."
+          : rawMessage,
+      );
+      setLoading(false);
+    }
   };
 
   const inputCls = (err: string | null) => `w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition ${err ? "border-destructive focus:ring-2 focus:ring-destructive/20" : "focus:ring-2 focus:ring-primary/20"}`;
