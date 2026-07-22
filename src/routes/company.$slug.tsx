@@ -526,6 +526,19 @@ function CompanyPage() {
           </section>
         )}
       </div>
+      {lightboxIdx !== null && gallery[lightboxIdx] && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" onClick={() => setLightboxIdx(null)}>
+          <button type="button" aria-label="Đóng" onClick={() => setLightboxIdx(null)} className="absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-white hover:bg-white/20">✕</button>
+          {gallery.length > 1 && (
+            <>
+              <button type="button" aria-label="Ảnh trước" onClick={(e) => { e.stopPropagation(); setLightboxIdx((i) => (i === null ? i : (i - 1 + gallery.length) % gallery.length)); }} className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-4 py-3 text-xl text-white hover:bg-white/20">‹</button>
+              <button type="button" aria-label="Ảnh sau" onClick={(e) => { e.stopPropagation(); setLightboxIdx((i) => (i === null ? i : (i + 1) % gallery.length)); }} className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-4 py-3 text-xl text-white hover:bg-white/20">›</button>
+            </>
+          )}
+          <img src={gallery[lightboxIdx]} alt={`Ảnh nhà máy ${c.name} ${lightboxIdx + 1}`} className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain" onClick={(e) => e.stopPropagation()} />
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-xs text-white">{lightboxIdx + 1} / {gallery.length}</div>
+        </div>
+      )}
       <SiteFooter />
     </div>
   );
