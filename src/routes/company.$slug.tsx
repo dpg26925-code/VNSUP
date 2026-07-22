@@ -229,6 +229,13 @@ function CompanyPage() {
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h1 className="text-2xl font-bold md:text-3xl">{c.name}</h1>
+                {reviews.length > 0 && (
+                  <a href="#reviews" className="mt-2 inline-flex items-center gap-2 text-sm hover:opacity-80">
+                    <Stars value={avgRating} />
+                    <span className="font-semibold text-foreground">{avgRating.toFixed(1)}</span>
+                    <span className="text-muted-foreground">({reviews.length} đánh giá)</span>
+                  </a>
+                )}
                 <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
                   {c.province && <span className="inline-flex items-center gap-1"><MapPin className="h-4 w-4" />{c.province}{c.district && `, ${c.district}`}</span>}
                   {c.industry && (
@@ -393,13 +400,15 @@ function CompanyPage() {
               </section>
             )}
 
-            <ReviewsSection
-              companyId={c.id}
-              companyName={c.name}
-              reviews={reviews}
-              avgRating={avgRating}
-              onChange={() => setReviewsVersion((v) => v + 1)}
-            />
+            <div id="reviews" className="scroll-mt-20">
+              <ReviewsSection
+                companyId={c.id}
+                companyName={c.name}
+                reviews={reviews}
+                avgRating={avgRating}
+                onChange={() => setReviewsVersion((v) => v + 1)}
+              />
+            </div>
 
 
             {updates.length > 0 && (
