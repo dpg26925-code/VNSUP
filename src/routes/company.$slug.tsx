@@ -638,3 +638,130 @@ function QuickInfoStats({ c }: { c: Company }) {
   );
 }
 
+function Stars({ value, size = 14 }: { value: number; size?: number }) {
+  const rounded = Math.round(value);
+  return (
+    <span className="inline-flex items-center gap-0.5" aria-label={`${value.toFixed(1)} / 5`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star key={n} className={n <= rounded ? "text-brand" : "text-muted-foreground/30"} style={{ width: size, height: size }} fill="currentColor" strokeWidth={0} />
+      ))}
+    </span>
+  );
+}
+
+function ReviewsSection({
+  companyId, companyName, reviews, avgRating, onChange,
+}: {
+  companyId: string; companyName: string; reviews: Review[]; avgRating: number; onChange: () => void;
+}) {
+  const [me, setMe] = useState<{ id: string; email: string | null; name: string | null } | null>(null);
+  const [rating, setRating] = useState(5);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) return setMe(null);
+      setMe({
+        id: data.user.id,
+        email: data.user.email ?? null,
+        name: (data.user.user_metadata?.full_name as string) ?? (data.user.user_metadata?.name as string) ?? null,
+      });
+    });
+  }, []);
+
+  const myReview = me ? reviews.find((r) => r.user_id === me.id) ?? null : null;
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!me) { setErr("Bạn cần đăng nhập để đánh giá."); setStatus("error"); return; }
+    if (content.trim().length < 10) { setErr("Nội dung đánh giá cần ít nhất 10 ký tự."); setStatus("error"); return; }
+    setStatus("sending"); setErr(null);
+    const payload = {
+      company_id: companyId,
+      user_id: me.id,
+      rating,
+      title: title.trim() || null,
+      content: content.trim(),
+      reviewer_name: me.name,
+    };
+    const { error } = myReview
+      ? await supabase.from("company_reviews").update(payload).eq("id", myReview.id)
+      : await supabase.from("company_reviews").insert(payload);
+    if (error) { setErr(error.message); setStatus("error"); return; }
+    setStatus("sent"); setTitle(""); setContent(""); setRating(5);
+    onChange();
+  }
+
+  async function remove(id: string) {
+    if (!confirm("Xoá đánh giá của bạn?")) return;
+    const { error } = await supabase.from("company_reviews").delete().eq("id", id);
+    if (!error) onChange();
+  }
+
+  return (
+    <section className="rounded-lg border bg-card p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="flex items-center gap-2 text-lg font-semibold"><MessageSquare className="h-5 w-5 text-brand" />Đánh giá từ khách hàng</h2>
+        {reviews.length > 0 && (
+          <div className="flex items-center gap-2 text-sm">
+            <Stars value={avgRating} size={16} />
+            <span className="font-semibold">{avgRating.toFixed(1)}</span>
+            <span className="text-muted-foreground">· {reviews.length} đánh giá</span>
+          </div>
+        )}
+      </div>
+
+      {me ? (
+        <form onSubmit={submit} className="mb-6 space-y-2 rounded-md border bg-background p-4">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-muted-foreground">Đánh giá của bạn:</span>
+            {[1, 2, 3, 4, 5].map((n) => (
+              <button type="button" key={n} onClick={() => setRating(n)} aria-label={`${n} sao`}>
+                <Star className={n <= rating ? "text-brand" : "text-muted-foreground/30"} fill="currentColor" strokeWidth={0} width={20} height={20} />
+              </button>
+            ))}
+          </div>
+          <input maxLength={120} placeholder="Tiêu đề (tuỳ chọn)" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20" />
+          <textarea required rows={3} maxLength={2000} placeholder={`Chia sẻ trải nghiệm làm việc với ${companyName}…`} value={content} onChange={(e) => setContent(e.target.value)} className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20" />
+          {err && <div className="rounded border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">{err}</div>}
+          {status === "sent" && <div className="rounded border border-success/30 bg-success/10 p-2 text-xs text-success">✓ Đã lưu đánh giá.</div>}
+          <button disabled={status === "sending"} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
+            {status === "sending" ? "Đang gửi…" : myReview ? "Cập nhật đánh giá" : "Đăng đánh giá"}
+          </button>
+        </form>
+      ) : (
+        <div className="mb-6 rounded-md border bg-secondary/40 p-3 text-sm text-muted-foreground">
+          <Link to="/auth" className="font-semibold text-brand hover:underline">Đăng nhập</Link> để đánh giá nhà cung cấp này.
+        </div>
+      )}
+
+      {reviews.length === 0 ? (
+        <p className="text-sm text-muted-foreground">Chưa có đánh giá nào. Hãy là người đầu tiên chia sẻ trải nghiệm.</p>
+      ) : (
+        <ul className="space-y-3">
+          {reviews.map((r) => (
+            <li key={r.id} className="rounded-md border bg-background p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Stars value={r.rating} />
+                  <span className="text-sm font-semibold">{r.reviewer_name ?? "Khách hàng"}</span>
+                  <span className="text-[11px] text-muted-foreground">{new Date(r.created_at).toLocaleDateString("vi-VN")}</span>
+                </div>
+                {me?.id === r.user_id && (
+                  <button onClick={() => remove(r.id)} className="text-[11px] font-semibold text-destructive hover:underline">Xoá</button>
+                )}
+              </div>
+              {r.title && <div className="mt-1 text-sm font-semibold">{r.title}</div>}
+              <p className="mt-1 whitespace-pre-line text-sm text-muted-foreground">{r.content}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+
