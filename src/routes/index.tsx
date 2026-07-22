@@ -19,7 +19,11 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: HOME_DESC },
       { property: "og:url", content: HOME_URL },
     ],
-    links: [{ rel: "canonical", href: HOME_URL }],
+    links: [
+      { rel: "canonical", href: HOME_URL },
+      { rel: "alternate", hreflang: "vi", href: HOME_URL },
+      { rel: "alternate", hreflang: "x-default", href: HOME_URL },
+    ],
     scripts: [
       {
         type: "application/ld+json",

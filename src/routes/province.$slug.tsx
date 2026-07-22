@@ -25,7 +25,11 @@ export const Route = createFileRoute("/province/$slug")({
         { property: "og:description", content: desc },
         { property: "og:url", content: url },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [
+        { rel: "canonical", href: url },
+        { rel: "alternate", hreflang: "vi", href: url },
+        { rel: "alternate", hreflang: "x-default", href: url },
+      ],
       scripts: [{
         type: "application/ld+json",
         children: JSON.stringify({

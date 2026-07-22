@@ -140,6 +140,29 @@ export const Route = createFileRoute("/company/$slug")({
       });
     }
 
+    const updatesSeo = (c as unknown as { _updatesSeo?: UpdateSeo[] })._updatesSeo ?? [];
+    for (const u of updatesSeo) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: u.title,
+          datePublished: u.published_at ?? undefined,
+          dateModified: u.published_at ?? undefined,
+          articleBody: u.content ?? undefined,
+          mainEntityOfPage: url,
+          author: { "@type": "Organization", name: c.name },
+          publisher: {
+            "@type": "Organization",
+            name: "VNSupplier",
+            logo: { "@type": "ImageObject", url: abs("/favicon.ico") },
+          },
+          image: c.logo_url ?? undefined,
+        }),
+      });
+    }
+
     return {
       meta: [
         { title },
@@ -154,7 +177,11 @@ export const Route = createFileRoute("/company/$slug")({
         ] : []),
         { name: "twitter:card", content: "summary_large_image" },
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: [
+        { rel: "canonical", href: url },
+        { rel: "alternate", hreflang: "vi", href: url },
+        { rel: "alternate", hreflang: "x-default", href: url },
+      ],
       scripts,
     };
   },
