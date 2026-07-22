@@ -65,6 +65,69 @@ export const Route = createFileRoute("/company/$slug")({
     }
     breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: c.name, item: url });
 
+    const faqList = Array.isArray(c.faqs)
+      ? (c.faqs as { q?: string; a?: string }[]).filter((f) => f && f.q && f.a)
+      : [];
+
+    const scripts: { type: string; children: string }[] = [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "@id": url,
+          name: c.name,
+          url,
+          logo: c.logo_url ?? undefined,
+          image: c.logo_url ?? undefined,
+          address: c.address ? {
+            "@type": "PostalAddress",
+            streetAddress: c.address,
+            addressLocality: c.district ?? undefined,
+            addressRegion: c.province ?? undefined,
+            addressCountry: "VN",
+          } : undefined,
+          telephone: c.phone ?? undefined,
+          email: c.email ?? undefined,
+          sameAs: c.website ? [c.website] : undefined,
+          areaServed: c.province ?? undefined,
+          foundingDate: c.founded_year ? String(c.founded_year) : undefined,
+          tickerSymbol: c.stock_ticker ? `${c.stock_exchange ?? ""}:${c.stock_ticker}`.replace(/^:/, "") : undefined,
+          description: desc,
+          aggregateRating: (c as unknown as { _reviewCount: number; _ratingAvg: number })._reviewCount > 0 ? {
+            "@type": "AggregateRating",
+            ratingValue: (c as unknown as { _ratingAvg: number })._ratingAvg.toFixed(1),
+            reviewCount: (c as unknown as { _reviewCount: number })._reviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          } : undefined,
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: breadcrumbs,
+        }),
+      },
+    ];
+
+    if (faqList.length > 0) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqList.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      });
+    }
+
     return {
       meta: [
         { title },
@@ -73,51 +136,14 @@ export const Route = createFileRoute("/company/$slug")({
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
+        ...(c.logo_url ? [
+          { property: "og:image", content: c.logo_url },
+          { name: "twitter:image", content: c.logo_url },
+        ] : []),
+        { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: url }],
-      scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "LocalBusiness",
-            "@id": url,
-            name: c.name,
-            url,
-            logo: c.logo_url ?? undefined,
-            image: c.logo_url ?? undefined,
-            address: c.address ? {
-              "@type": "PostalAddress",
-              streetAddress: c.address,
-              addressLocality: c.district ?? undefined,
-              addressRegion: c.province ?? undefined,
-              addressCountry: "VN",
-            } : undefined,
-            telephone: c.phone ?? undefined,
-            email: c.email ?? undefined,
-            sameAs: c.website ? [c.website] : undefined,
-            areaServed: c.province ?? undefined,
-            foundingDate: c.founded_year ? String(c.founded_year) : undefined,
-            tickerSymbol: c.stock_ticker ? `${c.stock_exchange ?? ""}:${c.stock_ticker}`.replace(/^:/, "") : undefined,
-            description: desc,
-            aggregateRating: (c as unknown as { _reviewCount: number; _ratingAvg: number })._reviewCount > 0 ? {
-              "@type": "AggregateRating",
-              ratingValue: (c as unknown as { _ratingAvg: number })._ratingAvg.toFixed(1),
-              reviewCount: (c as unknown as { _reviewCount: number })._reviewCount,
-              bestRating: 5,
-              worstRating: 1,
-            } : undefined,
-          }),
-        },
-        {
-          type: "application/ld+json",
-          children: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: breadcrumbs,
-          }),
-        },
-      ],
+      scripts,
     };
   },
   notFoundComponent: CompanyNotFound,
@@ -188,6 +214,18 @@ function CompanyPage() {
   const shownSimilar = showAllSimilar ? similar : similar.slice(0, 6);
   const videoEmbed = getVideoEmbed(c.video_url);
   const avgRating = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxIdx(null);
+      else if (e.key === "ArrowRight") setLightboxIdx((i) => (i === null ? i : (i + 1) % gallery.length));
+      else if (e.key === "ArrowLeft") setLightboxIdx((i) => (i === null ? i : (i - 1 + gallery.length) % gallery.length));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxIdx, gallery.length]);
 
 
 
@@ -351,9 +389,12 @@ function CompanyPage() {
                 <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><ImageIcon className="h-5 w-5 text-brand" />Hình ảnh nhà máy</h2>
                 <div className="grid gap-2 sm:grid-cols-3">
                   {gallery.slice(0, 9).map((url, i) => (
-                    <a key={i} href={url} target="_blank" rel="noopener" className="group relative aspect-square overflow-hidden rounded-lg border bg-secondary">
+                    <button key={i} type="button" onClick={() => setLightboxIdx(i)} className="group relative aspect-[4/3] overflow-hidden rounded-lg border bg-secondary">
                       <img src={url} alt={`Ảnh nhà máy ${c.name} ${i + 1}`} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
-                    </a>
+                      <span className="absolute inset-0 grid place-items-center bg-black/0 text-transparent transition group-hover:bg-black/30 group-hover:text-white">
+                        <ImageIcon className="h-6 w-6" />
+                      </span>
+                    </button>
                   ))}
                 </div>
               </section>
@@ -485,6 +526,19 @@ function CompanyPage() {
           </section>
         )}
       </div>
+      {lightboxIdx !== null && gallery[lightboxIdx] && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" onClick={() => setLightboxIdx(null)}>
+          <button type="button" aria-label="Đóng" onClick={() => setLightboxIdx(null)} className="absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-white hover:bg-white/20">✕</button>
+          {gallery.length > 1 && (
+            <>
+              <button type="button" aria-label="Ảnh trước" onClick={(e) => { e.stopPropagation(); setLightboxIdx((i) => (i === null ? i : (i - 1 + gallery.length) % gallery.length)); }} className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-4 py-3 text-xl text-white hover:bg-white/20">‹</button>
+              <button type="button" aria-label="Ảnh sau" onClick={(e) => { e.stopPropagation(); setLightboxIdx((i) => (i === null ? i : (i + 1) % gallery.length)); }} className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-4 py-3 text-xl text-white hover:bg-white/20">›</button>
+            </>
+          )}
+          <img src={gallery[lightboxIdx]} alt={`Ảnh nhà máy ${c.name} ${lightboxIdx + 1}`} className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain" onClick={(e) => e.stopPropagation()} />
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-xs text-white">{lightboxIdx + 1} / {gallery.length}</div>
+        </div>
+      )}
       <SiteFooter />
     </div>
   );
