@@ -447,13 +447,13 @@ function CompanyPage() {
               <h2 className="text-lg font-semibold">Nhà cung cấp tương tự</h2>
               <span className="text-xs text-muted-foreground">{similar.length} kết quả</span>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {shownSimilar.map((s) => <CompanyCard key={s.slug} {...s} />)}
             </div>
-            {similar.length > 4 && (
+            {similar.length > 6 && (
               <div className="mt-4 text-center">
                 <button onClick={() => setShowAllSimilar((v) => !v)} className="rounded-md border px-4 py-2 text-sm font-semibold hover:border-brand hover:text-brand">
-                  {showAllSimilar ? "Thu gọn" : `Xem thêm ${similar.length - 4} nhà máy`}
+                  {showAllSimilar ? "Thu gọn" : `Xem thêm ${similar.length - 6} nhà máy`}
                 </button>
               </div>
             )}
