@@ -364,6 +364,28 @@ function CompanyPage() {
               </section>
             )}
 
+            {exportMarkets.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Globe2 className="h-5 w-5 text-brand" />Thị trường xuất khẩu</h2>
+                <div className="flex flex-wrap gap-2">
+                  {exportMarkets.map((m) => (
+                    <span key={m} className="inline-flex items-center gap-1 rounded-full border bg-secondary/60 px-3 py-1 text-sm font-medium">
+                      <Globe2 className="h-3.5 w-3.5 text-muted-foreground" />{m}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <ReviewsSection
+              companyId={c.id}
+              companyName={c.name}
+              reviews={reviews}
+              avgRating={avgRating}
+              onChange={() => setReviewsVersion((v) => v + 1)}
+            />
+
+
             {updates.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
                 <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Newspaper className="h-5 w-5 text-brand" />Tin tức & cập nhật</h2>
