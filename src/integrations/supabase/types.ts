@@ -260,6 +260,7 @@ export type Database = {
           district: string | null
           email: string | null
           employee_range: string | null
+          export_markets: Json | null
           faqs: Json
           featured: boolean
           featured_expires_at: string | null
@@ -305,6 +306,7 @@ export type Database = {
           district?: string | null
           email?: string | null
           employee_range?: string | null
+          export_markets?: Json | null
           faqs?: Json
           featured?: boolean
           featured_expires_at?: string | null
@@ -350,6 +352,7 @@ export type Database = {
           district?: string | null
           email?: string | null
           employee_range?: string | null
+          export_markets?: Json | null
           faqs?: Json
           featured?: boolean
           featured_expires_at?: string | null
@@ -421,6 +424,53 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "company_claims_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_reviews: {
+        Row: {
+          company_id: string
+          content: string
+          created_at: string
+          id: string
+          rating: number
+          reviewer_name: string | null
+          status: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          content: string
+          created_at?: string
+          id?: string
+          rating: number
+          reviewer_name?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          reviewer_name?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_reviews_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"

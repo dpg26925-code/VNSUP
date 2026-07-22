@@ -12,7 +12,7 @@ type Row = {
   website: string | null; phone: string | null; email: string | null; address: string | null;
   logo_url: string | null; cover_url: string | null; video_url: string | null;
   description: string | null; ai_summary: string | null; capabilities: unknown;
-  certifications: unknown; gallery_urls: unknown; faqs: unknown;
+  certifications: unknown; gallery_urls: unknown; faqs: unknown; export_markets: unknown;
   verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   status: string | null; submitted_by: string | null; rejection_reason: string | null;
@@ -80,6 +80,7 @@ function AdminPage() {
       certifications: parseCerts(edit.certifications),
       gallery_urls: parseLines(edit.gallery_urls),
       faqs: parseFaqs(edit.faqs),
+      export_markets: parseCsv(edit.export_markets),
       video_url: edit.video_url || null,
       cover_url: edit.cover_url || null,
       verified: !!edit.verified, featured: !!edit.featured,
@@ -274,6 +275,10 @@ function AdminPage() {
               <Field label="FAQ (câu hỏi dòng 1, trả lời dòng 2+; cách nhau bằng dòng trống)" full>
                 <textarea rows={5} value={Array.isArray(edit.faqs) ? (edit.faqs as any[]).map((f) => `${f.q}\n${f.a}`).join("\n\n") : String(edit.faqs ?? "")} onChange={(e) => setEdit({ ...edit, faqs: e.target.value as any })} className="input" />
               </Field>
+              <Field label="Thị trường xuất khẩu (phân tách bằng dấu phẩy)" full>
+                <input value={Array.isArray(edit.export_markets) ? (edit.export_markets as string[]).join(", ") : String(edit.export_markets ?? "")} onChange={(e) => setEdit({ ...edit, export_markets: e.target.value as any })} className="input" placeholder="Mỹ, EU, Nhật Bản" />
+              </Field>
+
 
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.verified} onChange={(e) => setEdit({ ...edit, verified: e.target.checked })} /> Đã xác thực</label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.featured} onChange={(e) => setEdit({ ...edit, featured: e.target.checked })} /> Nổi bật</label>

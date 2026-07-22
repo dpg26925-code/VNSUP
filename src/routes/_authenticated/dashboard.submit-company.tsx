@@ -47,6 +47,7 @@ const schema = z.object({
   certifications: z.string().max(2000).optional().or(z.literal("")),
   gallery_urls: z.string().max(3000).optional().or(z.literal("")),
   faqs: z.string().max(5000).optional().or(z.literal("")),
+  export_markets: z.string().max(500).optional().or(z.literal("")),
   stock_exchange: z.enum(["", "HOSE", "HNX", "UPCOM", "Khác"]).optional(),
   stock_ticker: z
     .string()
@@ -79,7 +80,7 @@ function SubmitCompanyPage() {
     employee_range: "", founded_year: "", website: "", phone: "", email: "",
     address: "", description: "", capabilities: "",
     revenue_range: "", company_type: "", cover_url: "", video_url: "",
-    certifications: "", gallery_urls: "", faqs: "",
+    certifications: "", gallery_urls: "", faqs: "", export_markets: "",
     stock_exchange: "", stock_ticker: "", logo_url: "",
   });
 
@@ -138,6 +139,7 @@ function SubmitCompanyPage() {
       certifications: certs,
       gallery_urls: gallery,
       faqs: faqs,
+      export_markets: (d.export_markets || "").split(",").map((s) => s.trim()).filter(Boolean),
       stock_exchange: d.stock_exchange || null,
       stock_ticker: d.stock_ticker ? d.stock_ticker.toUpperCase() : null,
       verified: false,
@@ -261,6 +263,9 @@ function SubmitCompanyPage() {
             </F>
             <F label="Câu hỏi thường gặp (FAQ)" full hint="Câu hỏi ở dòng đầu, trả lời ở dòng sau; cách nhau bằng 1 dòng trống">
               <textarea rows={5} className="input" value={form.faqs} onChange={(e) => set("faqs", e.target.value)} placeholder={"MOQ tối thiểu là bao nhiêu?\nMOQ 500-1000 sản phẩm tuỳ loại.\n\nThời gian sản xuất trung bình?\nKhoảng 15-30 ngày làm việc."} />
+            </F>
+            <F label="Thị trường xuất khẩu" full err={errors.export_markets} hint="Phân tách bằng dấu phẩy. VD: Mỹ, EU, Nhật Bản, Hàn Quốc">
+              <input className="input" value={form.export_markets} onChange={(e) => set("export_markets", e.target.value)} placeholder="Mỹ, EU, Nhật Bản" />
             </F>
 
             <F label="Sàn niêm yết" err={errors.stock_exchange} hint="Bỏ trống nếu chưa niêm yết">

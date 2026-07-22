@@ -4,10 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
-import { BadgeCheck, Building2, Calendar, DollarSign, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package } from "lucide-react";
+import { BadgeCheck, Building2, Calendar, DollarSign, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare } from "lucide-react";
 
 type FAQ = { q: string; a: string };
 type Certification = { name: string; issuer?: string; year?: number | string };
+type Review = { id: string; rating: number; title: string | null; content: string; reviewer_name: string | null; created_at: string; user_id: string };
 
 type Company = {
   id: string; slug: string; name: string;
@@ -19,18 +20,29 @@ type Company = {
   logo_url: string | null; cover_url: string | null; video_url: string | null;
   description: string | null; ai_summary: string | null;
   capabilities: unknown; certifications: unknown; gallery_urls: unknown; faqs: unknown;
+  export_markets: unknown;
   verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   submitted_by: string | null;
 };
 
 
+
 async function loadCompany(slug: string) {
   const { data, error } = await supabase.from("companies").select("*").eq("slug", slug).maybeSingle();
   if (error) throw error;
   if (!data) throw notFound();
-  return data as Company;
+  const { data: ratingRows } = await supabase
+    .from("company_reviews")
+    .select("rating")
+    .eq("company_id", (data as { id: string }).id)
+    .eq("status", "published");
+  const ratings = (ratingRows ?? []) as { rating: number }[];
+  const reviewCount = ratings.length;
+  const ratingAvg = reviewCount > 0 ? ratings.reduce((s, r) => s + r.rating, 0) / reviewCount : 0;
+  return { ...(data as Company), _reviewCount: reviewCount, _ratingAvg: ratingAvg };
 }
+
 
 export const Route = createFileRoute("/company/$slug")({
   loader: async ({ params }) => loadCompany(params.slug),
@@ -88,6 +100,13 @@ export const Route = createFileRoute("/company/$slug")({
             foundingDate: c.founded_year ? String(c.founded_year) : undefined,
             tickerSymbol: c.stock_ticker ? `${c.stock_exchange ?? ""}:${c.stock_ticker}`.replace(/^:/, "") : undefined,
             description: desc,
+            aggregateRating: (c as unknown as { _reviewCount: number; _ratingAvg: number })._reviewCount > 0 ? {
+              "@type": "AggregateRating",
+              ratingValue: (c as unknown as { _ratingAvg: number })._ratingAvg.toFixed(1),
+              reviewCount: (c as unknown as { _reviewCount: number })._reviewCount,
+              bestRating: 5,
+              worstRating: 1,
+            } : undefined,
           }),
         },
         {
@@ -139,14 +158,17 @@ function CompanyPage() {
     : [];
   const gallery: string[] = Array.isArray(c.gallery_urls) ? (c.gallery_urls as string[]).filter((u) => typeof u === "string" && u) : [];
   const faqs: FAQ[] = Array.isArray(c.faqs) ? (c.faqs as FAQ[]).filter((f) => f && f.q && f.a) : [];
+  const exportMarkets: string[] = Array.isArray(c.export_markets) ? (c.export_markets as string[]).filter((v) => typeof v === "string" && v) : [];
   const [similar, setSimilar] = useState<CompanyCardProps[]>([]);
   const [showAllSimilar, setShowAllSimilar] = useState(false);
   const [products, setProducts] = useState<{ id: string; name: string; category: string | null; description: string | null }[]>([]);
   const [updates, setUpdates] = useState<{ id: string; title: string; content: string | null; update_type: string | null; published_at: string | null }[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsVersion, setReviewsVersion] = useState(0);
 
   useEffect(() => {
     supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
-      .eq("industry", c.industry ?? "").neq("id", c.id).limit(12)
+      .eq("industry", c.industry ?? "").neq("id", c.id).limit(18)
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
     supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)
       .then(({ data }) => setProducts(data ?? []));
@@ -154,13 +176,19 @@ function CompanyPage() {
       .eq("company_id", c.id).not("published_at", "is", null)
       .order("published_at", { ascending: false }).limit(6)
       .then(({ data }) => setUpdates(data ?? []));
-  }, [c.id, c.industry]);
+    supabase.from("company_reviews").select("id,rating,title,content,reviewer_name,created_at,user_id")
+      .eq("company_id", c.id).eq("status", "published")
+      .order("created_at", { ascending: false }).limit(50)
+      .then(({ data }) => setReviews((data ?? []) as Review[]));
+  }, [c.id, c.industry, reviewsVersion]);
 
   const mapQuery = encodeURIComponent([c.name, c.address, c.district, c.province].filter(Boolean).join(", "));
   const mapEmbed = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
   const mapLink = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
-  const shownSimilar = showAllSimilar ? similar : similar.slice(0, 4);
+  const shownSimilar = showAllSimilar ? similar : similar.slice(0, 6);
   const videoEmbed = getVideoEmbed(c.video_url);
+  const avgRating = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
+
 
 
   return (
@@ -352,6 +380,28 @@ function CompanyPage() {
               </section>
             )}
 
+            {exportMarkets.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Globe2 className="h-5 w-5 text-brand" />Thị trường xuất khẩu</h2>
+                <div className="flex flex-wrap gap-2">
+                  {exportMarkets.map((m) => (
+                    <span key={m} className="inline-flex items-center gap-1 rounded-full border bg-secondary/60 px-3 py-1 text-sm font-medium">
+                      <Globe2 className="h-3.5 w-3.5 text-muted-foreground" />{m}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <ReviewsSection
+              companyId={c.id}
+              companyName={c.name}
+              reviews={reviews}
+              avgRating={avgRating}
+              onChange={() => setReviewsVersion((v) => v + 1)}
+            />
+
+
             {updates.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
                 <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Newspaper className="h-5 w-5 text-brand" />Tin tức & cập nhật</h2>
@@ -413,13 +463,13 @@ function CompanyPage() {
               <h2 className="text-lg font-semibold">Nhà cung cấp tương tự</h2>
               <span className="text-xs text-muted-foreground">{similar.length} kết quả</span>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {shownSimilar.map((s) => <CompanyCard key={s.slug} {...s} />)}
             </div>
-            {similar.length > 4 && (
+            {similar.length > 6 && (
               <div className="mt-4 text-center">
                 <button onClick={() => setShowAllSimilar((v) => !v)} className="rounded-md border px-4 py-2 text-sm font-semibold hover:border-brand hover:text-brand">
-                  {showAllSimilar ? "Thu gọn" : `Xem thêm ${similar.length - 4} nhà máy`}
+                  {showAllSimilar ? "Thu gọn" : `Xem thêm ${similar.length - 6} nhà máy`}
                 </button>
               </div>
             )}
@@ -603,4 +653,131 @@ function QuickInfoStats({ c }: { c: Company }) {
     </div>
   );
 }
+
+function Stars({ value, size = 14 }: { value: number; size?: number }) {
+  const rounded = Math.round(value);
+  return (
+    <span className="inline-flex items-center gap-0.5" aria-label={`${value.toFixed(1)} / 5`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star key={n} className={n <= rounded ? "text-brand" : "text-muted-foreground/30"} style={{ width: size, height: size }} fill="currentColor" strokeWidth={0} />
+      ))}
+    </span>
+  );
+}
+
+function ReviewsSection({
+  companyId, companyName, reviews, avgRating, onChange,
+}: {
+  companyId: string; companyName: string; reviews: Review[]; avgRating: number; onChange: () => void;
+}) {
+  const [me, setMe] = useState<{ id: string; email: string | null; name: string | null } | null>(null);
+  const [rating, setRating] = useState(5);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) return setMe(null);
+      setMe({
+        id: data.user.id,
+        email: data.user.email ?? null,
+        name: (data.user.user_metadata?.full_name as string) ?? (data.user.user_metadata?.name as string) ?? null,
+      });
+    });
+  }, []);
+
+  const myReview = me ? reviews.find((r) => r.user_id === me.id) ?? null : null;
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!me) { setErr("Bạn cần đăng nhập để đánh giá."); setStatus("error"); return; }
+    if (content.trim().length < 10) { setErr("Nội dung đánh giá cần ít nhất 10 ký tự."); setStatus("error"); return; }
+    setStatus("sending"); setErr(null);
+    const payload = {
+      company_id: companyId,
+      user_id: me.id,
+      rating,
+      title: title.trim() || null,
+      content: content.trim(),
+      reviewer_name: me.name,
+    };
+    const { error } = myReview
+      ? await supabase.from("company_reviews").update(payload).eq("id", myReview.id)
+      : await supabase.from("company_reviews").insert(payload);
+    if (error) { setErr(error.message); setStatus("error"); return; }
+    setStatus("sent"); setTitle(""); setContent(""); setRating(5);
+    onChange();
+  }
+
+  async function remove(id: string) {
+    if (!confirm("Xoá đánh giá của bạn?")) return;
+    const { error } = await supabase.from("company_reviews").delete().eq("id", id);
+    if (!error) onChange();
+  }
+
+  return (
+    <section className="rounded-lg border bg-card p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="flex items-center gap-2 text-lg font-semibold"><MessageSquare className="h-5 w-5 text-brand" />Đánh giá từ khách hàng</h2>
+        {reviews.length > 0 && (
+          <div className="flex items-center gap-2 text-sm">
+            <Stars value={avgRating} size={16} />
+            <span className="font-semibold">{avgRating.toFixed(1)}</span>
+            <span className="text-muted-foreground">· {reviews.length} đánh giá</span>
+          </div>
+        )}
+      </div>
+
+      {me ? (
+        <form onSubmit={submit} className="mb-6 space-y-2 rounded-md border bg-background p-4">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-muted-foreground">Đánh giá của bạn:</span>
+            {[1, 2, 3, 4, 5].map((n) => (
+              <button type="button" key={n} onClick={() => setRating(n)} aria-label={`${n} sao`}>
+                <Star className={n <= rating ? "text-brand" : "text-muted-foreground/30"} fill="currentColor" strokeWidth={0} width={20} height={20} />
+              </button>
+            ))}
+          </div>
+          <input maxLength={120} placeholder="Tiêu đề (tuỳ chọn)" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20" />
+          <textarea required rows={3} maxLength={2000} placeholder={`Chia sẻ trải nghiệm làm việc với ${companyName}…`} value={content} onChange={(e) => setContent(e.target.value)} className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20" />
+          {err && <div className="rounded border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">{err}</div>}
+          {status === "sent" && <div className="rounded border border-success/30 bg-success/10 p-2 text-xs text-success">✓ Đã lưu đánh giá.</div>}
+          <button disabled={status === "sending"} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
+            {status === "sending" ? "Đang gửi…" : myReview ? "Cập nhật đánh giá" : "Đăng đánh giá"}
+          </button>
+        </form>
+      ) : (
+        <div className="mb-6 rounded-md border bg-secondary/40 p-3 text-sm text-muted-foreground">
+          <Link to="/auth" className="font-semibold text-brand hover:underline">Đăng nhập</Link> để đánh giá nhà cung cấp này.
+        </div>
+      )}
+
+      {reviews.length === 0 ? (
+        <p className="text-sm text-muted-foreground">Chưa có đánh giá nào. Hãy là người đầu tiên chia sẻ trải nghiệm.</p>
+      ) : (
+        <ul className="space-y-3">
+          {reviews.map((r) => (
+            <li key={r.id} className="rounded-md border bg-background p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Stars value={r.rating} />
+                  <span className="text-sm font-semibold">{r.reviewer_name ?? "Khách hàng"}</span>
+                  <span className="text-[11px] text-muted-foreground">{new Date(r.created_at).toLocaleDateString("vi-VN")}</span>
+                </div>
+                {me?.id === r.user_id && (
+                  <button onClick={() => remove(r.id)} className="text-[11px] font-semibold text-destructive hover:underline">Xoá</button>
+                )}
+              </div>
+              {r.title && <div className="mt-1 text-sm font-semibold">{r.title}</div>}
+              <p className="mt-1 whitespace-pre-line text-sm text-muted-foreground">{r.content}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
 
