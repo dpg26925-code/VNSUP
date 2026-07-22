@@ -80,7 +80,7 @@ function SubmitCompanyPage() {
     employee_range: "", founded_year: "", website: "", phone: "", email: "",
     address: "", description: "", capabilities: "",
     revenue_range: "", company_type: "", cover_url: "", video_url: "",
-    certifications: "", gallery_urls: "", faqs: "",
+    certifications: "", gallery_urls: "", faqs: "", export_markets: "",
     stock_exchange: "", stock_ticker: "", logo_url: "",
   });
 
