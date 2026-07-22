@@ -80,6 +80,7 @@ function AdminPage() {
       certifications: parseCerts(edit.certifications),
       gallery_urls: parseLines(edit.gallery_urls),
       faqs: parseFaqs(edit.faqs),
+      export_markets: parseCsv(edit.export_markets),
       video_url: edit.video_url || null,
       cover_url: edit.cover_url || null,
       verified: !!edit.verified, featured: !!edit.featured,
