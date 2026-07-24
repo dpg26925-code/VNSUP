@@ -46,11 +46,13 @@ export const Route = createFileRoute("/search")({
 function SearchPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
+  const runSmart = useServerFn(smartSearch);
   const [q, setQ] = useState(search.q ?? "");
   const [rows, setRows] = useState<CompanyCardProps[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
+  const [aiTerms, setAiTerms] = useState<string[]>([]);
 
   useEffect(() => setQ(search.q ?? ""), [search.q]);
 
@@ -60,21 +62,65 @@ function SearchPage() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
+    setAiTerms([]);
     const sort = search.sort ?? "featured";
-    let qb = supabase.from("companies")
-      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
-      .limit(60);
-    if (sort === "featured") qb = qb.order("featured", { ascending: false }).order("verified", { ascending: false });
-    else if (sort === "name") qb = qb.order("name", { ascending: true });
-    else if (sort === "province") qb = qb.order("province", { ascending: true });
-    else if (sort === "industry") qb = qb.order("industry", { ascending: true });
-    if (search.q) qb = qb.or(`name.ilike.%${search.q}%,description.ilike.%${search.q}%,industry.ilike.%${search.q}%,sub_industry.ilike.%${search.q}%`);
-    if (search.industry) qb = qb.eq("industry", search.industry);
-    if (search.province) qb = qb.eq("province", search.province);
-    if (search.size) qb = qb.eq("employee_range", search.size);
-    qb.then(({ data }) => { setRows((data ?? []) as CompanyCardProps[]); setLoading(false); });
-  }, [search.q, search.industry, search.province, search.size, search.sort]);
+
+    async function run() {
+      // AI-assisted search when the user typed a query
+      if (search.q && search.q.trim().length > 0) {
+        try {
+          const res = await runSmart({
+            data: {
+              q: search.q,
+              industry: search.industry ?? null,
+              province: search.province ?? null,
+              size: search.size ?? null,
+            },
+          });
+          if (cancelled) return;
+          const list = (res.rows ?? []) as CompanyCardProps[];
+          const sorted = [...list];
+          if (sort === "name") sorted.sort((a, b) => a.name.localeCompare(b.name, "vi"));
+          else if (sort === "province") sorted.sort((a, b) => (a.province ?? "").localeCompare(b.province ?? "", "vi"));
+          else if (sort === "industry") sorted.sort((a, b) => (a.industry ?? "").localeCompare(b.industry ?? "", "vi"));
+          setRows(sorted);
+          const terms = [
+            ...(res.expansion?.keywords ?? []),
+            ...(res.expansion?.industries ?? []),
+          ]
+            .map((s) => s.trim())
+            .filter((s) => s && s.toLowerCase() !== (search.q ?? "").toLowerCase());
+          setAiTerms(Array.from(new Set(terms)).slice(0, 8));
+          setLoading(false);
+          return;
+        } catch {
+          // fall through to plain query
+        }
+      }
+
+      // No query: plain filter/browse
+      let qb = supabase.from("companies")
+        .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
+        .eq("status", "approved")
+        .limit(60);
+      if (sort === "featured") qb = qb.order("featured", { ascending: false }).order("verified", { ascending: false });
+      else if (sort === "name") qb = qb.order("name", { ascending: true });
+      else if (sort === "province") qb = qb.order("province", { ascending: true });
+      else if (sort === "industry") qb = qb.order("industry", { ascending: true });
+      if (search.industry) qb = qb.eq("industry", search.industry);
+      if (search.province) qb = qb.eq("province", search.province);
+      if (search.size) qb = qb.eq("employee_range", search.size);
+      const { data } = await qb;
+      if (cancelled) return;
+      setRows((data ?? []) as CompanyCardProps[]);
+      setLoading(false);
+    }
+
+    run();
+    return () => { cancelled = true; };
+  }, [search.q, search.industry, search.province, search.size, search.sort, runSmart]);
 
   function apply(next: Partial<typeof search>) {
     navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, ...next }) as any, replace: true });
