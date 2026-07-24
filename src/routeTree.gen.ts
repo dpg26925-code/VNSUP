@@ -20,6 +20,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as KhuCongNghiepRouteImport } from './routes/khu-cong-nghiep'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ApiRouteImport } from './routes/api'
@@ -111,6 +112,11 @@ const PricingRoute = PricingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KhuCongNghiepRoute = KhuCongNghiepRouteImport.update({
+  id: '/khu-cong-nghiep',
+  path: '/khu-cong-nghiep',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -326,6 +332,7 @@ export interface FileRoutesByFullPath {
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/khu-cong-nghiep': typeof KhuCongNghiepRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -375,6 +382,7 @@ export interface FileRoutesByTo {
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/khu-cong-nghiep': typeof KhuCongNghiepRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -425,6 +433,7 @@ export interface FileRoutesById {
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/khu-cong-nghiep': typeof KhuCongNghiepRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -476,6 +485,7 @@ export interface FileRouteTypes {
     | '/api'
     | '/auth'
     | '/forgot-password'
+    | '/khu-cong-nghiep'
     | '/login'
     | '/pricing'
     | '/register'
@@ -525,6 +535,7 @@ export interface FileRouteTypes {
     | '/api'
     | '/auth'
     | '/forgot-password'
+    | '/khu-cong-nghiep'
     | '/login'
     | '/pricing'
     | '/register'
@@ -574,6 +585,7 @@ export interface FileRouteTypes {
     | '/api'
     | '/auth'
     | '/forgot-password'
+    | '/khu-cong-nghiep'
     | '/login'
     | '/pricing'
     | '/register'
@@ -625,6 +637,7 @@ export interface RootRouteChildren {
   ApiRoute: typeof ApiRouteWithChildren
   AuthRoute: typeof AuthRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  KhuCongNghiepRoute: typeof KhuCongNghiepRoute
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
@@ -720,6 +733,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/khu-cong-nghiep': {
+      id: '/khu-cong-nghiep'
+      path: '/khu-cong-nghiep'
+      fullPath: '/khu-cong-nghiep'
+      preLoaderRoute: typeof KhuCongNghiepRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -1119,6 +1139,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiRoute: ApiRouteWithChildren,
   AuthRoute: AuthRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  KhuCongNghiepRoute: KhuCongNghiepRoute,
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
