@@ -47,8 +47,16 @@ function AdminPage() {
   }
   useEffect(() => { load(); }, []);
 
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   async function save() {
-    if (!edit || !edit.name || !edit.slug) return;
+    setSaveError(null);
+    if (!edit) return;
+    if (!edit.name || !edit.slug) {
+      setSaveError("Vui lòng nhập Tên và Slug.");
+      return;
+    }
     const parseLines = (v: unknown): string[] =>
       typeof v === "string" ? v.split("\n").map((s) => s.trim()).filter(Boolean) : Array.isArray(v) ? (v as string[]) : [];
     const parseCsv = (v: unknown): string[] =>
@@ -88,13 +96,24 @@ function AdminPage() {
       stock_ticker: edit.stock_ticker ? String(edit.stock_ticker).toUpperCase() : null,
       logo_url: edit.logo_url || null,
     };
-    if (edit.id) {
-      await supabase.from("companies").update(payload).eq("id", edit.id);
-    } else {
-      await supabase.from("companies").insert({ ...payload, status: "approved", source: "admin" });
+    setSaving(true);
+    try {
+      const { error } = edit.id
+        ? await supabase.from("companies").update(payload).eq("id", edit.id)
+        : await supabase.from("companies").insert({ ...payload, status: "approved", source: "admin" });
+      if (error) {
+        console.error("[admin.save]", error);
+        setSaveError(error.message || "Không lưu được. Vui lòng thử lại.");
+        return;
+      }
+      setEdit(null);
+      await load();
+    } catch (e: any) {
+      console.error("[admin.save] exception", e);
+      setSaveError(e?.message || "Có lỗi xảy ra khi lưu.");
+    } finally {
+      setSaving(false);
     }
-
-    setEdit(null); load();
   }
 
   async function remove(id: string) {
@@ -283,9 +302,14 @@ function AdminPage() {
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.verified} onChange={(e) => setEdit({ ...edit, verified: e.target.checked })} /> Đã xác thực</label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.featured} onChange={(e) => setEdit({ ...edit, featured: e.target.checked })} /> Nổi bật</label>
             </div>
+            {saveError && (
+              <div className="mt-4 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+                {saveError}
+              </div>
+            )}
             <div className="mt-5 flex justify-end gap-2">
-              <button onClick={() => setEdit(null)} className="rounded-md border px-4 py-2 text-sm hover:bg-accent">Hủy</button>
-              <button onClick={save} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Lưu</button>
+              <button onClick={() => setEdit(null)} disabled={saving} className="rounded-md border px-4 py-2 text-sm hover:bg-accent disabled:opacity-60">Hủy</button>
+              <button onClick={save} disabled={saving} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">{saving ? "Đang lưu…" : "Lưu"}</button>
             </div>
           </div>
         </div>
