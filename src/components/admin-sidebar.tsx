@@ -30,7 +30,7 @@ const items = [
   { title: "Yêu cầu Claim", url: "/dashboard/admin/claims", icon: FileCheck2 },
   { title: "Bài viết", url: "/dashboard/articles", icon: FileText },
   { title: "Chuyên mục", url: "/dashboard/categories", icon: FolderTree },
-  { title: "Quản lý doanh nghiệp", url: "/admin", icon: Building2 },
+  { title: "Sửa chi tiết DN", url: "/dashboard/admin/edit", icon: Building2 },
   { title: "Leads", url: "/dashboard/leads", icon: Inbox },
   { title: "Thống kê", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Nhật ký", url: "/dashboard/audit-log", icon: ScrollText },

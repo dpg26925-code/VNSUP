@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
 import { Check, Pencil, Plus, Trash2, X, XCircle } from "lucide-react";
 
@@ -33,8 +32,8 @@ function slugify(s: string) {
 }
 
 
-export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Quản lý | VNSupplier" }, { name: "robots", content: "noindex" }] }),
+export const Route = createFileRoute("/_authenticated/dashboard/admin/edit")({
+  head: () => ({ meta: [{ title: "Sửa chi tiết DN | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
     if (!data.user) throw redirect({ to: "/auth" });
@@ -148,9 +147,8 @@ function AdminPage() {
     .filter((r) => !q || r.name.toLowerCase().includes(q.toLowerCase()) || r.slug.includes(q.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <div className="mx-auto max-w-7xl px-4 py-6">
+    <div className="p-6">
+      <div>
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold">Quản lý nhà máy</h1>
@@ -334,7 +332,6 @@ function AdminPage() {
         </div>
       )}
       <style>{`.input{width:100%;border:1px solid var(--color-border);background:var(--color-background);border-radius:.375rem;padding:.5rem .75rem;font-size:.875rem;outline:none}`}</style>
-      <SiteFooter />
     </div>
   );
 }
