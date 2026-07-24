@@ -21,6 +21,17 @@ type Row = {
 const REVENUE_RANGES = ["< 1 tỷ", "1-10 tỷ", "10-50 tỷ", "50-200 tỷ", "200 tỷ - 1000 tỷ", "> 1000 tỷ"];
 const COMPANY_TYPES = ["TNHH", "Cổ phần", "Cổ phần niêm yết", "Doanh nghiệp tư nhân", "FDI", "Nhà nước", "Hợp tác xã"];
 
+function slugify(s: string) {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 120);
+}
+
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Quản lý | VNSupplier" }, { name: "robots", content: "noindex" }] }),
@@ -213,7 +224,15 @@ function AdminPage() {
               <button onClick={() => setEdit(null)} className="rounded p-1 hover:bg-accent"><X className="h-5 w-5" /></button>
             </div>
             <div className="grid gap-3 md:grid-cols-2">
-              <Field label="Tên *"><input value={edit.name ?? ""} onChange={(e) => setEdit({ ...edit, name: e.target.value })} className="input" /></Field>
+              <Field label="Tên *"><input value={edit.name ?? ""} onChange={(e) => {
+                const name = e.target.value;
+                setEdit((prev) => {
+                  const p = prev ?? {};
+                  const prevAuto = slugify(p.name ?? "");
+                  const shouldAuto = !p.slug || p.slug === prevAuto;
+                  return { ...p, name, ...(shouldAuto ? { slug: slugify(name) } : {}) };
+                });
+              }} className="input" /></Field>
               <Field label="Slug *"><input value={edit.slug ?? ""} onChange={(e) => setEdit({ ...edit, slug: e.target.value.toLowerCase().replace(/\s+/g, "-") })} className="input" /></Field>
               <Field label="Tỉnh/TP">
                 <select value={edit.province ?? ""} onChange={(e) => setEdit({ ...edit, province: e.target.value || null })} className="input">
