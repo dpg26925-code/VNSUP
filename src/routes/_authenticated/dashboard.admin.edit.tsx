@@ -33,7 +33,7 @@ function slugify(s: string) {
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin/edit")({
-  head: () => ({ meta: [{ title: "Quản lý | VNSupplier" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Sửa chi tiết DN | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
     if (!data.user) throw redirect({ to: "/auth" });
