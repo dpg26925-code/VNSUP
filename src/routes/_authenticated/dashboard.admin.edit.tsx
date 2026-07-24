@@ -1,7 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
+import { EMPLOYEE_RANGES, PROVINCES } from "@/lib/factory";
+import { useIndustryOptions, useZoneOptions } from "@/lib/pickers";
 import { Check, Pencil, Plus, Trash2, X, XCircle } from "lucide-react";
 
 type Row = {
