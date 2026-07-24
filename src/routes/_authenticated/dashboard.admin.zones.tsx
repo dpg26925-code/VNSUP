@@ -87,7 +87,7 @@ function AdminZonesPage() {
     if (!selected.name?.trim()) { setErr("Tên là bắt buộc"); return; }
     setSaving(true); setErr(null);
     try {
-      const payload: Partial<ZoneRow> = {
+      const payload = {
         kind: selected.kind,
         name: selected.name.trim(),
         slug: selected.slug?.trim() || undefined,
