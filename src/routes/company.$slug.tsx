@@ -334,6 +334,16 @@ function CompanyPage() {
                   )}
                   {c.employee_range && <span className="inline-flex items-center gap-1"><Users className="h-4 w-4" />{c.employee_range}</span>}
                   {c.founded_year && <span>Thành lập {c.founded_year}</span>}
+                  {c._zone && (
+                    <Link
+                      to={c._zone.kind === "kcn" ? "/khu-cong-nghiep/$slug" : "/cum-cong-nghiep/$slug"}
+                      params={{ slug: c._zone.slug }}
+                      className="inline-flex items-center gap-1 rounded bg-brand-soft px-2 py-0.5 text-xs font-medium text-brand hover:bg-brand hover:text-brand-foreground"
+                    >
+                      <Building2 className="h-3.5 w-3.5" />
+                      {c._zone.kind === "kcn" ? "KCN" : "CCN"} {c._zone.name}
+                    </Link>
+                  )}
                 </div>
               </div>
               {c.stock_ticker && (
