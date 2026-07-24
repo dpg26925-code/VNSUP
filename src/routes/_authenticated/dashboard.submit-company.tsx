@@ -249,8 +249,14 @@ function SubmitCompanyPage() {
                 {["TNHH","Cổ phần","Cổ phần niêm yết","Doanh nghiệp tư nhân","FDI","Nhà nước","Hợp tác xã"].map((r) => <option key={r}>{r}</option>)}
               </select>
             </F>
-            <F label="Banner/Cover URL" full err={errors.cover_url} hint="Ảnh banner nằm ngang, khuyến nghị 1600×400px">
-              <input className="input" placeholder="https://.../banner.jpg" value={form.cover_url} onChange={(e) => set("cover_url", e.target.value)} />
+            <F label="Ảnh banner (cover)" full err={errors.cover_url} hint="Ảnh nằm ngang, khuyến nghị 1600×400px. Tối đa 5MB.">
+              <MediaUpload
+                value={form.cover_url}
+                onChange={(url) => set("cover_url", url)}
+                folder="covers"
+                accept="image/*"
+                label="Tải banner lên"
+              />
             </F>
             <F label="Video giới thiệu (YouTube/Vimeo)" full err={errors.video_url}>
               <input className="input" placeholder="https://youtube.com/watch?v=..." value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
@@ -258,8 +264,14 @@ function SubmitCompanyPage() {
             <F label="Chứng nhận" full hint="Mỗi dòng: Tên chứng nhận | Đơn vị cấp | Năm. VD: ISO 9001:2015 | BSI | 2023">
               <textarea rows={3} className="input" value={form.certifications} onChange={(e) => set("certifications", e.target.value)} />
             </F>
-            <F label="Thư viện ảnh nhà máy" full hint="Mỗi dòng 1 URL ảnh">
-              <textarea rows={3} className="input" value={form.gallery_urls} onChange={(e) => set("gallery_urls", e.target.value)} placeholder="https://.../factory-1.jpg" />
+            <F label="Thư viện ảnh nhà máy" full hint="Kéo thả hoặc chọn nhiều ảnh, tối đa 12 ảnh, mỗi ảnh tối đa 5MB.">
+              <MediaUploadMulti
+                value={(form.gallery_urls || "").split("\n").map((s) => s.trim()).filter(Boolean)}
+                onChange={(urls) => set("gallery_urls", urls.join("\n"))}
+                folder="gallery"
+                accept="image/*"
+                max={12}
+              />
             </F>
             <F label="Câu hỏi thường gặp (FAQ)" full hint="Câu hỏi ở dòng đầu, trả lời ở dòng sau; cách nhau bằng 1 dòng trống">
               <textarea rows={5} className="input" value={form.faqs} onChange={(e) => set("faqs", e.target.value)} placeholder={"MOQ tối thiểu là bao nhiêu?\nMOQ 500-1000 sản phẩm tuỳ loại.\n\nThời gian sản xuất trung bình?\nKhoảng 15-30 ngày làm việc."} />
