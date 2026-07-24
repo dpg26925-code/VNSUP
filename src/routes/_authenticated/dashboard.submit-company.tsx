@@ -77,13 +77,15 @@ function slugify(s: string) {
 
 function SubmitCompanyPage() {
   const navigate = useNavigate();
+  const industries = useIndustryOptions();
+  const { zones } = useZoneOptions();
   const [form, setForm] = useState<Record<string, string>>({
     name: "", slug: "", province: "", industry: "", sub_industry: "",
     employee_range: "", founded_year: "", website: "", phone: "", email: "",
     address: "", description: "", capabilities: "",
     revenue_range: "", company_type: "", cover_url: "", video_url: "",
     certifications: "", gallery_urls: "", faqs: "", export_markets: "",
-    stock_exchange: "", stock_ticker: "", logo_url: "",
+    stock_exchange: "", stock_ticker: "", logo_url: "", industrial_zone_id: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
