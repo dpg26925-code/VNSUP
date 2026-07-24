@@ -14,6 +14,19 @@ export function ZoneDetail({ zone }: { zone: ZoneRow }) {
     ? `https://www.openstreetmap.org/export/embed.html?bbox=${zone.longitude - 0.03}%2C${zone.latitude - 0.02}%2C${zone.longitude + 0.03}%2C${zone.latitude + 0.02}&layer=mapnik&marker=${zone.latitude}%2C${zone.longitude}`
     : null;
 
+  const [companies, setCompanies] = useState<ZoneCompany[]>([]);
+  useEffect(() => {
+    supabase
+      .from("companies")
+      .select("id,slug,name,logo_url,industry,sub_industry,employee_range,verified")
+      .eq("industrial_zone_id", zone.id)
+      .eq("status", "approved")
+      .order("verified", { ascending: false })
+      .order("name", { ascending: true })
+      .limit(60)
+      .then(({ data }) => setCompanies((data ?? []) as ZoneCompany[]));
+  }, [zone.id]);
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
