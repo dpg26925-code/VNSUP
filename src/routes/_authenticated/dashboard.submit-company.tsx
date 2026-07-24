@@ -202,6 +202,24 @@ function SubmitCompanyPage() {
                 {industries.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
               </select>
             </F>
+            <F label="Khu / Cụm Công Nghiệp" full hint="Chọn KCN/CCN nơi nhà máy đặt trụ sở (tuỳ chọn). Có thể lọc theo tỉnh đã chọn.">
+              <select
+                className="input"
+                value={form.industrial_zone_id}
+                onChange={(e) => set("industrial_zone_id", e.target.value)}
+              >
+                <option value="">— Không thuộc KCN/CCN —</option>
+                <optgroup label="Khu Công Nghiệp (KCN)">
+                  {zones.filter((z) => z.kind === "kcn" && (!form.province || z.province === form.province)).map((z) => (
+                    <option key={z.id} value={z.id}>{z.name}{z.province ? ` — ${z.province}` : ""}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Cụm Công Nghiệp (CCN)">
+                  {zones.filter((z) => z.kind === "ccn" && (!form.province || z.province === form.province)).map((z) => (
+                    <option key={z.id} value={z.id}>{z.name}{z.province ? ` — ${z.province}` : ""}</option>
+                  ))}
+                </optgroup>
+              </select>
             <F label="Ngành phụ">
               <input className="input" value={form.sub_industry} onChange={(e) => set("sub_industry", e.target.value)} />
             </F>
