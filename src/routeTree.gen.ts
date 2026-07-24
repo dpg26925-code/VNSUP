@@ -179,9 +179,9 @@ const PaymentCancelRoute = PaymentCancelRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const KhuCongNghiepSlugRoute = KhuCongNghiepSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => KhuCongNghiepRoute,
+  id: '/khu-cong-nghiep/$slug',
+  path: '/khu-cong-nghiep/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const IndustrySlugRoute = IndustrySlugRouteImport.update({
   id: '/industry/$slug',
@@ -189,9 +189,9 @@ const IndustrySlugRoute = IndustrySlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CumCongNghiepSlugRoute = CumCongNghiepSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => CumCongNghiepRoute,
+  id: '/cum-cong-nghiep/$slug',
+  path: '/cum-cong-nghiep/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CompanySlugRoute = CompanySlugRouteImport.update({
   id: '/company/$slug',
@@ -711,7 +711,9 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   CompanySlugRoute: typeof CompanySlugRoute
+  CumCongNghiepSlugRoute: typeof CumCongNghiepSlugRoute
   IndustrySlugRoute: typeof IndustrySlugRoute
+  KhuCongNghiepSlugRoute: typeof KhuCongNghiepSlugRoute
   PaymentCancelRoute: typeof PaymentCancelRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
   ProvinceSlugRoute: typeof ProvinceSlugRoute
@@ -884,10 +886,10 @@ declare module '@tanstack/react-router' {
     }
     '/khu-cong-nghiep/$slug': {
       id: '/khu-cong-nghiep/$slug'
-      path: '/$slug'
+      path: '/khu-cong-nghiep/$slug'
       fullPath: '/khu-cong-nghiep/$slug'
       preLoaderRoute: typeof KhuCongNghiepSlugRouteImport
-      parentRoute: typeof KhuCongNghiepRoute
+      parentRoute: typeof rootRouteImport
     }
     '/industry/$slug': {
       id: '/industry/$slug'
@@ -898,10 +900,10 @@ declare module '@tanstack/react-router' {
     }
     '/cum-cong-nghiep/$slug': {
       id: '/cum-cong-nghiep/$slug'
-      path: '/$slug'
+      path: '/cum-cong-nghiep/$slug'
       fullPath: '/cum-cong-nghiep/$slug'
       preLoaderRoute: typeof CumCongNghiepSlugRouteImport
-      parentRoute: typeof CumCongNghiepRoute
+      parentRoute: typeof rootRouteImport
     }
     '/company/$slug': {
       id: '/company/$slug'
@@ -1253,7 +1255,9 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   CompanySlugRoute: CompanySlugRoute,
+  CumCongNghiepSlugRoute: CumCongNghiepSlugRoute,
   IndustrySlugRoute: IndustrySlugRoute,
+  KhuCongNghiepSlugRoute: KhuCongNghiepSlugRoute,
   PaymentCancelRoute: PaymentCancelRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
   ProvinceSlugRoute: ProvinceSlugRoute,
@@ -1263,13 +1267,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
