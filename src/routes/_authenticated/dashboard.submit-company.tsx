@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
 import { Building2, Send } from "lucide-react";
+import { MediaUpload, MediaUploadMulti } from "@/components/media-upload";
 
 export const Route = createFileRoute("/_authenticated/dashboard/submit-company")({
   head: () => ({
