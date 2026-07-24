@@ -332,7 +332,7 @@ function AdminPage() {
         </div>
       )}
       <style>{`.input{width:100%;border:1px solid var(--color-border);background:var(--color-background);border-radius:.375rem;padding:.5rem .75rem;font-size:.875rem;outline:none}`}</style>
-      <SiteFooter />
+      </div>
     </div>
   );
 }
