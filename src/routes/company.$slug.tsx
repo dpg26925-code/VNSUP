@@ -47,6 +47,16 @@ async function loadCompany(slug: string) {
       .order("published_at", { ascending: false })
       .limit(10),
   ]);
+  const zoneId = (data as { industrial_zone_id?: string | null }).industrial_zone_id ?? null;
+  let zone: ZoneLite | null = null;
+  if (zoneId) {
+    const { data: zoneRow } = await supabase
+      .from("industrial_zones")
+      .select("id,name,slug,kind,province")
+      .eq("id", zoneId)
+      .maybeSingle();
+    if (zoneRow) zone = zoneRow as ZoneLite;
+  }
   const ratings = (ratingRows ?? []) as { rating: number }[];
   const reviewCount = ratings.length;
   const ratingAvg = reviewCount > 0 ? ratings.reduce((s, r) => s + r.rating, 0) / reviewCount : 0;
@@ -55,6 +65,7 @@ async function loadCompany(slug: string) {
     _reviewCount: reviewCount,
     _ratingAvg: ratingAvg,
     _updatesSeo: (updateRows ?? []) as UpdateSeo[],
+    _zone: zone,
   };
 }
 
