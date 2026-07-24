@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SitemapZonesDotxmlRouteImport } from './routes/sitemap-zones[.]xml'
 import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
 import { Route as SitemapProvincesDotxmlRouteImport } from './routes/sitemap-provinces[.]xml'
 import { Route as SitemapIndustriesDotxmlRouteImport } from './routes/sitemap-industries[.]xml'
@@ -20,7 +21,9 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as KhuCongNghiepRouteImport } from './routes/khu-cong-nghiep'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as CumCongNghiepRouteImport } from './routes/cum-cong-nghiep'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ApiRouteImport } from './routes/api'
 import { Route as AboutRouteImport } from './routes/about'
@@ -29,7 +32,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProvinceSlugRouteImport } from './routes/province.$slug'
 import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
 import { Route as PaymentCancelRouteImport } from './routes/payment.cancel'
+import { Route as KhuCongNghiepSlugRouteImport } from './routes/khu-cong-nghiep.$slug'
 import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
+import { Route as CumCongNghiepSlugRouteImport } from './routes/cum-cong-nghiep.$slug'
 import { Route as CompanySlugRouteImport } from './routes/company.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
@@ -50,6 +55,7 @@ import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/publi
 import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
 import { Route as AuthenticatedDashboardIntegrationsHermesRouteImport } from './routes/_authenticated/dashboard.integrations.hermes'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
+import { Route as AuthenticatedDashboardAdminZonesRouteImport } from './routes/_authenticated/dashboard.admin.zones'
 import { Route as AuthenticatedDashboardAdminEditRouteImport } from './routes/_authenticated/dashboard.admin.edit'
 import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './routes/_authenticated/dashboard.admin.companies'
 import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard.admin.claims'
@@ -66,6 +72,11 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapZonesDotxmlRoute = SitemapZonesDotxmlRouteImport.update({
+  id: '/sitemap-zones.xml',
+  path: '/sitemap-zones.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapStaticDotxmlRoute = SitemapStaticDotxmlRouteImport.update({
@@ -113,9 +124,19 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KhuCongNghiepRoute = KhuCongNghiepRouteImport.update({
+  id: '/khu-cong-nghiep',
+  path: '/khu-cong-nghiep',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CumCongNghiepRoute = CumCongNghiepRouteImport.update({
+  id: '/cum-cong-nghiep',
+  path: '/cum-cong-nghiep',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -157,10 +178,20 @@ const PaymentCancelRoute = PaymentCancelRouteImport.update({
   path: '/payment/cancel',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KhuCongNghiepSlugRoute = KhuCongNghiepSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => KhuCongNghiepRoute,
+} as any)
 const IndustrySlugRoute = IndustrySlugRouteImport.update({
   id: '/industry/$slug',
   path: '/industry/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const CumCongNghiepSlugRoute = CumCongNghiepSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CumCongNghiepRoute,
 } as any)
 const CompanySlugRoute = CompanySlugRouteImport.update({
   id: '/company/$slug',
@@ -277,6 +308,12 @@ const AuthenticatedDashboardArticlesNewRoute =
     path: '/new',
     getParentRoute: () => AuthenticatedDashboardArticlesRoute,
   } as any)
+const AuthenticatedDashboardAdminZonesRoute =
+  AuthenticatedDashboardAdminZonesRouteImport.update({
+    id: '/admin/zones',
+    path: '/admin/zones',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAdminEditRoute =
   AuthenticatedDashboardAdminEditRouteImport.update({
     id: '/admin/edit',
@@ -325,7 +362,9 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
+  '/cum-cong-nghiep': typeof CumCongNghiepRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
+  '/khu-cong-nghiep': typeof KhuCongNghiepRouteWithChildren
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -335,11 +374,14 @@ export interface FileRoutesByFullPath {
   '/sitemap-industries.xml': typeof SitemapIndustriesDotxmlRoute
   '/sitemap-provinces.xml': typeof SitemapProvincesDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap-zones.xml': typeof SitemapZonesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
+  '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
+  '/khu-cong-nghiep/$slug': typeof KhuCongNghiepSlugRoute
   '/payment/cancel': typeof PaymentCancelRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
@@ -357,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
+  '/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
@@ -374,7 +417,9 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
+  '/cum-cong-nghiep': typeof CumCongNghiepRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
+  '/khu-cong-nghiep': typeof KhuCongNghiepRouteWithChildren
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -384,10 +429,13 @@ export interface FileRoutesByTo {
   '/sitemap-industries.xml': typeof SitemapIndustriesDotxmlRoute
   '/sitemap-provinces.xml': typeof SitemapProvincesDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap-zones.xml': typeof SitemapZonesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/company/$slug': typeof CompanySlugRoute
+  '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
+  '/khu-cong-nghiep/$slug': typeof KhuCongNghiepSlugRoute
   '/payment/cancel': typeof PaymentCancelRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
@@ -405,6 +453,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
+  '/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
@@ -424,7 +473,9 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
+  '/cum-cong-nghiep': typeof CumCongNghiepRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
+  '/khu-cong-nghiep': typeof KhuCongNghiepRouteWithChildren
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -434,11 +485,14 @@ export interface FileRoutesById {
   '/sitemap-industries.xml': typeof SitemapIndustriesDotxmlRoute
   '/sitemap-provinces.xml': typeof SitemapProvincesDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
+  '/sitemap-zones.xml': typeof SitemapZonesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
+  '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
+  '/khu-cong-nghiep/$slug': typeof KhuCongNghiepSlugRoute
   '/payment/cancel': typeof PaymentCancelRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
@@ -456,6 +510,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/_authenticated/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/_authenticated/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
+  '/_authenticated/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/_authenticated/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
@@ -475,7 +530,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/api'
     | '/auth'
+    | '/cum-cong-nghiep'
     | '/forgot-password'
+    | '/khu-cong-nghiep'
     | '/login'
     | '/pricing'
     | '/register'
@@ -485,11 +542,14 @@ export interface FileRouteTypes {
     | '/sitemap-industries.xml'
     | '/sitemap-provinces.xml'
     | '/sitemap-static.xml'
+    | '/sitemap-zones.xml'
     | '/sitemap.xml'
     | '/unauthorized'
     | '/dashboard'
     | '/company/$slug'
+    | '/cum-cong-nghiep/$slug'
     | '/industry/$slug'
+    | '/khu-cong-nghiep/$slug'
     | '/payment/cancel'
     | '/payment/success'
     | '/province/$slug'
@@ -507,6 +567,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
     | '/dashboard/admin/edit'
+    | '/dashboard/admin/zones'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
@@ -524,7 +585,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/api'
     | '/auth'
+    | '/cum-cong-nghiep'
     | '/forgot-password'
+    | '/khu-cong-nghiep'
     | '/login'
     | '/pricing'
     | '/register'
@@ -534,10 +597,13 @@ export interface FileRouteTypes {
     | '/sitemap-industries.xml'
     | '/sitemap-provinces.xml'
     | '/sitemap-static.xml'
+    | '/sitemap-zones.xml'
     | '/sitemap.xml'
     | '/unauthorized'
     | '/company/$slug'
+    | '/cum-cong-nghiep/$slug'
     | '/industry/$slug'
+    | '/khu-cong-nghiep/$slug'
     | '/payment/cancel'
     | '/payment/success'
     | '/province/$slug'
@@ -555,6 +621,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
     | '/dashboard/admin/edit'
+    | '/dashboard/admin/zones'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
@@ -573,7 +640,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/api'
     | '/auth'
+    | '/cum-cong-nghiep'
     | '/forgot-password'
+    | '/khu-cong-nghiep'
     | '/login'
     | '/pricing'
     | '/register'
@@ -583,11 +652,14 @@ export interface FileRouteTypes {
     | '/sitemap-industries.xml'
     | '/sitemap-provinces.xml'
     | '/sitemap-static.xml'
+    | '/sitemap-zones.xml'
     | '/sitemap.xml'
     | '/unauthorized'
     | '/_authenticated/dashboard'
     | '/company/$slug'
+    | '/cum-cong-nghiep/$slug'
     | '/industry/$slug'
+    | '/khu-cong-nghiep/$slug'
     | '/payment/cancel'
     | '/payment/success'
     | '/province/$slug'
@@ -605,6 +677,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin/claims'
     | '/_authenticated/dashboard/admin/companies'
     | '/_authenticated/dashboard/admin/edit'
+    | '/_authenticated/dashboard/admin/zones'
     | '/_authenticated/dashboard/articles/new'
     | '/_authenticated/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
@@ -624,7 +697,9 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ApiRoute: typeof ApiRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CumCongNghiepRoute: typeof CumCongNghiepRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  KhuCongNghiepRoute: typeof KhuCongNghiepRouteWithChildren
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
@@ -634,6 +709,7 @@ export interface RootRouteChildren {
   SitemapIndustriesDotxmlRoute: typeof SitemapIndustriesDotxmlRoute
   SitemapProvincesDotxmlRoute: typeof SitemapProvincesDotxmlRoute
   SitemapStaticDotxmlRoute: typeof SitemapStaticDotxmlRoute
+  SitemapZonesDotxmlRoute: typeof SitemapZonesDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   CompanySlugRoute: typeof CompanySlugRoute
@@ -657,6 +733,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-zones.xml': {
+      id: '/sitemap-zones.xml'
+      path: '/sitemap-zones.xml'
+      fullPath: '/sitemap-zones.xml'
+      preLoaderRoute: typeof SitemapZonesDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap-static.xml': {
@@ -722,11 +805,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/khu-cong-nghiep': {
+      id: '/khu-cong-nghiep'
+      path: '/khu-cong-nghiep'
+      fullPath: '/khu-cong-nghiep'
+      preLoaderRoute: typeof KhuCongNghiepRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forgot-password': {
       id: '/forgot-password'
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cum-cong-nghiep': {
+      id: '/cum-cong-nghiep'
+      path: '/cum-cong-nghiep'
+      fullPath: '/cum-cong-nghiep'
+      preLoaderRoute: typeof CumCongNghiepRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -785,12 +882,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentCancelRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/khu-cong-nghiep/$slug': {
+      id: '/khu-cong-nghiep/$slug'
+      path: '/$slug'
+      fullPath: '/khu-cong-nghiep/$slug'
+      preLoaderRoute: typeof KhuCongNghiepSlugRouteImport
+      parentRoute: typeof KhuCongNghiepRoute
+    }
     '/industry/$slug': {
       id: '/industry/$slug'
       path: '/industry/$slug'
       fullPath: '/industry/$slug'
       preLoaderRoute: typeof IndustrySlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/cum-cong-nghiep/$slug': {
+      id: '/cum-cong-nghiep/$slug'
+      path: '/$slug'
+      fullPath: '/cum-cong-nghiep/$slug'
+      preLoaderRoute: typeof CumCongNghiepSlugRouteImport
+      parentRoute: typeof CumCongNghiepRoute
     }
     '/company/$slug': {
       id: '/company/$slug'
@@ -932,6 +1043,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardArticlesNewRouteImport
       parentRoute: typeof AuthenticatedDashboardArticlesRoute
     }
+    '/_authenticated/dashboard/admin/zones': {
+      id: '/_authenticated/dashboard/admin/zones'
+      path: '/admin/zones'
+      fullPath: '/dashboard/admin/zones'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminZonesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/admin/edit': {
       id: '/_authenticated/dashboard/admin/edit'
       path: '/admin/edit'
@@ -1017,6 +1135,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAdminClaimsRoute: typeof AuthenticatedDashboardAdminClaimsRoute
   AuthenticatedDashboardAdminCompaniesRoute: typeof AuthenticatedDashboardAdminCompaniesRoute
   AuthenticatedDashboardAdminEditRoute: typeof AuthenticatedDashboardAdminEditRoute
+  AuthenticatedDashboardAdminZonesRoute: typeof AuthenticatedDashboardAdminZonesRoute
   AuthenticatedDashboardIntegrationsHermesRoute: typeof AuthenticatedDashboardIntegrationsHermesRoute
 }
 
@@ -1043,6 +1162,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardAdminCompaniesRoute:
       AuthenticatedDashboardAdminCompaniesRoute,
     AuthenticatedDashboardAdminEditRoute: AuthenticatedDashboardAdminEditRoute,
+    AuthenticatedDashboardAdminZonesRoute:
+      AuthenticatedDashboardAdminZonesRoute,
     AuthenticatedDashboardIntegrationsHermesRoute:
       AuthenticatedDashboardIntegrationsHermesRoute,
   }
@@ -1112,13 +1233,39 @@ const ApiRouteChildren: ApiRouteChildren = {
 
 const ApiRouteWithChildren = ApiRoute._addFileChildren(ApiRouteChildren)
 
+interface CumCongNghiepRouteChildren {
+  CumCongNghiepSlugRoute: typeof CumCongNghiepSlugRoute
+}
+
+const CumCongNghiepRouteChildren: CumCongNghiepRouteChildren = {
+  CumCongNghiepSlugRoute: CumCongNghiepSlugRoute,
+}
+
+const CumCongNghiepRouteWithChildren = CumCongNghiepRoute._addFileChildren(
+  CumCongNghiepRouteChildren,
+)
+
+interface KhuCongNghiepRouteChildren {
+  KhuCongNghiepSlugRoute: typeof KhuCongNghiepSlugRoute
+}
+
+const KhuCongNghiepRouteChildren: KhuCongNghiepRouteChildren = {
+  KhuCongNghiepSlugRoute: KhuCongNghiepSlugRoute,
+}
+
+const KhuCongNghiepRouteWithChildren = KhuCongNghiepRoute._addFileChildren(
+  KhuCongNghiepRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   ApiRoute: ApiRouteWithChildren,
   AuthRoute: AuthRoute,
+  CumCongNghiepRoute: CumCongNghiepRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  KhuCongNghiepRoute: KhuCongNghiepRouteWithChildren,
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
@@ -1128,6 +1275,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapIndustriesDotxmlRoute: SitemapIndustriesDotxmlRoute,
   SitemapProvincesDotxmlRoute: SitemapProvincesDotxmlRoute,
   SitemapStaticDotxmlRoute: SitemapStaticDotxmlRoute,
+  SitemapZonesDotxmlRoute: SitemapZonesDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   CompanySlugRoute: CompanySlugRoute,

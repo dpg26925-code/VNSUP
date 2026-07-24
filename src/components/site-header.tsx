@@ -58,6 +58,8 @@ export function SiteHeader() {
 
         <nav className="ml-auto flex items-center gap-1 text-sm">
           <Link to="/search" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-block">Tìm kiếm</Link>
+          <Link to="/khu-cong-nghiep" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground md:inline-block">KCN</Link>
+          <Link to="/cum-cong-nghiep" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground md:inline-block">CCN</Link>
           <Link to="/pricing" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-block">Bảng giá</Link>
           <ThemeToggle />
           {isAdmin && (

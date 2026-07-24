@@ -13,6 +13,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           "sitemap-industries.xml",
           "sitemap-provinces.xml",
           "sitemap-companies.xml",
+          "sitemap-zones.xml",
         ];
         const body = children
           .map((c) => `  <sitemap><loc>${BASE_URL}/${c}</loc><lastmod>${now}</lastmod></sitemap>`)
