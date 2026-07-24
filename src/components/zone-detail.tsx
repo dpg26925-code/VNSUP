@@ -1,7 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { parseFaqs, ZONE_META, type ZoneKind, type ZoneRow } from "@/lib/zones";
-import { Building2, Calendar, Globe, Mail, MapPin, Phone, Ruler, TrendingUp, DollarSign, Sparkles, HelpCircle } from "lucide-react";
+import { Building2, Calendar, Globe, Mail, MapPin, Phone, Ruler, TrendingUp, DollarSign, Sparkles, HelpCircle, BadgeCheck } from "lucide-react";
+
+type ZoneCompany = { id: string; slug: string; name: string; logo_url: string | null; industry: string | null; sub_industry: string | null; employee_range: string | null; verified: boolean };
 
 export function ZoneDetail({ zone }: { zone: ZoneRow }) {
   const M = ZONE_META[zone.kind as ZoneKind];
