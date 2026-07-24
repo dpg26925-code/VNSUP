@@ -41,7 +41,7 @@ export const Route = createFileRoute("/khu-cong-nghiep/")({
       ],
       links: [
         { rel: "canonical", href: url },
-        { rel: "alternate", hreflang: "vi", href: url },
+        { rel: "alternate", hrefLang: "vi", href: url },
       ],
       scripts: [{
         type: "application/ld+json",

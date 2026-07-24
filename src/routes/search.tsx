@@ -34,8 +34,8 @@ export const Route = createFileRoute("/search")({
     ],
     links: [
       { rel: "canonical", href: SEARCH_URL },
-      { rel: "alternate", hreflang: "vi", href: SEARCH_URL },
-      { rel: "alternate", hreflang: "x-default", href: SEARCH_URL },
+      { rel: "alternate", hrefLang: "vi", href: SEARCH_URL },
+      { rel: "alternate", hrefLang: "x-default", href: SEARCH_URL },
     ],
   }),
   component: SearchPage,

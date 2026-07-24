@@ -21,8 +21,8 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: HOME_URL },
-      { rel: "alternate", hreflang: "vi", href: HOME_URL },
-      { rel: "alternate", hreflang: "x-default", href: HOME_URL },
+      { rel: "alternate", hrefLang: "vi", href: HOME_URL },
+      { rel: "alternate", hrefLang: "x-default", href: HOME_URL },
     ],
     scripts: [
       {
