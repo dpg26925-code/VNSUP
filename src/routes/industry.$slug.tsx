@@ -27,8 +27,8 @@ export const Route = createFileRoute("/industry/$slug")({
       ],
       links: [
         { rel: "canonical", href: url },
-        { rel: "alternate", hreflang: "vi", href: url },
-        { rel: "alternate", hreflang: "x-default", href: url },
+        { rel: "alternate", hrefLang: "vi", href: url },
+        { rel: "alternate", hrefLang: "x-default", href: url },
       ],
       scripts: [{
         type: "application/ld+json",

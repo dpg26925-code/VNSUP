@@ -21,14 +21,14 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as KhuCongNghiepRouteImport } from './routes/khu-cong-nghiep'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as CumCongNghiepRouteImport } from './routes/cum-cong-nghiep'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ApiRouteImport } from './routes/api'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as KhuCongNghiepIndexRouteImport } from './routes/khu-cong-nghiep.index'
+import { Route as CumCongNghiepIndexRouteImport } from './routes/cum-cong-nghiep.index'
 import { Route as ProvinceSlugRouteImport } from './routes/province.$slug'
 import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
 import { Route as PaymentCancelRouteImport } from './routes/payment.cancel'
@@ -124,19 +124,9 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const KhuCongNghiepRoute = KhuCongNghiepRouteImport.update({
-  id: '/khu-cong-nghiep',
-  path: '/khu-cong-nghiep',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CumCongNghiepRoute = CumCongNghiepRouteImport.update({
-  id: '/cum-cong-nghiep',
-  path: '/cum-cong-nghiep',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -163,6 +153,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KhuCongNghiepIndexRoute = KhuCongNghiepIndexRouteImport.update({
+  id: '/khu-cong-nghiep/',
+  path: '/khu-cong-nghiep/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CumCongNghiepIndexRoute = CumCongNghiepIndexRouteImport.update({
+  id: '/cum-cong-nghiep/',
+  path: '/cum-cong-nghiep/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProvinceSlugRoute = ProvinceSlugRouteImport.update({
   id: '/province/$slug',
   path: '/province/$slug',
@@ -179,9 +179,9 @@ const PaymentCancelRoute = PaymentCancelRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const KhuCongNghiepSlugRoute = KhuCongNghiepSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => KhuCongNghiepRoute,
+  id: '/khu-cong-nghiep/$slug',
+  path: '/khu-cong-nghiep/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const IndustrySlugRoute = IndustrySlugRouteImport.update({
   id: '/industry/$slug',
@@ -189,9 +189,9 @@ const IndustrySlugRoute = IndustrySlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CumCongNghiepSlugRoute = CumCongNghiepSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => CumCongNghiepRoute,
+  id: '/cum-cong-nghiep/$slug',
+  path: '/cum-cong-nghiep/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CompanySlugRoute = CompanySlugRouteImport.update({
   id: '/company/$slug',
@@ -362,9 +362,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
-  '/cum-cong-nghiep': typeof CumCongNghiepRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
-  '/khu-cong-nghiep': typeof KhuCongNghiepRouteWithChildren
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -385,6 +383,8 @@ export interface FileRoutesByFullPath {
   '/payment/cancel': typeof PaymentCancelRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
+  '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
+  '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
@@ -417,9 +417,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
-  '/cum-cong-nghiep': typeof CumCongNghiepRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
-  '/khu-cong-nghiep': typeof KhuCongNghiepRouteWithChildren
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -439,6 +437,8 @@ export interface FileRoutesByTo {
   '/payment/cancel': typeof PaymentCancelRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
+  '/cum-cong-nghiep': typeof CumCongNghiepIndexRoute
+  '/khu-cong-nghiep': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
@@ -473,9 +473,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
-  '/cum-cong-nghiep': typeof CumCongNghiepRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
-  '/khu-cong-nghiep': typeof KhuCongNghiepRouteWithChildren
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -496,6 +494,8 @@ export interface FileRoutesById {
   '/payment/cancel': typeof PaymentCancelRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
+  '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
+  '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/_authenticated/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
@@ -530,9 +530,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/api'
     | '/auth'
-    | '/cum-cong-nghiep'
     | '/forgot-password'
-    | '/khu-cong-nghiep'
     | '/login'
     | '/pricing'
     | '/register'
@@ -553,6 +551,8 @@ export interface FileRouteTypes {
     | '/payment/cancel'
     | '/payment/success'
     | '/province/$slug'
+    | '/cum-cong-nghiep/'
+    | '/khu-cong-nghiep/'
     | '/dashboard/analytics'
     | '/dashboard/articles'
     | '/dashboard/audit-log'
@@ -585,9 +585,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/api'
     | '/auth'
-    | '/cum-cong-nghiep'
     | '/forgot-password'
-    | '/khu-cong-nghiep'
     | '/login'
     | '/pricing'
     | '/register'
@@ -607,6 +605,8 @@ export interface FileRouteTypes {
     | '/payment/cancel'
     | '/payment/success'
     | '/province/$slug'
+    | '/cum-cong-nghiep'
+    | '/khu-cong-nghiep'
     | '/dashboard/analytics'
     | '/dashboard/articles'
     | '/dashboard/audit-log'
@@ -640,9 +640,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/api'
     | '/auth'
-    | '/cum-cong-nghiep'
     | '/forgot-password'
-    | '/khu-cong-nghiep'
     | '/login'
     | '/pricing'
     | '/register'
@@ -663,6 +661,8 @@ export interface FileRouteTypes {
     | '/payment/cancel'
     | '/payment/success'
     | '/province/$slug'
+    | '/cum-cong-nghiep/'
+    | '/khu-cong-nghiep/'
     | '/_authenticated/dashboard/analytics'
     | '/_authenticated/dashboard/articles'
     | '/_authenticated/dashboard/audit-log'
@@ -697,9 +697,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ApiRoute: typeof ApiRouteWithChildren
   AuthRoute: typeof AuthRoute
-  CumCongNghiepRoute: typeof CumCongNghiepRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
-  KhuCongNghiepRoute: typeof KhuCongNghiepRouteWithChildren
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
@@ -713,10 +711,14 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   CompanySlugRoute: typeof CompanySlugRoute
+  CumCongNghiepSlugRoute: typeof CumCongNghiepSlugRoute
   IndustrySlugRoute: typeof IndustrySlugRoute
+  KhuCongNghiepSlugRoute: typeof KhuCongNghiepSlugRoute
   PaymentCancelRoute: typeof PaymentCancelRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
   ProvinceSlugRoute: typeof ProvinceSlugRoute
+  CumCongNghiepIndexRoute: typeof CumCongNghiepIndexRoute
+  KhuCongNghiepIndexRoute: typeof KhuCongNghiepIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -805,25 +807,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/khu-cong-nghiep': {
-      id: '/khu-cong-nghiep'
-      path: '/khu-cong-nghiep'
-      fullPath: '/khu-cong-nghiep'
-      preLoaderRoute: typeof KhuCongNghiepRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/forgot-password': {
       id: '/forgot-password'
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cum-cong-nghiep': {
-      id: '/cum-cong-nghiep'
-      path: '/cum-cong-nghiep'
-      fullPath: '/cum-cong-nghiep'
-      preLoaderRoute: typeof CumCongNghiepRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -861,6 +849,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/khu-cong-nghiep/': {
+      id: '/khu-cong-nghiep/'
+      path: '/khu-cong-nghiep'
+      fullPath: '/khu-cong-nghiep/'
+      preLoaderRoute: typeof KhuCongNghiepIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cum-cong-nghiep/': {
+      id: '/cum-cong-nghiep/'
+      path: '/cum-cong-nghiep'
+      fullPath: '/cum-cong-nghiep/'
+      preLoaderRoute: typeof CumCongNghiepIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/province/$slug': {
       id: '/province/$slug'
       path: '/province/$slug'
@@ -884,10 +886,10 @@ declare module '@tanstack/react-router' {
     }
     '/khu-cong-nghiep/$slug': {
       id: '/khu-cong-nghiep/$slug'
-      path: '/$slug'
+      path: '/khu-cong-nghiep/$slug'
       fullPath: '/khu-cong-nghiep/$slug'
       preLoaderRoute: typeof KhuCongNghiepSlugRouteImport
-      parentRoute: typeof KhuCongNghiepRoute
+      parentRoute: typeof rootRouteImport
     }
     '/industry/$slug': {
       id: '/industry/$slug'
@@ -898,10 +900,10 @@ declare module '@tanstack/react-router' {
     }
     '/cum-cong-nghiep/$slug': {
       id: '/cum-cong-nghiep/$slug'
-      path: '/$slug'
+      path: '/cum-cong-nghiep/$slug'
       fullPath: '/cum-cong-nghiep/$slug'
       preLoaderRoute: typeof CumCongNghiepSlugRouteImport
-      parentRoute: typeof CumCongNghiepRoute
+      parentRoute: typeof rootRouteImport
     }
     '/company/$slug': {
       id: '/company/$slug'
@@ -1233,39 +1235,13 @@ const ApiRouteChildren: ApiRouteChildren = {
 
 const ApiRouteWithChildren = ApiRoute._addFileChildren(ApiRouteChildren)
 
-interface CumCongNghiepRouteChildren {
-  CumCongNghiepSlugRoute: typeof CumCongNghiepSlugRoute
-}
-
-const CumCongNghiepRouteChildren: CumCongNghiepRouteChildren = {
-  CumCongNghiepSlugRoute: CumCongNghiepSlugRoute,
-}
-
-const CumCongNghiepRouteWithChildren = CumCongNghiepRoute._addFileChildren(
-  CumCongNghiepRouteChildren,
-)
-
-interface KhuCongNghiepRouteChildren {
-  KhuCongNghiepSlugRoute: typeof KhuCongNghiepSlugRoute
-}
-
-const KhuCongNghiepRouteChildren: KhuCongNghiepRouteChildren = {
-  KhuCongNghiepSlugRoute: KhuCongNghiepSlugRoute,
-}
-
-const KhuCongNghiepRouteWithChildren = KhuCongNghiepRoute._addFileChildren(
-  KhuCongNghiepRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   ApiRoute: ApiRouteWithChildren,
   AuthRoute: AuthRoute,
-  CumCongNghiepRoute: CumCongNghiepRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
-  KhuCongNghiepRoute: KhuCongNghiepRouteWithChildren,
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
@@ -1279,10 +1255,14 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   CompanySlugRoute: CompanySlugRoute,
+  CumCongNghiepSlugRoute: CumCongNghiepSlugRoute,
   IndustrySlugRoute: IndustrySlugRoute,
+  KhuCongNghiepSlugRoute: KhuCongNghiepSlugRoute,
   PaymentCancelRoute: PaymentCancelRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
   ProvinceSlugRoute: ProvinceSlugRoute,
+  CumCongNghiepIndexRoute: CumCongNghiepIndexRoute,
+  KhuCongNghiepIndexRoute: KhuCongNghiepIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

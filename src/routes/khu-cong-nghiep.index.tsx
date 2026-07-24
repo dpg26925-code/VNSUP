@@ -3,12 +3,12 @@ import { useMemo, useState } from "react";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
-import { EmptyState } from "@/components/skeleton-card";
+import { SkeletonCard, EmptyState } from "@/components/skeleton-card";
 import { PROVINCES } from "@/lib/factory";
 import { ZONE_META, zoneAbs, type ZoneRow } from "@/lib/zones";
 import { Building2, MapPin, Ruler, BadgeCheck } from "lucide-react";
 
-const KIND = "ccn" as const;
+const KIND = "kcn" as const;
 const M = ZONE_META[KIND];
 
 const listQO = queryOptions({
@@ -26,7 +26,7 @@ const listQO = queryOptions({
   },
 });
 
-export const Route = createFileRoute("/cum-cong-nghiep")({
+export const Route = createFileRoute("/khu-cong-nghiep/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(listQO),
   head: () => {
     const url = zoneAbs(KIND);
@@ -41,7 +41,7 @@ export const Route = createFileRoute("/cum-cong-nghiep")({
       ],
       links: [
         { rel: "canonical", href: url },
-        { rel: "alternate", hreflang: "vi", href: url },
+        { rel: "alternate", hrefLang: "vi", href: url },
       ],
       scripts: [{
         type: "application/ld+json",
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/cum-cong-nghiep")({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Trang chủ", item: "https://vnsupplier.cloud/" },
+            { "@type": "ListItem", position: 1, name: "Trang chủ", item: zoneAbs(KIND).replace(M.path, "/") },
             { "@type": "ListItem", position: 2, name: M.fullLabel, item: url },
           ],
         }),
@@ -58,10 +58,10 @@ export const Route = createFileRoute("/cum-cong-nghiep")({
   },
   errorComponent: () => <div className="p-6 text-sm text-destructive">Không tải được danh sách.</div>,
   notFoundComponent: () => <div className="p-6 text-sm">Không tìm thấy.</div>,
-  component: CCNListPage,
+  component: KCNListPage,
 });
 
-function CCNListPage() {
+function KCNListPage() {
   const { data: rows } = useSuspenseQuery(listQO);
   const [province, setProvince] = useState<string>("");
   const filtered = useMemo(() => rows.filter((r) => !province || r.province === province), [rows, province]);
@@ -73,14 +73,14 @@ function CCNListPage() {
         <nav className="mb-3 text-xs text-muted-foreground">
           <Link to="/" className="hover:text-foreground">Trang chủ</Link>
           <span className="mx-1">/</span>
-          <span className="text-foreground">Cụm Công Nghiệp</span>
+          <span className="text-foreground">Khu Công Nghiệp</span>
         </nav>
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold md:text-3xl">Danh sách Cụm Công Nghiệp tại Việt Nam</h1>
+            <h1 className="text-2xl font-bold md:text-3xl">Danh sách Khu Công Nghiệp tại Việt Nam</h1>
             <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{M.listDescription}</p>
           </div>
-          <div className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{filtered.length} CCN</div>
+          <div className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{filtered.length} KCN</div>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-2">
@@ -97,12 +97,12 @@ function CCNListPage() {
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.length === 0 ? (
             <div className="col-span-full">
-              <EmptyState title="Chưa có CCN" description="Không có CCN nào phù hợp bộ lọc." />
+              <EmptyState title="Chưa có KCN" description="Không có KCN nào phù hợp bộ lọc." />
             </div>
           ) : filtered.map((z) => (
             <Link
               key={z.id}
-              to="/cum-cong-nghiep/$slug"
+              to="/khu-cong-nghiep/$slug"
               params={{ slug: z.slug }}
               className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-lg"
             >
@@ -144,3 +144,5 @@ function CCNListPage() {
     </div>
   );
 }
+
+export function _fallback() { return <SkeletonCard />; }
