@@ -147,9 +147,8 @@ function AdminPage() {
     .filter((r) => !q || r.name.toLowerCase().includes(q.toLowerCase()) || r.slug.includes(q.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <div className="mx-auto max-w-7xl px-4 py-6">
+    <div className="p-6">
+      <div>
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold">Quản lý nhà máy</h1>
