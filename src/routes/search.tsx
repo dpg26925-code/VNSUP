@@ -205,6 +205,25 @@ function SearchPage() {
               </div>
             )}
 
+            {!loading && search.q && aiTerms.length > 0 && (
+              <div className="mb-3 flex flex-wrap items-center gap-1.5 rounded-md border border-primary/20 bg-primary/5 p-2">
+                <span className="inline-flex items-center gap-1 text-xs font-medium text-primary">
+                  <Sparkles className="h-3 w-3" /> AI mở rộng:
+                </span>
+                {aiTerms.map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => { setQ(t); apply({ q: t }); }}
+                    className="rounded-full border bg-card px-2 py-0.5 text-xs hover:border-primary hover:text-primary"
+                    title={`Tìm với "${t}"`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            )}
+
+
             {loading ? (
               <SkeletonGrid count={6} cols={3} />
             ) : rows.length === 0 ? (
