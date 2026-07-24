@@ -245,7 +245,26 @@ function AdminPage() {
               <Field label="Ngành">
                 <select value={edit.industry ?? ""} onChange={(e) => setEdit({ ...edit, industry: e.target.value || null })} className="input">
                   <option value="">—</option>
-                  {INDUSTRIES.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
+                  {industries.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
+                </select>
+              </Field>
+              <Field label="KCN / CCN" full>
+                <select
+                  value={edit.industrial_zone_id ?? ""}
+                  onChange={(e) => setEdit({ ...edit, industrial_zone_id: e.target.value || null })}
+                  className="input"
+                >
+                  <option value="">— Không thuộc KCN/CCN —</option>
+                  <optgroup label="Khu Công Nghiệp (KCN)">
+                    {zones.filter((z) => z.kind === "kcn").map((z) => (
+                      <option key={z.id} value={z.id}>{z.name}{z.province ? ` — ${z.province}` : ""}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Cụm Công Nghiệp (CCN)">
+                    {zones.filter((z) => z.kind === "ccn").map((z) => (
+                      <option key={z.id} value={z.id}>{z.name}{z.province ? ` — ${z.province}` : ""}</option>
+                    ))}
+                  </optgroup>
                 </select>
               </Field>
               <Field label="Ngành phụ"><input value={edit.sub_industry ?? ""} onChange={(e) => setEdit({ ...edit, sub_industry: e.target.value })} className="input" /></Field>
