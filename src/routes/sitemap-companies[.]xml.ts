@@ -21,7 +21,7 @@ export const Route = createFileRoute("/sitemap-companies.xml")({
             .limit(50000);
           entries = ((data ?? []) as { slug: string; updated_at: string | null }[]).map((c) => ({
             loc: `/company/${c.slug}`,
-            lastmod: c.updated_at ?? now,
+            lastmod: c.updated_at ?? undefined,
             changefreq: "weekly",
             priority: "0.7",
           }));
