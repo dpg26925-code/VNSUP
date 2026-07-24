@@ -137,6 +137,53 @@ export function ZoneDetail({ zone }: { zone: ZoneRow }) {
           </section>
         )}
 
+        {/* Companies in this zone */}
+        <section className="mt-8 rounded-2xl border border-border bg-card p-5">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="inline-flex items-center gap-2 text-lg font-semibold">
+              <Building2 className="h-5 w-5 text-brand" /> Doanh nghiệp trong {M.label} ({companies.length})
+            </h2>
+            <Link to="/search" search={{ zone: zone.id }} className="text-sm text-brand hover:underline">Xem tất cả →</Link>
+          </div>
+          {companies.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              Chưa có doanh nghiệp nào được liên kết với {M.label} này.
+              <div className="mt-2">
+                <Link to="/dashboard/submit-company" className="text-brand hover:underline">Đăng ký doanh nghiệp của bạn →</Link>
+              </div>
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {companies.map((co) => (
+                <Link
+                  key={co.id}
+                  to="/company/$slug"
+                  params={{ slug: co.slug }}
+                  className="group flex items-center gap-3 rounded-xl border border-border bg-background p-3 transition hover:border-brand hover:shadow-sm"
+                >
+                  <div className="grid h-12 w-12 flex-shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-muted">
+                    {co.logo_url ? (
+                      <img src={co.logo_url} alt={co.name} className="h-full w-full object-contain" loading="lazy" />
+                    ) : (
+                      <Building2 className="h-5 w-5 text-muted-foreground" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <div className="truncate text-sm font-semibold group-hover:text-brand">{co.name}</div>
+                      {co.verified && <BadgeCheck className="h-4 w-4 flex-shrink-0 text-brand" />}
+                    </div>
+                    <div className="truncate text-xs text-muted-foreground">
+                      {co.industry ?? "—"}{co.sub_industry ? ` · ${co.sub_industry}` : ""}
+                      {co.employee_range ? ` · ${co.employee_range}` : ""}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+
         {/* FAQ */}
         {faqs.length > 0 && (
           <section className="mt-8 rounded-2xl border border-border bg-card p-5">
