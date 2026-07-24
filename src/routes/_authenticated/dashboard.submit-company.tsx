@@ -122,6 +122,7 @@ function SubmitCompanyPage() {
       return { q: (q ?? "").trim(), a: a.join("\n").trim() };
     }).filter((f) => f.q && f.a);
     const { error } = await supabase.from("companies").insert({
+      industrial_zone_id: form.industrial_zone_id || null,
       name: d.name,
       slug: d.slug,
       province: d.province || null,
