@@ -93,6 +93,7 @@ function AdminPage() {
     };
     const payload: any = {
       name: edit.name, slug: edit.slug, province: edit.province ?? null, industry: edit.industry ?? null,
+      industrial_zone_id: edit.industrial_zone_id ?? null,
       sub_industry: edit.sub_industry ?? null, employee_range: edit.employee_range ?? null,
       founded_year: edit.founded_year ? Number(edit.founded_year) : null,
       revenue_range: edit.revenue_range || null, company_type: edit.company_type || null,
