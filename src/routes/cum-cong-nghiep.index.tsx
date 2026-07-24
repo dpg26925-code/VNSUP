@@ -26,7 +26,7 @@ const listQO = queryOptions({
   },
 });
 
-export const Route = createFileRoute("/cum-cong-nghiep")({
+export const Route = createFileRoute("/cum-cong-nghiep/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(listQO),
   head: () => {
     const url = zoneAbs(KIND);
