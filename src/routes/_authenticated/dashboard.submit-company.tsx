@@ -198,7 +198,7 @@ function SubmitCompanyPage() {
             <F label="Ngành">
               <select className="input" value={form.industry} onChange={(e) => set("industry", e.target.value)}>
                 <option value="">— Chọn —</option>
-                {INDUSTRIES.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
+                {industries.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
               </select>
             </F>
             <F label="Ngành phụ">
