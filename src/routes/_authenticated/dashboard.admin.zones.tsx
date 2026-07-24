@@ -114,7 +114,7 @@ function AdminZonesPage() {
         is_featured: !!selected.is_featured,
       };
       if (selected.id) {
-        const { error } = await supabase.from("industrial_zones").update(payload).eq("id", selected.id);
+        const { error } = await supabase.from("industrial_zones").update(payload as never).eq("id", selected.id);
         if (error) throw error;
       } else {
         const { error } = await supabase.from("industrial_zones").insert(payload as never);
