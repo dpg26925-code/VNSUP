@@ -3,7 +3,8 @@ import { useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 
-import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
+import { EMPLOYEE_RANGES, PROVINCES } from "@/lib/factory";
+import { useIndustryOptions, useZoneOptions } from "@/lib/pickers";
 import { Building2, Send } from "lucide-react";
 import { MediaUpload, MediaUploadMulti } from "@/components/media-upload";
 
