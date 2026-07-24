@@ -516,6 +516,111 @@ export type Database = {
           },
         ]
       }
+      industrial_zones: {
+        Row: {
+          address: string | null
+          ai_summary: string | null
+          area_ha: number | null
+          banner_url: string | null
+          canonical_url: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          developer: string | null
+          district: string | null
+          established_year: number | null
+          faqs: Json | null
+          gallery_url: string[] | null
+          highlights: string[] | null
+          id: string
+          industries: string[] | null
+          is_featured: boolean
+          kind: Database["public"]["Enums"]["zone_kind"]
+          land_price_usd_m2_year: number | null
+          latitude: number | null
+          logo_url: string | null
+          longitude: number | null
+          meta_description: string | null
+          meta_title: string | null
+          name: string
+          occupancy_percent: number | null
+          province: string | null
+          slug: string
+          status: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          address?: string | null
+          ai_summary?: string | null
+          area_ha?: number | null
+          banner_url?: string | null
+          canonical_url?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          developer?: string | null
+          district?: string | null
+          established_year?: number | null
+          faqs?: Json | null
+          gallery_url?: string[] | null
+          highlights?: string[] | null
+          id?: string
+          industries?: string[] | null
+          is_featured?: boolean
+          kind: Database["public"]["Enums"]["zone_kind"]
+          land_price_usd_m2_year?: number | null
+          latitude?: number | null
+          logo_url?: string | null
+          longitude?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
+          name: string
+          occupancy_percent?: number | null
+          province?: string | null
+          slug: string
+          status?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          address?: string | null
+          ai_summary?: string | null
+          area_ha?: number | null
+          banner_url?: string | null
+          canonical_url?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          developer?: string | null
+          district?: string | null
+          established_year?: number | null
+          faqs?: Json | null
+          gallery_url?: string[] | null
+          highlights?: string[] | null
+          id?: string
+          industries?: string[] | null
+          is_featured?: boolean
+          kind?: Database["public"]["Enums"]["zone_kind"]
+          land_price_usd_m2_year?: number | null
+          latitude?: number | null
+          logo_url?: string | null
+          longitude?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
+          name?: string
+          occupancy_percent?: number | null
+          province?: string | null
+          slug?: string
+          status?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           company: string | null
@@ -846,6 +951,7 @@ export type Database = {
         | "profile_claim"
       post_status: "draft" | "pending" | "published" | "archived"
       subscription_status: "active" | "expired" | "cancelled"
+      zone_kind: "kcn" | "ccn"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -985,6 +1091,7 @@ export const Constants = {
       ],
       post_status: ["draft", "pending", "published", "archived"],
       subscription_status: ["active", "expired", "cancelled"],
+      zone_kind: ["kcn", "ccn"],
     },
   },
 } as const
