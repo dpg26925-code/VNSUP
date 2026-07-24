@@ -51,6 +51,8 @@ function AdminPage() {
   const [edit, setEdit] = useState<Partial<Row> | null>(null);
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"pending" | "all" | "rejected">("pending");
+  const industries = useIndustryOptions();
+  const { zones } = useZoneOptions();
 
   async function load() {
     setLoading(true);
