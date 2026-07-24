@@ -55,6 +55,7 @@ import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/publi
 import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
 import { Route as AuthenticatedDashboardIntegrationsHermesRouteImport } from './routes/_authenticated/dashboard.integrations.hermes'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
+import { Route as AuthenticatedDashboardAdminZonesRouteImport } from './routes/_authenticated/dashboard.admin.zones'
 import { Route as AuthenticatedDashboardAdminEditRouteImport } from './routes/_authenticated/dashboard.admin.edit'
 import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './routes/_authenticated/dashboard.admin.companies'
 import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard.admin.claims'
@@ -307,6 +308,12 @@ const AuthenticatedDashboardArticlesNewRoute =
     path: '/new',
     getParentRoute: () => AuthenticatedDashboardArticlesRoute,
   } as any)
+const AuthenticatedDashboardAdminZonesRoute =
+  AuthenticatedDashboardAdminZonesRouteImport.update({
+    id: '/admin/zones',
+    path: '/admin/zones',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAdminEditRoute =
   AuthenticatedDashboardAdminEditRouteImport.update({
     id: '/admin/edit',
@@ -392,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
+  '/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
@@ -445,6 +453,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
+  '/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
@@ -501,6 +510,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/_authenticated/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/_authenticated/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
+  '/_authenticated/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/_authenticated/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
@@ -557,6 +567,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
     | '/dashboard/admin/edit'
+    | '/dashboard/admin/zones'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
@@ -610,6 +621,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
     | '/dashboard/admin/edit'
+    | '/dashboard/admin/zones'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
@@ -665,6 +677,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin/claims'
     | '/_authenticated/dashboard/admin/companies'
     | '/_authenticated/dashboard/admin/edit'
+    | '/_authenticated/dashboard/admin/zones'
     | '/_authenticated/dashboard/articles/new'
     | '/_authenticated/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
@@ -1030,6 +1043,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardArticlesNewRouteImport
       parentRoute: typeof AuthenticatedDashboardArticlesRoute
     }
+    '/_authenticated/dashboard/admin/zones': {
+      id: '/_authenticated/dashboard/admin/zones'
+      path: '/admin/zones'
+      fullPath: '/dashboard/admin/zones'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminZonesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/admin/edit': {
       id: '/_authenticated/dashboard/admin/edit'
       path: '/admin/edit'
@@ -1115,6 +1135,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAdminClaimsRoute: typeof AuthenticatedDashboardAdminClaimsRoute
   AuthenticatedDashboardAdminCompaniesRoute: typeof AuthenticatedDashboardAdminCompaniesRoute
   AuthenticatedDashboardAdminEditRoute: typeof AuthenticatedDashboardAdminEditRoute
+  AuthenticatedDashboardAdminZonesRoute: typeof AuthenticatedDashboardAdminZonesRoute
   AuthenticatedDashboardIntegrationsHermesRoute: typeof AuthenticatedDashboardIntegrationsHermesRoute
 }
 
@@ -1141,6 +1162,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardAdminCompaniesRoute:
       AuthenticatedDashboardAdminCompaniesRoute,
     AuthenticatedDashboardAdminEditRoute: AuthenticatedDashboardAdminEditRoute,
+    AuthenticatedDashboardAdminZonesRoute:
+      AuthenticatedDashboardAdminZonesRoute,
     AuthenticatedDashboardIntegrationsHermesRoute:
       AuthenticatedDashboardIntegrationsHermesRoute,
   }
