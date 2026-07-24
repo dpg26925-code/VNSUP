@@ -7,10 +7,12 @@ import {
   FolderTree,
   Home,
   Inbox,
+  LogOut,
   Plug,
   ScrollText,
   ShieldCheck,
 } from "lucide-react";
+
 import {
   Sidebar,
   SidebarContent,
