@@ -302,9 +302,14 @@ function AdminPage() {
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.verified} onChange={(e) => setEdit({ ...edit, verified: e.target.checked })} /> Đã xác thực</label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.featured} onChange={(e) => setEdit({ ...edit, featured: e.target.checked })} /> Nổi bật</label>
             </div>
+            {saveError && (
+              <div className="mt-4 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+                {saveError}
+              </div>
+            )}
             <div className="mt-5 flex justify-end gap-2">
-              <button onClick={() => setEdit(null)} className="rounded-md border px-4 py-2 text-sm hover:bg-accent">Hủy</button>
-              <button onClick={save} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Lưu</button>
+              <button onClick={() => setEdit(null)} disabled={saving} className="rounded-md border px-4 py-2 text-sm hover:bg-accent disabled:opacity-60">Hủy</button>
+              <button onClick={save} disabled={saving} className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">{saving ? "Đang lưu…" : "Lưu"}</button>
             </div>
           </div>
         </div>
