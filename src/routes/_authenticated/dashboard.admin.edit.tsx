@@ -1,7 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
+import { EMPLOYEE_RANGES, PROVINCES } from "@/lib/factory";
+import { useIndustryOptions, useZoneOptions } from "@/lib/pickers";
 import { Check, Pencil, Plus, Trash2, X, XCircle } from "lucide-react";
 
 type Row = {
@@ -15,6 +16,7 @@ type Row = {
   verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   status: string | null; submitted_by: string | null; rejection_reason: string | null;
+  industrial_zone_id: string | null;
 };
 
 const REVENUE_RANGES = ["< 1 tỷ", "1-10 tỷ", "10-50 tỷ", "50-200 tỷ", "200 tỷ - 1000 tỷ", "> 1000 tỷ"];
@@ -49,6 +51,8 @@ function AdminPage() {
   const [edit, setEdit] = useState<Partial<Row> | null>(null);
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<"pending" | "all" | "rejected">("pending");
+  const industries = useIndustryOptions();
+  const { zones } = useZoneOptions();
 
   async function load() {
     setLoading(true);
@@ -89,6 +93,7 @@ function AdminPage() {
     };
     const payload: any = {
       name: edit.name, slug: edit.slug, province: edit.province ?? null, industry: edit.industry ?? null,
+      industrial_zone_id: edit.industrial_zone_id ?? null,
       sub_industry: edit.sub_industry ?? null, employee_range: edit.employee_range ?? null,
       founded_year: edit.founded_year ? Number(edit.founded_year) : null,
       revenue_range: edit.revenue_range || null, company_type: edit.company_type || null,
@@ -241,7 +246,26 @@ function AdminPage() {
               <Field label="Ngành">
                 <select value={edit.industry ?? ""} onChange={(e) => setEdit({ ...edit, industry: e.target.value || null })} className="input">
                   <option value="">—</option>
-                  {INDUSTRIES.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
+                  {industries.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
+                </select>
+              </Field>
+              <Field label="KCN / CCN" full>
+                <select
+                  value={edit.industrial_zone_id ?? ""}
+                  onChange={(e) => setEdit({ ...edit, industrial_zone_id: e.target.value || null })}
+                  className="input"
+                >
+                  <option value="">— Không thuộc KCN/CCN —</option>
+                  <optgroup label="Khu Công Nghiệp (KCN)">
+                    {zones.filter((z) => z.kind === "kcn").map((z) => (
+                      <option key={z.id} value={z.id}>{z.name}{z.province ? ` — ${z.province}` : ""}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Cụm Công Nghiệp (CCN)">
+                    {zones.filter((z) => z.kind === "ccn").map((z) => (
+                      <option key={z.id} value={z.id}>{z.name}{z.province ? ` — ${z.province}` : ""}</option>
+                    ))}
+                  </optgroup>
                 </select>
               </Field>
               <Field label="Ngành phụ"><input value={edit.sub_industry ?? ""} onChange={(e) => setEdit({ ...edit, sub_industry: e.target.value })} className="input" /></Field>

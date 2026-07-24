@@ -24,7 +24,10 @@ type Company = {
   verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   submitted_by: string | null;
+  industrial_zone_id: string | null;
 };
+
+type ZoneLite = { id: string; name: string; slug: string; kind: "kcn" | "ccn"; province: string | null };
 
 
 
@@ -44,6 +47,16 @@ async function loadCompany(slug: string) {
       .order("published_at", { ascending: false })
       .limit(10),
   ]);
+  const zoneId = (data as { industrial_zone_id?: string | null }).industrial_zone_id ?? null;
+  let zone: ZoneLite | null = null;
+  if (zoneId) {
+    const { data: zoneRow } = await supabase
+      .from("industrial_zones")
+      .select("id,name,slug,kind,province")
+      .eq("id", zoneId)
+      .maybeSingle();
+    if (zoneRow) zone = zoneRow as ZoneLite;
+  }
   const ratings = (ratingRows ?? []) as { rating: number }[];
   const reviewCount = ratings.length;
   const ratingAvg = reviewCount > 0 ? ratings.reduce((s, r) => s + r.rating, 0) / reviewCount : 0;
@@ -52,6 +65,7 @@ async function loadCompany(slug: string) {
     _reviewCount: reviewCount,
     _ratingAvg: ratingAvg,
     _updatesSeo: (updateRows ?? []) as UpdateSeo[],
+    _zone: zone,
   };
 }
 
@@ -216,7 +230,7 @@ function initials(name: string) {
 }
 
 function CompanyPage() {
-  const c = Route.useLoaderData() as Company;
+  const c = Route.useLoaderData() as Company & { _zone: ZoneLite | null };
   const caps = Array.isArray(c.capabilities) ? (c.capabilities as string[]) : [];
   const certs: Certification[] = Array.isArray(c.certifications)
     ? (c.certifications as unknown[]).map((v) => (typeof v === "string" ? { name: v } : (v as Certification))).filter((v) => v && v.name)
@@ -320,6 +334,16 @@ function CompanyPage() {
                   )}
                   {c.employee_range && <span className="inline-flex items-center gap-1"><Users className="h-4 w-4" />{c.employee_range}</span>}
                   {c.founded_year && <span>Thành lập {c.founded_year}</span>}
+                  {c._zone && (
+                    <Link
+                      to={c._zone.kind === "kcn" ? "/khu-cong-nghiep/$slug" : "/cum-cong-nghiep/$slug"}
+                      params={{ slug: c._zone.slug }}
+                      className="inline-flex items-center gap-1 rounded bg-brand-soft px-2 py-0.5 text-xs font-medium text-brand hover:bg-brand hover:text-brand-foreground"
+                    >
+                      <Building2 className="h-3.5 w-3.5" />
+                      {c._zone.kind === "kcn" ? "KCN" : "CCN"} {c._zone.name}
+                    </Link>
+                  )}
                 </div>
               </div>
               {c.stock_ticker && (

@@ -1,7 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { parseFaqs, ZONE_META, type ZoneKind, type ZoneRow } from "@/lib/zones";
-import { Building2, Calendar, Globe, Mail, MapPin, Phone, Ruler, TrendingUp, DollarSign, Sparkles, HelpCircle } from "lucide-react";
+import { Building2, Calendar, Globe, Mail, MapPin, Phone, Ruler, TrendingUp, DollarSign, Sparkles, HelpCircle, BadgeCheck } from "lucide-react";
+
+type ZoneCompany = { id: string; slug: string; name: string; logo_url: string | null; industry: string | null; sub_industry: string | null; employee_range: string | null; verified: boolean };
 
 export function ZoneDetail({ zone }: { zone: ZoneRow }) {
   const M = ZONE_META[zone.kind as ZoneKind];
@@ -9,6 +13,19 @@ export function ZoneDetail({ zone }: { zone: ZoneRow }) {
   const mapEmbed = zone.latitude != null && zone.longitude != null
     ? `https://www.openstreetmap.org/export/embed.html?bbox=${zone.longitude - 0.03}%2C${zone.latitude - 0.02}%2C${zone.longitude + 0.03}%2C${zone.latitude + 0.02}&layer=mapnik&marker=${zone.latitude}%2C${zone.longitude}`
     : null;
+
+  const [companies, setCompanies] = useState<ZoneCompany[]>([]);
+  useEffect(() => {
+    supabase
+      .from("companies")
+      .select("id,slug,name,logo_url,industry,sub_industry,employee_range,verified")
+      .eq("industrial_zone_id", zone.id)
+      .eq("status", "approved")
+      .order("verified", { ascending: false })
+      .order("name", { ascending: true })
+      .limit(60)
+      .then(({ data }) => setCompanies((data ?? []) as ZoneCompany[]));
+  }, [zone.id]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -119,6 +136,53 @@ export function ZoneDetail({ zone }: { zone: ZoneRow }) {
             </div>
           </section>
         )}
+
+        {/* Companies in this zone */}
+        <section className="mt-8 rounded-2xl border border-border bg-card p-5">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="inline-flex items-center gap-2 text-lg font-semibold">
+              <Building2 className="h-5 w-5 text-brand" /> Doanh nghiệp trong {M.label} ({companies.length})
+            </h2>
+            <Link to="/search" search={{ zone: zone.id }} className="text-sm text-brand hover:underline">Xem tất cả →</Link>
+          </div>
+          {companies.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              Chưa có doanh nghiệp nào được liên kết với {M.label} này.
+              <div className="mt-2">
+                <Link to="/dashboard/submit-company" className="text-brand hover:underline">Đăng ký doanh nghiệp của bạn →</Link>
+              </div>
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {companies.map((co) => (
+                <Link
+                  key={co.id}
+                  to="/company/$slug"
+                  params={{ slug: co.slug }}
+                  className="group flex items-center gap-3 rounded-xl border border-border bg-background p-3 transition hover:border-brand hover:shadow-sm"
+                >
+                  <div className="grid h-12 w-12 flex-shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-muted">
+                    {co.logo_url ? (
+                      <img src={co.logo_url} alt={co.name} className="h-full w-full object-contain" loading="lazy" />
+                    ) : (
+                      <Building2 className="h-5 w-5 text-muted-foreground" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <div className="truncate text-sm font-semibold group-hover:text-brand">{co.name}</div>
+                      {co.verified && <BadgeCheck className="h-4 w-4 flex-shrink-0 text-brand" />}
+                    </div>
+                    <div className="truncate text-xs text-muted-foreground">
+                      {co.industry ?? "—"}{co.sub_industry ? ` · ${co.sub_industry}` : ""}
+                      {co.employee_range ? ` · ${co.employee_range}` : ""}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
 
         {/* FAQ */}
         {faqs.length > 0 && (

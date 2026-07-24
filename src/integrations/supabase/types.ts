@@ -267,6 +267,7 @@ export type Database = {
           founded_year: number | null
           gallery_urls: Json
           id: string
+          industrial_zone_id: string | null
           industry: string | null
           is_featured: boolean
           is_verified: boolean
@@ -313,6 +314,7 @@ export type Database = {
           founded_year?: number | null
           gallery_urls?: Json
           id?: string
+          industrial_zone_id?: string | null
           industry?: string | null
           is_featured?: boolean
           is_verified?: boolean
@@ -359,6 +361,7 @@ export type Database = {
           founded_year?: number | null
           gallery_urls?: Json
           id?: string
+          industrial_zone_id?: string | null
           industry?: string | null
           is_featured?: boolean
           is_verified?: boolean
@@ -385,7 +388,15 @@ export type Database = {
           video_url?: string | null
           website?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "companies_industrial_zone_id_fkey"
+            columns: ["industrial_zone_id"]
+            isOneToOne: false
+            referencedRelation: "industrial_zones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       company_claims: {
         Row: {

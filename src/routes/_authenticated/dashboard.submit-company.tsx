@@ -3,7 +3,8 @@ import { useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 
-import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
+import { EMPLOYEE_RANGES, PROVINCES } from "@/lib/factory";
+import { useIndustryOptions, useZoneOptions } from "@/lib/pickers";
 import { Building2, Send } from "lucide-react";
 import { MediaUpload, MediaUploadMulti } from "@/components/media-upload";
 
@@ -76,13 +77,15 @@ function slugify(s: string) {
 
 function SubmitCompanyPage() {
   const navigate = useNavigate();
+  const industries = useIndustryOptions();
+  const { zones } = useZoneOptions();
   const [form, setForm] = useState<Record<string, string>>({
     name: "", slug: "", province: "", industry: "", sub_industry: "",
     employee_range: "", founded_year: "", website: "", phone: "", email: "",
     address: "", description: "", capabilities: "",
     revenue_range: "", company_type: "", cover_url: "", video_url: "",
     certifications: "", gallery_urls: "", faqs: "", export_markets: "",
-    stock_exchange: "", stock_ticker: "", logo_url: "",
+    stock_exchange: "", stock_ticker: "", logo_url: "", industrial_zone_id: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -119,6 +122,7 @@ function SubmitCompanyPage() {
       return { q: (q ?? "").trim(), a: a.join("\n").trim() };
     }).filter((f) => f.q && f.a);
     const { error } = await supabase.from("companies").insert({
+      industrial_zone_id: form.industrial_zone_id || null,
       name: d.name,
       slug: d.slug,
       province: d.province || null,
@@ -195,7 +199,26 @@ function SubmitCompanyPage() {
             <F label="Ngành">
               <select className="input" value={form.industry} onChange={(e) => set("industry", e.target.value)}>
                 <option value="">— Chọn —</option>
-                {INDUSTRIES.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
+                {industries.map((i) => <option key={i.slug} value={i.name}>{i.name}</option>)}
+              </select>
+            </F>
+            <F label="Khu / Cụm Công Nghiệp" full hint="Chọn KCN/CCN nơi nhà máy đặt trụ sở (tuỳ chọn). Có thể lọc theo tỉnh đã chọn.">
+              <select
+                className="input"
+                value={form.industrial_zone_id}
+                onChange={(e) => set("industrial_zone_id", e.target.value)}
+              >
+                <option value="">— Không thuộc KCN/CCN —</option>
+                <optgroup label="Khu Công Nghiệp (KCN)">
+                  {zones.filter((z) => z.kind === "kcn" && (!form.province || z.province === form.province)).map((z) => (
+                    <option key={z.id} value={z.id}>{z.name}{z.province ? ` — ${z.province}` : ""}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Cụm Công Nghiệp (CCN)">
+                  {zones.filter((z) => z.kind === "ccn" && (!form.province || z.province === form.province)).map((z) => (
+                    <option key={z.id} value={z.id}>{z.name}{z.province ? ` — ${z.province}` : ""}</option>
+                  ))}
+                </optgroup>
               </select>
             </F>
             <F label="Ngành phụ">
