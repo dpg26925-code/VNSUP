@@ -24,7 +24,10 @@ type Company = {
   verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   submitted_by: string | null;
+  industrial_zone_id: string | null;
 };
+
+type ZoneLite = { id: string; name: string; slug: string; kind: "kcn" | "ccn"; province: string | null };
 
 
 
