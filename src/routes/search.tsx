@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +8,8 @@ import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { SkeletonGrid, EmptyState } from "@/components/skeleton-card";
 import { Container, CardGrid } from "@/components/primitives";
 import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES, abs } from "@/lib/factory";
-import { Filter, Search as SearchIcon, X } from "lucide-react";
+import { smartSearch } from "@/lib/smart-search.functions";
+import { Filter, Search as SearchIcon, Sparkles, X } from "lucide-react";
 
 const searchSchema = z.object({
   q: z.string().optional(),
