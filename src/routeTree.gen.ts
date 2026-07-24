@@ -32,7 +32,6 @@ import { Route as PaymentCancelRouteImport } from './routes/payment.cancel'
 import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
 import { Route as CompanySlugRouteImport } from './routes/company.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardSubscriptionsRouteImport } from './routes/_authenticated/dashboard.subscriptions'
 import { Route as AuthenticatedDashboardSubmitCompanyRouteImport } from './routes/_authenticated/dashboard.submit-company'
@@ -51,6 +50,7 @@ import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/publi
 import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
 import { Route as AuthenticatedDashboardIntegrationsHermesRouteImport } from './routes/_authenticated/dashboard.integrations.hermes'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
+import { Route as AuthenticatedDashboardAdminEditRouteImport } from './routes/_authenticated/dashboard.admin.edit'
 import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './routes/_authenticated/dashboard.admin.companies'
 import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard.admin.claims'
 import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
@@ -172,11 +172,6 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
@@ -282,6 +277,12 @@ const AuthenticatedDashboardArticlesNewRoute =
     path: '/new',
     getParentRoute: () => AuthenticatedDashboardArticlesRoute,
   } as any)
+const AuthenticatedDashboardAdminEditRoute =
+  AuthenticatedDashboardAdminEditRouteImport.update({
+    id: '/admin/edit',
+    path: '/admin/edit',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAdminCompaniesRoute =
   AuthenticatedDashboardAdminCompaniesRouteImport.update({
     id: '/admin/companies',
@@ -336,7 +337,6 @@ export interface FileRoutesByFullPath {
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
@@ -356,6 +356,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
+  '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
@@ -385,7 +386,6 @@ export interface FileRoutesByTo {
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/company/$slug': typeof CompanySlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/payment/cancel': typeof PaymentCancelRoute
@@ -404,6 +404,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
+  '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
@@ -435,7 +436,6 @@ export interface FileRoutesById {
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
@@ -455,6 +455,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/_authenticated/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
+  '/_authenticated/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/_authenticated/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
@@ -486,7 +487,6 @@ export interface FileRouteTypes {
     | '/sitemap-static.xml'
     | '/sitemap.xml'
     | '/unauthorized'
-    | '/admin'
     | '/dashboard'
     | '/company/$slug'
     | '/industry/$slug'
@@ -506,6 +506,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
+    | '/dashboard/admin/edit'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
@@ -535,7 +536,6 @@ export interface FileRouteTypes {
     | '/sitemap-static.xml'
     | '/sitemap.xml'
     | '/unauthorized'
-    | '/admin'
     | '/company/$slug'
     | '/industry/$slug'
     | '/payment/cancel'
@@ -554,6 +554,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
+    | '/dashboard/admin/edit'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
@@ -584,7 +585,6 @@ export interface FileRouteTypes {
     | '/sitemap-static.xml'
     | '/sitemap.xml'
     | '/unauthorized'
-    | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/company/$slug'
     | '/industry/$slug'
@@ -604,6 +604,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/admin/claims'
     | '/_authenticated/dashboard/admin/companies'
+    | '/_authenticated/dashboard/admin/edit'
     | '/_authenticated/dashboard/articles/new'
     | '/_authenticated/dashboard/integrations/hermes'
     | '/api/public/admin/articles'
@@ -805,13 +806,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
       path: '/'
@@ -938,6 +932,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardArticlesNewRouteImport
       parentRoute: typeof AuthenticatedDashboardArticlesRoute
     }
+    '/_authenticated/dashboard/admin/edit': {
+      id: '/_authenticated/dashboard/admin/edit'
+      path: '/admin/edit'
+      fullPath: '/dashboard/admin/edit'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminEditRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/admin/companies': {
       id: '/_authenticated/dashboard/admin/companies'
       path: '/admin/companies'
@@ -1015,6 +1016,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedDashboardAdminClaimsRoute: typeof AuthenticatedDashboardAdminClaimsRoute
   AuthenticatedDashboardAdminCompaniesRoute: typeof AuthenticatedDashboardAdminCompaniesRoute
+  AuthenticatedDashboardAdminEditRoute: typeof AuthenticatedDashboardAdminEditRoute
   AuthenticatedDashboardIntegrationsHermesRoute: typeof AuthenticatedDashboardIntegrationsHermesRoute
 }
 
@@ -1040,6 +1042,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
       AuthenticatedDashboardAdminClaimsRoute,
     AuthenticatedDashboardAdminCompaniesRoute:
       AuthenticatedDashboardAdminCompaniesRoute,
+    AuthenticatedDashboardAdminEditRoute: AuthenticatedDashboardAdminEditRoute,
     AuthenticatedDashboardIntegrationsHermesRoute:
       AuthenticatedDashboardIntegrationsHermesRoute,
   }
@@ -1050,12 +1053,10 @@ const AuthenticatedDashboardRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
 }
 

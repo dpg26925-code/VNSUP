@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
 import { Check, Pencil, Plus, Trash2, X, XCircle } from "lucide-react";
 
@@ -33,7 +32,7 @@ function slugify(s: string) {
 }
 
 
-export const Route = createFileRoute("/_authenticated/admin")({
+export const Route = createFileRoute("/_authenticated/dashboard/admin/edit")({
   head: () => ({ meta: [{ title: "Quản lý | VNSupplier" }, { name: "robots", content: "noindex" }] }),
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
