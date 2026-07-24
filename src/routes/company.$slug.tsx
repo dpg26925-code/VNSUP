@@ -230,7 +230,7 @@ function initials(name: string) {
 }
 
 function CompanyPage() {
-  const c = Route.useLoaderData() as Company;
+  const c = Route.useLoaderData() as Company & { _zone: ZoneLite | null };
   const caps = Array.isArray(c.capabilities) ? (c.capabilities as string[]) : [];
   const certs: Certification[] = Array.isArray(c.certifications)
     ? (c.certifications as unknown[]).map((v) => (typeof v === "string" ? { name: v } : (v as Certification))).filter((v) => v && v.name)
