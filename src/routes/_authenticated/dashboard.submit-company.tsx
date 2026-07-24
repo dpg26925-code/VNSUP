@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 import { EMPLOYEE_RANGES, INDUSTRIES, PROVINCES } from "@/lib/factory";
 import { Building2, Send } from "lucide-react";
+import { MediaUpload, MediaUploadMulti } from "@/components/media-upload";
 
 export const Route = createFileRoute("/_authenticated/dashboard/submit-company")({
   head: () => ({
@@ -212,15 +213,14 @@ function SubmitCompanyPage() {
             <F label="Website" err={errors.website}>
               <input className="input" placeholder="https://..." value={form.website} onChange={(e) => set("website", e.target.value)} />
             </F>
-            <F label="Logo URL" err={errors.logo_url} full hint="Dán URL ảnh logo (PNG/JPG/SVG). Nên vuông, nền trong suốt.">
-              <div className="flex items-center gap-3">
-                {form.logo_url ? (
-                  <img src={form.logo_url} alt="Logo preview" className="h-12 w-12 rounded-md border bg-background object-contain p-1" />
-                ) : (
-                  <div className="grid h-12 w-12 place-items-center rounded-md border bg-muted text-[10px] text-muted-foreground">Logo</div>
-                )}
-                <input className="input" placeholder="https://.../logo.png" value={form.logo_url} onChange={(e) => set("logo_url", e.target.value)} />
-              </div>
+            <F label="Logo" err={errors.logo_url} full hint="PNG/JPG/SVG, khuyến nghị vuông, nền trong suốt. Tối đa 5MB.">
+              <MediaUpload
+                value={form.logo_url}
+                onChange={(url) => set("logo_url", url)}
+                folder="logos"
+                accept="image/*"
+                label="Tải logo lên"
+              />
             </F>
             <F label="Điện thoại">
               <input className="input" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
@@ -249,8 +249,14 @@ function SubmitCompanyPage() {
                 {["TNHH","Cổ phần","Cổ phần niêm yết","Doanh nghiệp tư nhân","FDI","Nhà nước","Hợp tác xã"].map((r) => <option key={r}>{r}</option>)}
               </select>
             </F>
-            <F label="Banner/Cover URL" full err={errors.cover_url} hint="Ảnh banner nằm ngang, khuyến nghị 1600×400px">
-              <input className="input" placeholder="https://.../banner.jpg" value={form.cover_url} onChange={(e) => set("cover_url", e.target.value)} />
+            <F label="Ảnh banner (cover)" full err={errors.cover_url} hint="Ảnh nằm ngang, khuyến nghị 1600×400px. Tối đa 5MB.">
+              <MediaUpload
+                value={form.cover_url}
+                onChange={(url) => set("cover_url", url)}
+                folder="covers"
+                accept="image/*"
+                label="Tải banner lên"
+              />
             </F>
             <F label="Video giới thiệu (YouTube/Vimeo)" full err={errors.video_url}>
               <input className="input" placeholder="https://youtube.com/watch?v=..." value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
@@ -258,8 +264,14 @@ function SubmitCompanyPage() {
             <F label="Chứng nhận" full hint="Mỗi dòng: Tên chứng nhận | Đơn vị cấp | Năm. VD: ISO 9001:2015 | BSI | 2023">
               <textarea rows={3} className="input" value={form.certifications} onChange={(e) => set("certifications", e.target.value)} />
             </F>
-            <F label="Thư viện ảnh nhà máy" full hint="Mỗi dòng 1 URL ảnh">
-              <textarea rows={3} className="input" value={form.gallery_urls} onChange={(e) => set("gallery_urls", e.target.value)} placeholder="https://.../factory-1.jpg" />
+            <F label="Thư viện ảnh nhà máy" full hint="Kéo thả hoặc chọn nhiều ảnh, tối đa 12 ảnh, mỗi ảnh tối đa 5MB.">
+              <MediaUploadMulti
+                value={(form.gallery_urls || "").split("\n").map((s) => s.trim()).filter(Boolean)}
+                onChange={(urls) => set("gallery_urls", urls.join("\n"))}
+                folder="gallery"
+                accept="image/*"
+                max={12}
+              />
             </F>
             <F label="Câu hỏi thường gặp (FAQ)" full hint="Câu hỏi ở dòng đầu, trả lời ở dòng sau; cách nhau bằng 1 dòng trống">
               <textarea rows={5} className="input" value={form.faqs} onChange={(e) => set("faqs", e.target.value)} placeholder={"MOQ tối thiểu là bao nhiêu?\nMOQ 500-1000 sản phẩm tuỳ loại.\n\nThời gian sản xuất trung bình?\nKhoảng 15-30 ngày làm việc."} />
