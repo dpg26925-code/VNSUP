@@ -220,6 +220,7 @@ function SubmitCompanyPage() {
                   ))}
                 </optgroup>
               </select>
+            </F>
             <F label="Ngành phụ">
               <input className="input" value={form.sub_industry} onChange={(e) => set("sub_industry", e.target.value)} />
             </F>
