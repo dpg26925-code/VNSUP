@@ -213,15 +213,14 @@ function SubmitCompanyPage() {
             <F label="Website" err={errors.website}>
               <input className="input" placeholder="https://..." value={form.website} onChange={(e) => set("website", e.target.value)} />
             </F>
-            <F label="Logo URL" err={errors.logo_url} full hint="Dán URL ảnh logo (PNG/JPG/SVG). Nên vuông, nền trong suốt.">
-              <div className="flex items-center gap-3">
-                {form.logo_url ? (
-                  <img src={form.logo_url} alt="Logo preview" className="h-12 w-12 rounded-md border bg-background object-contain p-1" />
-                ) : (
-                  <div className="grid h-12 w-12 place-items-center rounded-md border bg-muted text-[10px] text-muted-foreground">Logo</div>
-                )}
-                <input className="input" placeholder="https://.../logo.png" value={form.logo_url} onChange={(e) => set("logo_url", e.target.value)} />
-              </div>
+            <F label="Logo" err={errors.logo_url} full hint="PNG/JPG/SVG, khuyến nghị vuông, nền trong suốt. Tối đa 5MB.">
+              <MediaUpload
+                value={form.logo_url}
+                onChange={(url) => set("logo_url", url)}
+                folder="logos"
+                accept="image/*"
+                label="Tải logo lên"
+              />
             </F>
             <F label="Điện thoại">
               <input className="input" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
