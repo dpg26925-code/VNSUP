@@ -7,10 +7,12 @@ import {
   FolderTree,
   Home,
   Inbox,
+  LogOut,
   Plug,
   ScrollText,
   ShieldCheck,
 } from "lucide-react";
+
 import {
   Sidebar,
   SidebarContent,
@@ -77,9 +79,20 @@ export function AdminSidebar({ role }: { role?: string | null }) {
       </SidebarContent>
 
       <SidebarFooter className="border-t">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Về trang chủ">
+              <Link to="/">
+                <LogOut className="h-4 w-4" />
+                <span>Thoát Admin</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         <div className="px-2 py-1.5 text-[11px] text-muted-foreground group-data-[collapsible=icon]:hidden">
           Vai trò: <span className="font-medium text-foreground">{role ?? "—"}</span>
         </div>
+
       </SidebarFooter>
     </Sidebar>
   );
