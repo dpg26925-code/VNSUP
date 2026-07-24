@@ -16,6 +16,7 @@ type Row = {
   verified: boolean; featured: boolean;
   stock_exchange: string | null; stock_ticker: string | null;
   status: string | null; submitted_by: string | null; rejection_reason: string | null;
+  industrial_zone_id: string | null;
 };
 
 const REVENUE_RANGES = ["< 1 tỷ", "1-10 tỷ", "10-50 tỷ", "50-200 tỷ", "200 tỷ - 1000 tỷ", "> 1000 tỷ"];
