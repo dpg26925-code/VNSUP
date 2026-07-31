@@ -479,9 +479,24 @@ function CompanyPage() {
                 <ul className="grid gap-3 sm:grid-cols-2">
                   {products.map((p) => (
                     <li key={p.id} className="rounded-lg border bg-background p-3.5 text-sm transition hover:border-brand/40">
+                      {p.image_url && (
+                        <img src={p.image_url} alt={`Sản phẩm ${p.name}`} loading="lazy" className="mb-2.5 aspect-[4/3] w-full rounded-md border object-cover" />
+                      )}
                       <div className="font-semibold">{p.name}</div>
                       {p.category && <div className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{p.category}</div>}
                       {p.description && <p className="mt-1.5 line-clamp-2 text-xs text-muted-foreground">{p.description}</p>}
+                      {(p.moq || p.lead_time || p.price_range) && (
+                        <dl className="mt-2 grid grid-cols-3 gap-2 border-t pt-2 text-[11px]">
+                          {p.moq && <div><dt className="text-muted-foreground">MOQ</dt><dd className="font-semibold">{p.moq}</dd></div>}
+                          {p.lead_time && <div><dt className="text-muted-foreground">Lead time</dt><dd className="font-semibold">{p.lead_time}</dd></div>}
+                          {p.price_range && <div><dt className="text-muted-foreground">Giá</dt><dd className="font-semibold">{p.price_range}</dd></div>}
+                        </dl>
+                      )}
+                      {p.catalog_url && (
+                        <a href={p.catalog_url} target="_blank" rel="noopener" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-brand hover:underline">
+                          <FileText className="h-3.5 w-3.5" />Xem catalogue
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -496,9 +511,19 @@ function CompanyPage() {
                     <div key={i} className="flex items-start gap-2.5 rounded-md border border-success/20 bg-success/5 p-3">
                       <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold">{cert.name}</div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-sm font-semibold">{cert.name}</span>
+                          {cert.status === "verified" && (
+                            <span className="rounded-full bg-success/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-success">Đã xác minh</span>
+                          )}
+                        </div>
                         {(cert.issuer || cert.year) && (
                           <div className="text-[11px] text-muted-foreground">{[cert.issuer, cert.year].filter(Boolean).join(" · ")}</div>
+                        )}
+                        {cert.url && (
+                          <a href={cert.url} target="_blank" rel="noopener" className="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-brand hover:underline">
+                            <FileText className="h-3 w-3" />Xem chứng chỉ
+                          </a>
                         )}
                       </div>
                     </div>
@@ -506,6 +531,7 @@ function CompanyPage() {
                 </div>
               </section>
             )}
+
 
             {gallery.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
