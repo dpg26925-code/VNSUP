@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
-import { industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
+import { industryLabel, industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
 import { BadgeCheck, Building2, Calendar, DollarSign, FileText, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare, UserSquare2 } from "lucide-react";
 
 
@@ -115,7 +115,7 @@ export const Route = createFileRoute("/company/$slug")({
   head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [{ title: "Không tìm thấy nhà máy" }, { name: "robots", content: "noindex" }] };
     const c = loaderData;
-    const title = `${c.name} | ${c.industry ?? "Sản xuất"} tại ${c.province ?? "Việt Nam"} | VNSupplier`;
+    const title = `${c.name} | ${industryLabel(c.industry) || "Sản xuất"} tại ${c.province ?? "Việt Nam"} | VNSupplier`;
     const desc = truncate(c.ai_summary ?? c.description, 155);
     const url = abs(`/company/${params.slug}`);
     const breadcrumbs: { "@type": "ListItem"; position: number; name: string; item: string }[] = [
@@ -123,7 +123,7 @@ export const Route = createFileRoute("/company/$slug")({
     ];
     if (c.industry) {
       const iSlug = industrySlug(c.industry);
-      if (iSlug) breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: c.industry, item: abs(`/industry/${iSlug}`) });
+      if (iSlug) breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: industryLabel(c.industry), item: abs(`/industry/${iSlug}`) });
     }
     if (c.province) {
       const pSlug = provinceSlug(c.province);
@@ -223,7 +223,7 @@ export const Route = createFileRoute("/company/$slug")({
       meta: [
         { title },
         { name: "description", content: desc },
-        { property: "og:title", content: `${c.name} — ${c.sub_industry ?? c.industry ?? ""}` },
+        { property: "og:title", content: `${c.name} — ${c.sub_industry ?? industryLabel(c.industry)}` },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
@@ -350,7 +350,7 @@ function CompanyPage() {
         <nav className="mb-4 text-xs text-muted-foreground">
           <Link to="/" className="hover:text-foreground">Trang chủ</Link> <span className="mx-1">/</span>
           {c.industry && <>
-            <Link to="/industry/$slug" params={{ slug: industrySlug(c.industry) || "cnc" }} className="hover:text-foreground">{c.industry}</Link>
+            <Link to="/industry/$slug" params={{ slug: industrySlug(c.industry) || "cnc" }} className="hover:text-foreground">{industryLabel(c.industry)}</Link>
             <span className="mx-1">/</span>
           </>}
           <span className="text-foreground">{c.name}</span>
@@ -390,7 +390,7 @@ function CompanyPage() {
                 <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
                   {c.province && <span className="inline-flex items-center gap-1"><MapPin className="h-4 w-4" />{c.province}{c.district && `, ${c.district}`}</span>}
                   {c.industry && (
-                    <Link to="/industry/$slug" params={{ slug: industrySlug(c.industry) || "cnc" }} className="rounded bg-secondary px-2 py-0.5 text-xs font-medium hover:bg-primary hover:text-primary-foreground">{c.industry}{c.sub_industry ? ` · ${c.sub_industry}` : ""}</Link>
+                    <Link to="/industry/$slug" params={{ slug: industrySlug(c.industry) || "cnc" }} className="rounded bg-secondary px-2 py-0.5 text-xs font-medium hover:bg-primary hover:text-primary-foreground">{industryLabel(c.industry)}{c.sub_industry ? ` · ${c.sub_industry}` : ""}</Link>
                   )}
                   {c.employee_range && <span className="inline-flex items-center gap-1"><Users className="h-4 w-4" />{c.employee_range}</span>}
                   {c.founded_year && <span>Thành lập {c.founded_year}</span>}
@@ -456,7 +456,7 @@ function CompanyPage() {
                     </div>
                     <div className="rounded-md bg-secondary/50 p-3">
                       <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ngành</dt>
-                      <dd className="mt-1 font-medium">{c.industry ?? "-"}{c.sub_industry ? ` · ${c.sub_industry}` : ""}</dd>
+                      <dd className="mt-1 font-medium">{industryLabel(c.industry) || "-"}{c.sub_industry ? ` · ${c.sub_industry}` : ""}</dd>
                     </div>
                     <div className="rounded-md bg-secondary/50 p-3">
                       <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Kinh nghiệm</dt>

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { BadgeCheck, MapPin, Star, Users } from "lucide-react";
-import { truncate } from "@/lib/factory";
+import { industryLabel, truncate } from "@/lib/factory";
 
 export type CompanyCardProps = {
   slug: string;
@@ -57,7 +57,7 @@ export function CompanyCard(c: CompanyCardProps) {
       </div>
       {c.industry && (
         <div className="mt-3">
-          <span className="rounded-md bg-secondary px-1.5 py-0.5 text-xs font-medium text-secondary-foreground">{c.industry}</span>
+          <span className="rounded-md bg-secondary px-1.5 py-0.5 text-xs font-medium text-secondary-foreground">{industryLabel(c.industry)}</span>
         </div>
       )}
       <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{truncate(c.ai_summary, 160)}</p>
