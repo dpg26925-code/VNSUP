@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Search, ArrowUpRight, Building2, Cpu, Factory, Package, Scissors, Wrench, Zap, Sparkles, Star, FileSearch, Send, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ArrowUpRight, Building2, Cpu, Factory, Package, Scissors, Wrench, Zap, Sparkles, FileSearch, Send, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
@@ -216,7 +216,7 @@ function HomePage() {
           <div className="rounded-2xl border border-border bg-card p-8">
             <h3 className="text-xl font-bold tracking-tight">Bạn là nhà máy?</h3>
             <p className="mt-2 text-sm text-muted-foreground">Đăng hồ sơ năng lực miễn phí, nhận yêu cầu báo giá từ buyer trong nước và quốc tế.</p>
-            <Link to="/auth" search={{ tab: "register" } as never} className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground transition hover:-translate-y-px hover:bg-brand/90">
+            <Link to="/auth" className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground transition hover:-translate-y-px hover:bg-brand/90">
               Đăng nhà máy <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
             </Link>
           </div>
