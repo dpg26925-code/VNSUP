@@ -46,6 +46,7 @@ import { Route as AuthenticatedDashboardLeadsRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardCategoriesRouteImport } from './routes/_authenticated/dashboard.categories'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
 import { Route as AuthenticatedDashboardAuditLogRouteImport } from './routes/_authenticated/dashboard.audit-log'
+import { Route as AuthenticatedDashboardAuctionRouteImport } from './routes/_authenticated/dashboard.auction'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
 import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
 import { Route as ApiPublicWebhooksPayosRouteImport } from './routes/api/public/webhooks/payos'
@@ -260,6 +261,12 @@ const AuthenticatedDashboardAuditLogRoute =
     path: '/audit-log',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAuctionRoute =
+  AuthenticatedDashboardAuctionRouteImport.update({
+    id: '/auction',
+    path: '/auction',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAnalyticsRoute =
   AuthenticatedDashboardAnalyticsRouteImport.update({
     id: '/analytics',
@@ -407,6 +414,7 @@ export interface FileRoutesByFullPath {
   '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
+  '/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
@@ -464,6 +472,7 @@ export interface FileRoutesByTo {
   '/cum-cong-nghiep': typeof CumCongNghiepIndexRoute
   '/khu-cong-nghiep': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
+  '/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
@@ -524,6 +533,7 @@ export interface FileRoutesById {
   '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
+  '/_authenticated/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
   '/_authenticated/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/_authenticated/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
@@ -584,6 +594,7 @@ export interface FileRouteTypes {
     | '/cum-cong-nghiep/'
     | '/khu-cong-nghiep/'
     | '/dashboard/analytics'
+    | '/dashboard/auction'
     | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
@@ -641,6 +652,7 @@ export interface FileRouteTypes {
     | '/cum-cong-nghiep'
     | '/khu-cong-nghiep'
     | '/dashboard/analytics'
+    | '/dashboard/auction'
     | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
@@ -700,6 +712,7 @@ export interface FileRouteTypes {
     | '/cum-cong-nghiep/'
     | '/khu-cong-nghiep/'
     | '/_authenticated/dashboard/analytics'
+    | '/_authenticated/dashboard/auction'
     | '/_authenticated/dashboard/audit-log'
     | '/_authenticated/dashboard/buyer'
     | '/_authenticated/dashboard/categories'
@@ -1021,6 +1034,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAuditLogRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/auction': {
+      id: '/_authenticated/dashboard/auction'
+      path: '/auction'
+      fullPath: '/dashboard/auction'
+      preLoaderRoute: typeof AuthenticatedDashboardAuctionRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/analytics': {
       id: '/_authenticated/dashboard/analytics'
       path: '/analytics'
@@ -1166,6 +1186,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
+  AuthenticatedDashboardAuctionRoute: typeof AuthenticatedDashboardAuctionRoute
   AuthenticatedDashboardAuditLogRoute: typeof AuthenticatedDashboardAuditLogRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
   AuthenticatedDashboardCategoriesRoute: typeof AuthenticatedDashboardCategoriesRoute
@@ -1189,6 +1210,7 @@ interface AuthenticatedDashboardRouteChildren {
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
+    AuthenticatedDashboardAuctionRoute: AuthenticatedDashboardAuctionRoute,
     AuthenticatedDashboardAuditLogRoute: AuthenticatedDashboardAuditLogRoute,
     AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
     AuthenticatedDashboardCategoriesRoute:
