@@ -129,9 +129,11 @@ export const Route = createFileRoute("/company/$slug")({
     }
     breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: c.name, item: url });
 
-    const faqList = Array.isArray(c.faqs)
-      ? (c.faqs as { q?: string; a?: string }[]).filter((f) => f && f.q && f.a)
-      : [];
+    const faqList = [
+      ...((c as unknown as { _faqs?: DbFaq[] })._faqs ?? []).map((f) => ({ q: f.question, a: f.answer })),
+      ...(Array.isArray(c.faqs) ? (c.faqs as { q?: string; a?: string }[]).filter((f) => f && f.q && f.a) : []),
+    ] as { q?: string; a?: string }[];
+
 
     const scripts: { type: string; children: string }[] = [
       {
