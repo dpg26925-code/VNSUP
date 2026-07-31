@@ -36,14 +36,10 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-6">
-        <Link to="/" className="flex shrink-0 items-center gap-2">
-          <div className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-brand-foreground">
-            <Factory className="h-4 w-4" strokeWidth={1.75} />
-          </div>
-          <span className="text-lg font-bold tracking-tight">
-            VNSupplier
-          </span>
+        <Link to="/" className="flex shrink-0 items-center" aria-label="VNSupplier">
+          <img src="/assets/vnsupplier-logo-light.svg" alt="VNSupplier" width={162} height={40} className="h-10 w-auto" />
         </Link>
+
 
         <form onSubmit={submitSearch} className="hidden flex-1 md:block">
           <div className="mx-auto flex max-w-md items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 transition focus-within:ring-2 focus-within:ring-brand/25">
