@@ -46,8 +46,8 @@ import { Route as AuthenticatedDashboardLeadsRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardCategoriesRouteImport } from './routes/_authenticated/dashboard.categories'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
 import { Route as AuthenticatedDashboardAuditLogRouteImport } from './routes/_authenticated/dashboard.audit-log'
-import { Route as AuthenticatedDashboardArticlesRouteImport } from './routes/_authenticated/dashboard.articles'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
+import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
 import { Route as ApiPublicWebhooksPayosRouteImport } from './routes/api/public/webhooks/payos'
 import { Route as ApiPublicHooksExpireSubscriptionsRouteImport } from './routes/api/public/hooks/expire-subscriptions'
 import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
@@ -259,16 +259,16 @@ const AuthenticatedDashboardAuditLogRoute =
     path: '/audit-log',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const AuthenticatedDashboardArticlesRoute =
-  AuthenticatedDashboardArticlesRouteImport.update({
-    id: '/articles',
-    path: '/articles',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
 const AuthenticatedDashboardAnalyticsRoute =
   AuthenticatedDashboardAnalyticsRouteImport.update({
     id: '/analytics',
     path: '/analytics',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardArticlesIndexRoute =
+  AuthenticatedDashboardArticlesIndexRouteImport.update({
+    id: '/articles/',
+    path: '/articles/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const ApiPublicWebhooksPayosRoute = ApiPublicWebhooksPayosRouteImport.update({
@@ -306,9 +306,9 @@ const AuthenticatedDashboardIntegrationsHermesRoute =
   } as any)
 const AuthenticatedDashboardArticlesNewRoute =
   AuthenticatedDashboardArticlesNewRouteImport.update({
-    id: '/new',
-    path: '/new',
-    getParentRoute: () => AuthenticatedDashboardArticlesRoute,
+    id: '/articles/new',
+    path: '/articles/new',
+    getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardAdminZonesRoute =
   AuthenticatedDashboardAdminZonesRouteImport.update({
@@ -360,9 +360,9 @@ const ApiPublicAdminAnalyticsSummaryRoute =
   } as any)
 const AuthenticatedDashboardArticlesIdEditRoute =
   AuthenticatedDashboardArticlesIdEditRouteImport.update({
-    id: '/$id/edit',
-    path: '/$id/edit',
-    getParentRoute: () => AuthenticatedDashboardArticlesRoute,
+    id: '/articles/$id/edit',
+    path: '/articles/$id/edit',
+    getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const ApiPublicAdminArticlesIdPublishRoute =
   ApiPublicAdminArticlesIdPublishRouteImport.update({
@@ -400,7 +400,6 @@ export interface FileRoutesByFullPath {
   '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
-  '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
@@ -422,6 +421,7 @@ export interface FileRoutesByFullPath {
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
   '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
   '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
+  '/dashboard/articles/': typeof AuthenticatedDashboardArticlesIndexRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
@@ -456,7 +456,6 @@ export interface FileRoutesByTo {
   '/cum-cong-nghiep': typeof CumCongNghiepIndexRoute
   '/khu-cong-nghiep': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
-  '/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
@@ -478,6 +477,7 @@ export interface FileRoutesByTo {
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
   '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
   '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
+  '/dashboard/articles': typeof AuthenticatedDashboardArticlesIndexRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
@@ -515,7 +515,6 @@ export interface FileRoutesById {
   '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
-  '/_authenticated/dashboard/articles': typeof AuthenticatedDashboardArticlesRouteWithChildren
   '/_authenticated/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/_authenticated/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
@@ -537,6 +536,7 @@ export interface FileRoutesById {
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
   '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
   '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
+  '/_authenticated/dashboard/articles/': typeof AuthenticatedDashboardArticlesIndexRoute
   '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
@@ -574,7 +574,6 @@ export interface FileRouteTypes {
     | '/cum-cong-nghiep/'
     | '/khu-cong-nghiep/'
     | '/dashboard/analytics'
-    | '/dashboard/articles'
     | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
@@ -596,6 +595,7 @@ export interface FileRouteTypes {
     | '/api/public/admin/leads'
     | '/api/public/hooks/expire-subscriptions'
     | '/api/public/webhooks/payos'
+    | '/dashboard/articles/'
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
@@ -630,7 +630,6 @@ export interface FileRouteTypes {
     | '/cum-cong-nghiep'
     | '/khu-cong-nghiep'
     | '/dashboard/analytics'
-    | '/dashboard/articles'
     | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
@@ -652,6 +651,7 @@ export interface FileRouteTypes {
     | '/api/public/admin/leads'
     | '/api/public/hooks/expire-subscriptions'
     | '/api/public/webhooks/payos'
+    | '/dashboard/articles'
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
@@ -688,7 +688,6 @@ export interface FileRouteTypes {
     | '/cum-cong-nghiep/'
     | '/khu-cong-nghiep/'
     | '/_authenticated/dashboard/analytics'
-    | '/_authenticated/dashboard/articles'
     | '/_authenticated/dashboard/audit-log'
     | '/_authenticated/dashboard/buyer'
     | '/_authenticated/dashboard/categories'
@@ -710,6 +709,7 @@ export interface FileRouteTypes {
     | '/api/public/admin/leads'
     | '/api/public/hooks/expire-subscriptions'
     | '/api/public/webhooks/payos'
+    | '/_authenticated/dashboard/articles/'
     | '/_authenticated/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
@@ -1008,18 +1008,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAuditLogRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/articles': {
-      id: '/_authenticated/dashboard/articles'
-      path: '/articles'
-      fullPath: '/dashboard/articles'
-      preLoaderRoute: typeof AuthenticatedDashboardArticlesRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
     '/_authenticated/dashboard/analytics': {
       id: '/_authenticated/dashboard/analytics'
       path: '/analytics'
       fullPath: '/dashboard/analytics'
       preLoaderRoute: typeof AuthenticatedDashboardAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/articles/': {
+      id: '/_authenticated/dashboard/articles/'
+      path: '/articles'
+      fullPath: '/dashboard/articles/'
+      preLoaderRoute: typeof AuthenticatedDashboardArticlesIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/api/public/webhooks/payos': {
@@ -1066,10 +1066,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/dashboard/articles/new': {
       id: '/_authenticated/dashboard/articles/new'
-      path: '/new'
+      path: '/articles/new'
       fullPath: '/dashboard/articles/new'
       preLoaderRoute: typeof AuthenticatedDashboardArticlesNewRouteImport
-      parentRoute: typeof AuthenticatedDashboardArticlesRoute
+      parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/admin/zones': {
       id: '/_authenticated/dashboard/admin/zones'
@@ -1129,10 +1129,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/dashboard/articles/$id/edit': {
       id: '/_authenticated/dashboard/articles/$id/edit'
-      path: '/$id/edit'
+      path: '/articles/$id/edit'
       fullPath: '/dashboard/articles/$id/edit'
       preLoaderRoute: typeof AuthenticatedDashboardArticlesIdEditRouteImport
-      parentRoute: typeof AuthenticatedDashboardArticlesRoute
+      parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/api/public/admin/articles/$id/publish': {
       id: '/api/public/admin/articles/$id/publish'
@@ -1144,27 +1144,8 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedDashboardArticlesRouteChildren {
-  AuthenticatedDashboardArticlesNewRoute: typeof AuthenticatedDashboardArticlesNewRoute
-  AuthenticatedDashboardArticlesIdEditRoute: typeof AuthenticatedDashboardArticlesIdEditRoute
-}
-
-const AuthenticatedDashboardArticlesRouteChildren: AuthenticatedDashboardArticlesRouteChildren =
-  {
-    AuthenticatedDashboardArticlesNewRoute:
-      AuthenticatedDashboardArticlesNewRoute,
-    AuthenticatedDashboardArticlesIdEditRoute:
-      AuthenticatedDashboardArticlesIdEditRoute,
-  }
-
-const AuthenticatedDashboardArticlesRouteWithChildren =
-  AuthenticatedDashboardArticlesRoute._addFileChildren(
-    AuthenticatedDashboardArticlesRouteChildren,
-  )
-
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
-  AuthenticatedDashboardArticlesRoute: typeof AuthenticatedDashboardArticlesRouteWithChildren
   AuthenticatedDashboardAuditLogRoute: typeof AuthenticatedDashboardAuditLogRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
   AuthenticatedDashboardCategoriesRoute: typeof AuthenticatedDashboardCategoriesRoute
@@ -1179,14 +1160,15 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAdminEditRoute: typeof AuthenticatedDashboardAdminEditRoute
   AuthenticatedDashboardAdminImportRoute: typeof AuthenticatedDashboardAdminImportRoute
   AuthenticatedDashboardAdminZonesRoute: typeof AuthenticatedDashboardAdminZonesRoute
+  AuthenticatedDashboardArticlesNewRoute: typeof AuthenticatedDashboardArticlesNewRoute
   AuthenticatedDashboardIntegrationsHermesRoute: typeof AuthenticatedDashboardIntegrationsHermesRoute
+  AuthenticatedDashboardArticlesIndexRoute: typeof AuthenticatedDashboardArticlesIndexRoute
+  AuthenticatedDashboardArticlesIdEditRoute: typeof AuthenticatedDashboardArticlesIdEditRoute
 }
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
-    AuthenticatedDashboardArticlesRoute:
-      AuthenticatedDashboardArticlesRouteWithChildren,
     AuthenticatedDashboardAuditLogRoute: AuthenticatedDashboardAuditLogRoute,
     AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
     AuthenticatedDashboardCategoriesRoute:
@@ -1209,8 +1191,14 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
       AuthenticatedDashboardAdminImportRoute,
     AuthenticatedDashboardAdminZonesRoute:
       AuthenticatedDashboardAdminZonesRoute,
+    AuthenticatedDashboardArticlesNewRoute:
+      AuthenticatedDashboardArticlesNewRoute,
     AuthenticatedDashboardIntegrationsHermesRoute:
       AuthenticatedDashboardIntegrationsHermesRoute,
+    AuthenticatedDashboardArticlesIndexRoute:
+      AuthenticatedDashboardArticlesIndexRoute,
+    AuthenticatedDashboardArticlesIdEditRoute:
+      AuthenticatedDashboardArticlesIdEditRoute,
   }
 
 const AuthenticatedDashboardRouteWithChildren =
