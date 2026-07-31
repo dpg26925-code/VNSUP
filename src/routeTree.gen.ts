@@ -59,6 +59,7 @@ import { Route as AuthenticatedDashboardAdminZonesRouteImport } from './routes/_
 import { Route as AuthenticatedDashboardAdminEditRouteImport } from './routes/_authenticated/dashboard.admin.edit'
 import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './routes/_authenticated/dashboard.admin.companies'
 import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard.admin.claims'
+import { Route as ApiPublicAdminCompaniesBatchRouteImport } from './routes/api/public/admin/companies.batch'
 import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
 import { Route as ApiPublicAdminAnalyticsSummaryRouteImport } from './routes/api/public/admin/analytics.summary'
 import { Route as AuthenticatedDashboardArticlesIdEditRouteImport } from './routes/_authenticated/dashboard.articles.$id.edit'
@@ -332,6 +333,12 @@ const AuthenticatedDashboardAdminClaimsRoute =
     path: '/admin/claims',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const ApiPublicAdminCompaniesBatchRoute =
+  ApiPublicAdminCompaniesBatchRouteImport.update({
+    id: '/public/admin/companies/batch',
+    path: '/public/admin/companies/batch',
+    getParentRoute: () => ApiRoute,
+  } as any)
 const ApiPublicAdminArticlesIdRoute =
   ApiPublicAdminArticlesIdRouteImport.update({
     id: '/$id',
@@ -410,6 +417,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/companies/batch': typeof ApiPublicAdminCompaniesBatchRoute
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
 export interface FileRoutesByTo {
@@ -464,6 +472,7 @@ export interface FileRoutesByTo {
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/companies/batch': typeof ApiPublicAdminCompaniesBatchRoute
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
 export interface FileRoutesById {
@@ -521,6 +530,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/companies/batch': typeof ApiPublicAdminCompaniesBatchRoute
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
 export interface FileRouteTypes {
@@ -578,6 +588,7 @@ export interface FileRouteTypes {
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
+    | '/api/public/admin/companies/batch'
     | '/api/public/admin/articles/$id/publish'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -632,6 +643,7 @@ export interface FileRouteTypes {
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
+    | '/api/public/admin/companies/batch'
     | '/api/public/admin/articles/$id/publish'
   id:
     | '__root__'
@@ -688,6 +700,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
+    | '/api/public/admin/companies/batch'
     | '/api/public/admin/articles/$id/publish'
   fileRoutesById: FileRoutesById
 }
@@ -1073,6 +1086,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminClaimsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/api/public/admin/companies/batch': {
+      id: '/api/public/admin/companies/batch'
+      path: '/public/admin/companies/batch'
+      fullPath: '/api/public/admin/companies/batch'
+      preLoaderRoute: typeof ApiPublicAdminCompaniesBatchRouteImport
+      parentRoute: typeof ApiRoute
+    }
     '/api/public/admin/articles/$id': {
       id: '/api/public/admin/articles/$id'
       path: '/$id'
@@ -1221,6 +1241,7 @@ interface ApiRouteChildren {
   ApiPublicHooksExpireSubscriptionsRoute: typeof ApiPublicHooksExpireSubscriptionsRoute
   ApiPublicWebhooksPayosRoute: typeof ApiPublicWebhooksPayosRoute
   ApiPublicAdminAnalyticsSummaryRoute: typeof ApiPublicAdminAnalyticsSummaryRoute
+  ApiPublicAdminCompaniesBatchRoute: typeof ApiPublicAdminCompaniesBatchRoute
 }
 
 const ApiRouteChildren: ApiRouteChildren = {
@@ -1231,6 +1252,7 @@ const ApiRouteChildren: ApiRouteChildren = {
     ApiPublicHooksExpireSubscriptionsRoute,
   ApiPublicWebhooksPayosRoute: ApiPublicWebhooksPayosRoute,
   ApiPublicAdminAnalyticsSummaryRoute: ApiPublicAdminAnalyticsSummaryRoute,
+  ApiPublicAdminCompaniesBatchRoute: ApiPublicAdminCompaniesBatchRoute,
 }
 
 const ApiRouteWithChildren = ApiRoute._addFileChildren(ApiRouteChildren)
