@@ -122,14 +122,13 @@ export async function requireAdmin(
       }
       return json({ error: "role_lookup_failed", message: msg }, 500);
     }
-    roleRows = data as never;
+    roleRows = (data ?? []) as unknown as Array<Record<string, unknown>>;
   } catch (err) {
     console.error("[admin-api] role lookup exception:", err);
     return json({ error: "role_lookup_failed", message: (err as Error).message }, 500);
   }
 
-
-  const rows = roleRows ?? [];
+  const rows: Array<Record<string, unknown>> = roleRows ?? [];
   const roles = rows
     .map((r) => r.role as string)
     .filter((r): r is AdminRole => r === "admin" || r === "publisher" || r === "editor");
@@ -152,16 +151,17 @@ export async function requireAdmin(
 
   const allowedCategories = Array.from(
     new Set(rows.flatMap((r) => (r.allowed_categories as string[] | null) ?? [])),
-  );
+  ) as string[];
   const canPublish =
-    highestRole === "admin" || highestRole === "publisher" || rows.some((r) => r.can_publish);
+    highestRole === "admin" || highestRole === "publisher" || rows.some((r) => Boolean(r.can_publish));
   const canDelete =
-    highestRole === "admin" || highestRole === "publisher" || rows.some((r) => r.can_delete);
-  const canManageUsers = highestRole === "admin" || rows.some((r) => r.can_manage_users);
+    highestRole === "admin" || highestRole === "publisher" || rows.some((r) => Boolean(r.can_delete));
+  const canManageUsers = highestRole === "admin" || rows.some((r) => Boolean(r.can_manage_users));
 
   return {
-    userId: userData.user.id,
-    email: userData.user.email ?? null,
+    userId: user.id,
+    email: user.email ?? null,
+
     roles,
     highestRole,
     allowedCategories,
