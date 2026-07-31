@@ -112,7 +112,11 @@ function AdminPage() {
       stock_exchange: edit.stock_exchange || null,
       stock_ticker: edit.stock_ticker ? String(edit.stock_ticker).toUpperCase() : null,
       logo_url: edit.logo_url || null,
+      tax_code: edit.tax_code || null,
+      business_registration_number: edit.business_registration_number || null,
+      legal_representative: edit.legal_representative || null,
     };
+
     setSaving(true);
     try {
       const { error } = edit.id
