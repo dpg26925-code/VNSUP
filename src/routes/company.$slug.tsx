@@ -8,7 +8,9 @@ import { BadgeCheck, Building2, Calendar, DollarSign, FileText, Globe, Mail, Map
 
 
 type FAQ = { q: string; a: string };
-type Certification = { name: string; issuer?: string; year?: number | string };
+type Certification = { name: string; issuer?: string; year?: number | string; url?: string; status?: string };
+type DbProduct = { id: string; name: string; category: string | null; description: string | null; moq?: string | null; lead_time?: string | null; price_range?: string | null; catalog_url?: string | null; image_url?: string | null };
+
 type Review = { id: string; rating: number; title: string | null; content: string; reviewer_name: string | null; created_at: string; user_id: string };
 
 type Company = {
