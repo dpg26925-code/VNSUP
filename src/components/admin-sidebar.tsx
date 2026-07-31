@@ -5,6 +5,7 @@ import {
   FileCheck2,
   FileText,
   FolderTree,
+  Gavel,
   Home,
   Inbox,
   LogOut,
@@ -38,6 +39,7 @@ const items = [
   { title: "Thống kê", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Nhật ký", url: "/dashboard/audit-log", icon: ScrollText },
   { title: "Import hàng loạt", url: "/dashboard/admin/import", icon: Plug },
+  { title: "Đấu giá Featured", url: "/dashboard/auction", icon: Gavel },
   { title: "Tích hợp Hermes", url: "/dashboard/integrations/hermes", icon: Plug },
 
 ];

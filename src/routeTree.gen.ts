@@ -46,9 +46,11 @@ import { Route as AuthenticatedDashboardLeadsRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardCategoriesRouteImport } from './routes/_authenticated/dashboard.categories'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
 import { Route as AuthenticatedDashboardAuditLogRouteImport } from './routes/_authenticated/dashboard.audit-log'
+import { Route as AuthenticatedDashboardAuctionRouteImport } from './routes/_authenticated/dashboard.auction'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
 import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
 import { Route as ApiPublicWebhooksPayosRouteImport } from './routes/api/public/webhooks/payos'
+import { Route as ApiPublicHooksPriorityRecalculateRouteImport } from './routes/api/public/hooks/priority-recalculate'
 import { Route as ApiPublicHooksExpireSubscriptionsRouteImport } from './routes/api/public/hooks/expire-subscriptions'
 import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
 import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/public/admin/categories'
@@ -259,6 +261,12 @@ const AuthenticatedDashboardAuditLogRoute =
     path: '/audit-log',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAuctionRoute =
+  AuthenticatedDashboardAuctionRouteImport.update({
+    id: '/auction',
+    path: '/auction',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAnalyticsRoute =
   AuthenticatedDashboardAnalyticsRouteImport.update({
     id: '/analytics',
@@ -276,6 +284,12 @@ const ApiPublicWebhooksPayosRoute = ApiPublicWebhooksPayosRouteImport.update({
   path: '/public/webhooks/payos',
   getParentRoute: () => ApiRoute,
 } as any)
+const ApiPublicHooksPriorityRecalculateRoute =
+  ApiPublicHooksPriorityRecalculateRouteImport.update({
+    id: '/public/hooks/priority-recalculate',
+    path: '/public/hooks/priority-recalculate',
+    getParentRoute: () => ApiRoute,
+  } as any)
 const ApiPublicHooksExpireSubscriptionsRoute =
   ApiPublicHooksExpireSubscriptionsRouteImport.update({
     id: '/public/hooks/expire-subscriptions',
@@ -400,6 +414,7 @@ export interface FileRoutesByFullPath {
   '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
+  '/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
@@ -420,6 +435,7 @@ export interface FileRoutesByFullPath {
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
   '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
+  '/api/public/hooks/priority-recalculate': typeof ApiPublicHooksPriorityRecalculateRoute
   '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
   '/dashboard/articles/': typeof AuthenticatedDashboardArticlesIndexRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
@@ -456,6 +472,7 @@ export interface FileRoutesByTo {
   '/cum-cong-nghiep': typeof CumCongNghiepIndexRoute
   '/khu-cong-nghiep': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
+  '/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
@@ -476,6 +493,7 @@ export interface FileRoutesByTo {
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
   '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
+  '/api/public/hooks/priority-recalculate': typeof ApiPublicHooksPriorityRecalculateRoute
   '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesIndexRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
@@ -515,6 +533,7 @@ export interface FileRoutesById {
   '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
+  '/_authenticated/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
   '/_authenticated/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/_authenticated/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
@@ -535,6 +554,7 @@ export interface FileRoutesById {
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
   '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
+  '/api/public/hooks/priority-recalculate': typeof ApiPublicHooksPriorityRecalculateRoute
   '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
   '/_authenticated/dashboard/articles/': typeof AuthenticatedDashboardArticlesIndexRoute
   '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
@@ -574,6 +594,7 @@ export interface FileRouteTypes {
     | '/cum-cong-nghiep/'
     | '/khu-cong-nghiep/'
     | '/dashboard/analytics'
+    | '/dashboard/auction'
     | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
@@ -594,6 +615,7 @@ export interface FileRouteTypes {
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
     | '/api/public/hooks/expire-subscriptions'
+    | '/api/public/hooks/priority-recalculate'
     | '/api/public/webhooks/payos'
     | '/dashboard/articles/'
     | '/dashboard/articles/$id/edit'
@@ -630,6 +652,7 @@ export interface FileRouteTypes {
     | '/cum-cong-nghiep'
     | '/khu-cong-nghiep'
     | '/dashboard/analytics'
+    | '/dashboard/auction'
     | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
@@ -650,6 +673,7 @@ export interface FileRouteTypes {
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
     | '/api/public/hooks/expire-subscriptions'
+    | '/api/public/hooks/priority-recalculate'
     | '/api/public/webhooks/payos'
     | '/dashboard/articles'
     | '/dashboard/articles/$id/edit'
@@ -688,6 +712,7 @@ export interface FileRouteTypes {
     | '/cum-cong-nghiep/'
     | '/khu-cong-nghiep/'
     | '/_authenticated/dashboard/analytics'
+    | '/_authenticated/dashboard/auction'
     | '/_authenticated/dashboard/audit-log'
     | '/_authenticated/dashboard/buyer'
     | '/_authenticated/dashboard/categories'
@@ -708,6 +733,7 @@ export interface FileRouteTypes {
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
     | '/api/public/hooks/expire-subscriptions'
+    | '/api/public/hooks/priority-recalculate'
     | '/api/public/webhooks/payos'
     | '/_authenticated/dashboard/articles/'
     | '/_authenticated/dashboard/articles/$id/edit'
@@ -1008,6 +1034,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAuditLogRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/auction': {
+      id: '/_authenticated/dashboard/auction'
+      path: '/auction'
+      fullPath: '/dashboard/auction'
+      preLoaderRoute: typeof AuthenticatedDashboardAuctionRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/analytics': {
       id: '/_authenticated/dashboard/analytics'
       path: '/analytics'
@@ -1027,6 +1060,13 @@ declare module '@tanstack/react-router' {
       path: '/public/webhooks/payos'
       fullPath: '/api/public/webhooks/payos'
       preLoaderRoute: typeof ApiPublicWebhooksPayosRouteImport
+      parentRoute: typeof ApiRoute
+    }
+    '/api/public/hooks/priority-recalculate': {
+      id: '/api/public/hooks/priority-recalculate'
+      path: '/public/hooks/priority-recalculate'
+      fullPath: '/api/public/hooks/priority-recalculate'
+      preLoaderRoute: typeof ApiPublicHooksPriorityRecalculateRouteImport
       parentRoute: typeof ApiRoute
     }
     '/api/public/hooks/expire-subscriptions': {
@@ -1146,6 +1186,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
+  AuthenticatedDashboardAuctionRoute: typeof AuthenticatedDashboardAuctionRoute
   AuthenticatedDashboardAuditLogRoute: typeof AuthenticatedDashboardAuditLogRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
   AuthenticatedDashboardCategoriesRoute: typeof AuthenticatedDashboardCategoriesRoute
@@ -1169,6 +1210,7 @@ interface AuthenticatedDashboardRouteChildren {
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
+    AuthenticatedDashboardAuctionRoute: AuthenticatedDashboardAuctionRoute,
     AuthenticatedDashboardAuditLogRoute: AuthenticatedDashboardAuditLogRoute,
     AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
     AuthenticatedDashboardCategoriesRoute:
@@ -1250,6 +1292,7 @@ interface ApiRouteChildren {
   ApiPublicAdminCategoriesRoute: typeof ApiPublicAdminCategoriesRoute
   ApiPublicAdminLeadsRoute: typeof ApiPublicAdminLeadsRoute
   ApiPublicHooksExpireSubscriptionsRoute: typeof ApiPublicHooksExpireSubscriptionsRoute
+  ApiPublicHooksPriorityRecalculateRoute: typeof ApiPublicHooksPriorityRecalculateRoute
   ApiPublicWebhooksPayosRoute: typeof ApiPublicWebhooksPayosRoute
   ApiPublicAdminAnalyticsSummaryRoute: typeof ApiPublicAdminAnalyticsSummaryRoute
   ApiPublicAdminCompaniesBatchRoute: typeof ApiPublicAdminCompaniesBatchRoute
@@ -1261,6 +1304,8 @@ const ApiRouteChildren: ApiRouteChildren = {
   ApiPublicAdminLeadsRoute: ApiPublicAdminLeadsRoute,
   ApiPublicHooksExpireSubscriptionsRoute:
     ApiPublicHooksExpireSubscriptionsRoute,
+  ApiPublicHooksPriorityRecalculateRoute:
+    ApiPublicHooksPriorityRecalculateRoute,
   ApiPublicWebhooksPayosRoute: ApiPublicWebhooksPayosRoute,
   ApiPublicAdminAnalyticsSummaryRoute: ApiPublicAdminAnalyticsSummaryRoute,
   ApiPublicAdminCompaniesBatchRoute: ApiPublicAdminCompaniesBatchRoute,
@@ -1300,13 +1345,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
