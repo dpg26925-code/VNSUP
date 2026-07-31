@@ -112,9 +112,11 @@ function SectionEditor({ def, companyId }: { def: SectionDef; companyId: string 
       const v = row[f.key];
       payload[f.key] = v === "" || v === undefined ? null : f.type === "number" ? Number(v) : v;
     }
+    const table = supabase.from(def.table) as any;
     const res = row.id
-      ? await supabase.from(def.table).update(payload).eq("id", row.id as string)
-      : await supabase.from(def.table).insert(payload);
+      ? await table.update(payload).eq("id", row.id as string)
+      : await table.insert(payload);
+
     setBusy(false);
     if (res.error) { setErr(res.error.message); return; }
     await load();
