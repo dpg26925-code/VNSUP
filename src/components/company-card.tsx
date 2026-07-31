@@ -13,6 +13,9 @@ export type CompanyCardProps = {
   verified: boolean;
   featured: boolean;
   logo_url?: string | null;
+  id?: string;
+  rating?: number;
+  review_count?: number;
 };
 
 function initials(name: string) {
@@ -55,6 +58,13 @@ export function CompanyCard(c: CompanyCardProps) {
           )}
         </div>
       </div>
+      {typeof c.rating === "number" && c.rating > 0 && (
+        <div className="mt-2 flex items-center gap-1 text-xs">
+          <Star className="h-3.5 w-3.5 text-brand" fill="currentColor" strokeWidth={0} />
+          <span className="font-semibold">{c.rating.toFixed(1)}</span>
+          {c.review_count ? <span className="text-muted-foreground">({c.review_count})</span> : null}
+        </div>
+      )}
       {c.industry && (
         <div className="mt-3">
           <span className="rounded-md bg-secondary px-1.5 py-0.5 text-xs font-medium text-secondary-foreground">{industryLabel(c.industry)}</span>
