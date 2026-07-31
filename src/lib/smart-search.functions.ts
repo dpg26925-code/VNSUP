@@ -93,11 +93,11 @@ export const smartSearch = createServerFn({ method: "POST" })
       const pat = `%${t}%`;
       orParts.push(`name.ilike.${pat}`);
       orParts.push(`description.ilike.${pat}`);
+      orParts.push(`ai_summary.ilike.${pat}`);
       orParts.push(`industry.ilike.${pat}`);
       orParts.push(`sub_industry.ilike.${pat}`);
-      // capabilities is text[]; use cs (contains) via array
-      orParts.push(`capabilities.cs.{${t}}`);
     }
+
     for (const ind of expansion.industries.map(escapeIlike)) {
       orParts.push(`industry.ilike.%${ind}%`);
     }
