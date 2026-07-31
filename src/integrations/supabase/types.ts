@@ -246,10 +246,61 @@ export type Database = {
         }
         Relationships: []
       }
+      certifications: {
+        Row: {
+          certificate_url: string | null
+          company_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          issued_at: string | null
+          issuer: string | null
+          name: string
+          sort_order: number
+          updated_at: string
+          verification_status: string
+        }
+        Insert: {
+          certificate_url?: string | null
+          company_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          issued_at?: string | null
+          issuer?: string | null
+          name: string
+          sort_order?: number
+          updated_at?: string
+          verification_status?: string
+        }
+        Update: {
+          certificate_url?: string | null
+          company_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          issued_at?: string | null
+          issuer?: string | null
+          name?: string
+          sort_order?: number
+          updated_at?: string
+          verification_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certifications_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies: {
         Row: {
           address: string | null
           ai_summary: string | null
+          business_registration_number: string | null
           canonical_url: string | null
           capabilities: Json
           certifications: Json
@@ -273,6 +324,7 @@ export type Database = {
           is_verified: boolean
           last_verified_at: string | null
           lead_notify_expires_at: string | null
+          legal_representative: string | null
           logo_url: string | null
           meta_description: string | null
           meta_title: string | null
@@ -288,6 +340,7 @@ export type Database = {
           stock_ticker: string | null
           sub_industry: string | null
           submitted_by: string | null
+          tax_code: string | null
           updated_at: string
           verified: boolean
           verified_expires_at: string | null
@@ -297,6 +350,7 @@ export type Database = {
         Insert: {
           address?: string | null
           ai_summary?: string | null
+          business_registration_number?: string | null
           canonical_url?: string | null
           capabilities?: Json
           certifications?: Json
@@ -320,6 +374,7 @@ export type Database = {
           is_verified?: boolean
           last_verified_at?: string | null
           lead_notify_expires_at?: string | null
+          legal_representative?: string | null
           logo_url?: string | null
           meta_description?: string | null
           meta_title?: string | null
@@ -335,6 +390,7 @@ export type Database = {
           stock_ticker?: string | null
           sub_industry?: string | null
           submitted_by?: string | null
+          tax_code?: string | null
           updated_at?: string
           verified?: boolean
           verified_expires_at?: string | null
@@ -344,6 +400,7 @@ export type Database = {
         Update: {
           address?: string | null
           ai_summary?: string | null
+          business_registration_number?: string | null
           canonical_url?: string | null
           capabilities?: Json
           certifications?: Json
@@ -367,6 +424,7 @@ export type Database = {
           is_verified?: boolean
           last_verified_at?: string | null
           lead_notify_expires_at?: string | null
+          legal_representative?: string | null
           logo_url?: string | null
           meta_description?: string | null
           meta_title?: string | null
@@ -382,6 +440,7 @@ export type Database = {
           stock_ticker?: string | null
           sub_industry?: string | null
           submitted_by?: string | null
+          tax_code?: string | null
           updated_at?: string
           verified?: boolean
           verified_expires_at?: string | null
@@ -435,6 +494,114 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "company_claims_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_export_markets: {
+        Row: {
+          company_id: string
+          country: string
+          created_at: string
+          id: string
+          note: string | null
+          share_percent: number | null
+          sort_order: number
+        }
+        Insert: {
+          company_id: string
+          country: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          share_percent?: number | null
+          sort_order?: number
+        }
+        Update: {
+          company_id?: string
+          country?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          share_percent?: number | null
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_export_markets_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_faqs: {
+        Row: {
+          answer: string
+          company_id: string
+          created_at: string
+          id: string
+          question: string
+          sort_order: number
+        }
+        Insert: {
+          answer: string
+          company_id: string
+          created_at?: string
+          id?: string
+          question: string
+          sort_order?: number
+        }
+        Update: {
+          answer?: string
+          company_id?: string
+          created_at?: string
+          id?: string
+          question?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_faqs_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_gallery: {
+        Row: {
+          caption: string | null
+          company_id: string
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+        }
+        Insert: {
+          caption?: string | null
+          company_id: string
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+        }
+        Update: {
+          caption?: string | null
+          company_id?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_gallery_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
@@ -520,6 +687,44 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "company_updates_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_videos: {
+        Row: {
+          company_id: string
+          created_at: string
+          id: string
+          sort_order: number
+          thumbnail_url: string | null
+          title: string | null
+          video_url: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          thumbnail_url?: string | null
+          title?: string | null
+          video_url: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          thumbnail_url?: string | null
+          title?: string | null
+          video_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_videos_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
@@ -749,28 +954,46 @@ export type Database = {
       }
       products: {
         Row: {
+          catalog_url: string | null
           category: string | null
           company_id: string
           created_at: string
           description: string | null
           id: string
+          image_url: string | null
+          lead_time: string | null
+          moq: string | null
           name: string
+          price_range: string | null
+          sort_order: number
         }
         Insert: {
+          catalog_url?: string | null
           category?: string | null
           company_id: string
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
+          lead_time?: string | null
+          moq?: string | null
           name: string
+          price_range?: string | null
+          sort_order?: number
         }
         Update: {
+          catalog_url?: string | null
           category?: string | null
           company_id?: string
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
+          lead_time?: string | null
+          moq?: string | null
           name?: string
+          price_range?: string | null
+          sort_order?: number
         }
         Relationships: [
           {
@@ -830,6 +1053,30 @@ export type Database = {
           id?: string
           query?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      slug_redirects: {
+        Row: {
+          created_at: string
+          entity_type: string
+          id: string
+          new_slug: string
+          old_slug: string
+        }
+        Insert: {
+          created_at?: string
+          entity_type?: string
+          id?: string
+          new_slug: string
+          old_slug: string
+        }
+        Update: {
+          created_at?: string
+          entity_type?: string
+          id?: string
+          new_slug?: string
+          old_slug?: string
         }
         Relationships: []
       }
@@ -935,7 +1182,9 @@ export type Database = {
     }
     Functions: {
       can_delete: { Args: { _user_id: string }; Returns: boolean }
+      can_manage_company: { Args: { _company_id: string }; Returns: boolean }
       can_publish: { Args: { _user_id: string }; Returns: boolean }
+      company_is_public: { Args: { _company_id: string }; Returns: boolean }
       factoryhub_slugify: { Args: { _input: string }; Returns: string }
       get_user_role: {
         Args: { _user_id: string }
