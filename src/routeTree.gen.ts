@@ -49,6 +49,7 @@ import { Route as AuthenticatedDashboardAuditLogRouteImport } from './routes/_au
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
 import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
 import { Route as ApiPublicWebhooksPayosRouteImport } from './routes/api/public/webhooks/payos'
+import { Route as ApiPublicHooksPriorityRecalculateRouteImport } from './routes/api/public/hooks/priority-recalculate'
 import { Route as ApiPublicHooksExpireSubscriptionsRouteImport } from './routes/api/public/hooks/expire-subscriptions'
 import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
 import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/public/admin/categories'
@@ -276,6 +277,12 @@ const ApiPublicWebhooksPayosRoute = ApiPublicWebhooksPayosRouteImport.update({
   path: '/public/webhooks/payos',
   getParentRoute: () => ApiRoute,
 } as any)
+const ApiPublicHooksPriorityRecalculateRoute =
+  ApiPublicHooksPriorityRecalculateRouteImport.update({
+    id: '/public/hooks/priority-recalculate',
+    path: '/public/hooks/priority-recalculate',
+    getParentRoute: () => ApiRoute,
+  } as any)
 const ApiPublicHooksExpireSubscriptionsRoute =
   ApiPublicHooksExpireSubscriptionsRouteImport.update({
     id: '/public/hooks/expire-subscriptions',
@@ -420,6 +427,7 @@ export interface FileRoutesByFullPath {
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
   '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
+  '/api/public/hooks/priority-recalculate': typeof ApiPublicHooksPriorityRecalculateRoute
   '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
   '/dashboard/articles/': typeof AuthenticatedDashboardArticlesIndexRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
@@ -476,6 +484,7 @@ export interface FileRoutesByTo {
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
   '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
+  '/api/public/hooks/priority-recalculate': typeof ApiPublicHooksPriorityRecalculateRoute
   '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
   '/dashboard/articles': typeof AuthenticatedDashboardArticlesIndexRoute
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
@@ -535,6 +544,7 @@ export interface FileRoutesById {
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
   '/api/public/hooks/expire-subscriptions': typeof ApiPublicHooksExpireSubscriptionsRoute
+  '/api/public/hooks/priority-recalculate': typeof ApiPublicHooksPriorityRecalculateRoute
   '/api/public/webhooks/payos': typeof ApiPublicWebhooksPayosRoute
   '/_authenticated/dashboard/articles/': typeof AuthenticatedDashboardArticlesIndexRoute
   '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
@@ -594,6 +604,7 @@ export interface FileRouteTypes {
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
     | '/api/public/hooks/expire-subscriptions'
+    | '/api/public/hooks/priority-recalculate'
     | '/api/public/webhooks/payos'
     | '/dashboard/articles/'
     | '/dashboard/articles/$id/edit'
@@ -650,6 +661,7 @@ export interface FileRouteTypes {
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
     | '/api/public/hooks/expire-subscriptions'
+    | '/api/public/hooks/priority-recalculate'
     | '/api/public/webhooks/payos'
     | '/dashboard/articles'
     | '/dashboard/articles/$id/edit'
@@ -708,6 +720,7 @@ export interface FileRouteTypes {
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
     | '/api/public/hooks/expire-subscriptions'
+    | '/api/public/hooks/priority-recalculate'
     | '/api/public/webhooks/payos'
     | '/_authenticated/dashboard/articles/'
     | '/_authenticated/dashboard/articles/$id/edit'
@@ -1029,6 +1042,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWebhooksPayosRouteImport
       parentRoute: typeof ApiRoute
     }
+    '/api/public/hooks/priority-recalculate': {
+      id: '/api/public/hooks/priority-recalculate'
+      path: '/public/hooks/priority-recalculate'
+      fullPath: '/api/public/hooks/priority-recalculate'
+      preLoaderRoute: typeof ApiPublicHooksPriorityRecalculateRouteImport
+      parentRoute: typeof ApiRoute
+    }
     '/api/public/hooks/expire-subscriptions': {
       id: '/api/public/hooks/expire-subscriptions'
       path: '/public/hooks/expire-subscriptions'
@@ -1250,6 +1270,7 @@ interface ApiRouteChildren {
   ApiPublicAdminCategoriesRoute: typeof ApiPublicAdminCategoriesRoute
   ApiPublicAdminLeadsRoute: typeof ApiPublicAdminLeadsRoute
   ApiPublicHooksExpireSubscriptionsRoute: typeof ApiPublicHooksExpireSubscriptionsRoute
+  ApiPublicHooksPriorityRecalculateRoute: typeof ApiPublicHooksPriorityRecalculateRoute
   ApiPublicWebhooksPayosRoute: typeof ApiPublicWebhooksPayosRoute
   ApiPublicAdminAnalyticsSummaryRoute: typeof ApiPublicAdminAnalyticsSummaryRoute
   ApiPublicAdminCompaniesBatchRoute: typeof ApiPublicAdminCompaniesBatchRoute
@@ -1261,6 +1282,8 @@ const ApiRouteChildren: ApiRouteChildren = {
   ApiPublicAdminLeadsRoute: ApiPublicAdminLeadsRoute,
   ApiPublicHooksExpireSubscriptionsRoute:
     ApiPublicHooksExpireSubscriptionsRoute,
+  ApiPublicHooksPriorityRecalculateRoute:
+    ApiPublicHooksPriorityRecalculateRoute,
   ApiPublicWebhooksPayosRoute: ApiPublicWebhooksPayosRoute,
   ApiPublicAdminAnalyticsSummaryRoute: ApiPublicAdminAnalyticsSummaryRoute,
   ApiPublicAdminCompaniesBatchRoute: ApiPublicAdminCompaniesBatchRoute,
