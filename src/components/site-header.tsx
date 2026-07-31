@@ -141,12 +141,8 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-3">
           <div>
-            <div className="flex items-center gap-2">
-              <div className="grid h-7 w-7 place-items-center rounded-md bg-brand text-brand-foreground">
-                <Factory className="h-3.5 w-3.5" strokeWidth={1.75} />
-              </div>
-              <span className="font-bold tracking-tight">VNSupplier</span>
-            </div>
+            <img src="/assets/vnsupplier-logo-light.svg" alt="VNSupplier" width={146} height={36} className="h-9 w-auto" />
+
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
               Danh bạ AI nhà máy & nhà cung cấp sản xuất Việt Nam.
             </p>
