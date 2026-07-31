@@ -26,19 +26,45 @@ type Company = {
   stock_exchange: string | null; stock_ticker: string | null;
   submitted_by: string | null;
   industrial_zone_id: string | null;
+  tax_code: string | null;
+  business_registration_number: string | null;
+  legal_representative: string | null;
 };
 
 type ZoneLite = { id: string; name: string; slug: string; kind: "kcn" | "ccn"; province: string | null };
 
-
+type DbCertification = { id: string; name: string; issuer: string | null; certificate_url: string | null; issued_at: string | null; expires_at: string | null; verification_status: string | null };
+type DbGallery = { id: string; image_url: string; caption: string | null };
+type DbVideo = { id: string; title: string | null; video_url: string; thumbnail_url: string | null };
+type DbFaq = { id: string; question: string; answer: string };
+type DbMarket = { id: string; country: string; share_percent: number | null; note: string | null };
 
 type UpdateSeo = { id: string; title: string; content: string | null; published_at: string | null };
 async function loadCompany(slug: string) {
   const { data, error } = await supabase.from("companies").select("*").eq("slug", slug).maybeSingle();
   if (error) throw error;
-  if (!data) throw notFound();
+  if (!data) {
+    const { data: redirectRow } = await supabase
+      .from("slug_redirects")
+      .select("new_slug")
+      .eq("entity_type", "company")
+      .eq("old_slug", slug)
+      .maybeSingle();
+    if (redirectRow?.new_slug && redirectRow.new_slug !== slug) {
+      throw redirect({ to: "/company/$slug", params: { slug: redirectRow.new_slug }, statusCode: 301 });
+    }
+    throw notFound();
+  }
   const id = (data as { id: string }).id;
-  const [{ data: ratingRows }, { data: updateRows }] = await Promise.all([
+  const [
+    { data: ratingRows },
+    { data: updateRows },
+    { data: certRows },
+    { data: galleryRows },
+    { data: videoRows },
+    { data: faqRows },
+    { data: marketRows },
+  ] = await Promise.all([
     supabase.from("company_reviews").select("rating").eq("company_id", id).eq("status", "published"),
     supabase
       .from("company_updates")
@@ -47,6 +73,11 @@ async function loadCompany(slug: string) {
       .not("published_at", "is", null)
       .order("published_at", { ascending: false })
       .limit(10),
+    supabase.from("certifications").select("id,name,issuer,certificate_url,issued_at,expires_at,verification_status").eq("company_id", id).order("sort_order"),
+    supabase.from("company_gallery").select("id,image_url,caption").eq("company_id", id).order("sort_order"),
+    supabase.from("company_videos").select("id,title,video_url,thumbnail_url").eq("company_id", id).order("sort_order"),
+    supabase.from("company_faqs").select("id,question,answer").eq("company_id", id).order("sort_order"),
+    supabase.from("company_export_markets").select("id,country,share_percent,note").eq("company_id", id).order("sort_order"),
   ]);
   const zoneId = (data as { industrial_zone_id?: string | null }).industrial_zone_id ?? null;
   let zone: ZoneLite | null = null;
@@ -67,8 +98,14 @@ async function loadCompany(slug: string) {
     _ratingAvg: ratingAvg,
     _updatesSeo: (updateRows ?? []) as UpdateSeo[],
     _zone: zone,
+    _certs: (certRows ?? []) as DbCertification[],
+    _gallery: (galleryRows ?? []) as DbGallery[],
+    _videos: (videoRows ?? []) as DbVideo[],
+    _faqs: (faqRows ?? []) as DbFaq[],
+    _markets: (marketRows ?? []) as DbMarket[],
   };
 }
+
 
 
 export const Route = createFileRoute("/company/$slug")({
