@@ -744,6 +744,62 @@ export type Database = {
           },
         ]
       }
+      featured_bids: {
+        Row: {
+          bid_amount: number
+          bid_status: string
+          company_id: string
+          created_at: string
+          created_by: string | null
+          effective_bid: number
+          id: string
+          industry_slug: string
+          period_end: string
+          period_start: string
+          province_slug: string
+          rank: number | null
+          updated_at: string
+        }
+        Insert: {
+          bid_amount: number
+          bid_status?: string
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          effective_bid?: number
+          id?: string
+          industry_slug: string
+          period_end?: string
+          period_start?: string
+          province_slug: string
+          rank?: number | null
+          updated_at?: string
+        }
+        Update: {
+          bid_amount?: number
+          bid_status?: string
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          effective_bid?: number
+          id?: string
+          industry_slug?: string
+          period_end?: string
+          period_start?: string
+          province_slug?: string
+          rank?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "featured_bids_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       import_logs: {
         Row: {
           created_at: string
@@ -1003,6 +1059,44 @@ export type Database = {
           },
         ]
       }
+      priority_cache: {
+        Row: {
+          company_id: string
+          computed_at: string
+          display_order: number
+          id: string
+          industry_slug: string
+          priority_score: number
+          province_slug: string
+        }
+        Insert: {
+          company_id: string
+          computed_at?: string
+          display_order: number
+          id?: string
+          industry_slug: string
+          priority_score: number
+          province_slug: string
+        }
+        Update: {
+          company_id?: string
+          computed_at?: string
+          display_order?: number
+          id?: string
+          industry_slug?: string
+          priority_score?: number
+          province_slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "priority_cache_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           catalog_url: string | null
@@ -1163,44 +1257,59 @@ export type Database = {
       }
       subscriptions: {
         Row: {
+          amount: number
           auto_renew: boolean
           company_id: string | null
           created_at: string
           expires_at: string
           id: string
+          industry_slug: string | null
+          metadata: Json
           order_id: string | null
           plan_type: Database["public"]["Enums"]["plan_type"]
+          province_slug: string | null
           reminder_sent_at: string | null
           starts_at: string
           status: Database["public"]["Enums"]["subscription_status"]
+          tier: number | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          amount?: number
           auto_renew?: boolean
           company_id?: string | null
           created_at?: string
           expires_at: string
           id?: string
+          industry_slug?: string | null
+          metadata?: Json
           order_id?: string | null
           plan_type: Database["public"]["Enums"]["plan_type"]
+          province_slug?: string | null
           reminder_sent_at?: string | null
           starts_at?: string
           status?: Database["public"]["Enums"]["subscription_status"]
+          tier?: number | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          amount?: number
           auto_renew?: boolean
           company_id?: string | null
           created_at?: string
           expires_at?: string
           id?: string
+          industry_slug?: string | null
+          metadata?: Json
           order_id?: string | null
           plan_type?: Database["public"]["Enums"]["plan_type"]
+          province_slug?: string | null
           reminder_sent_at?: string | null
           starts_at?: string
           status?: Database["public"]["Enums"]["subscription_status"]
+          tier?: number | null
           updated_at?: string
           user_id?: string
         }
