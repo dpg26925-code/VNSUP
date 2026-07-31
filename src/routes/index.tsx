@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Search, ArrowUpRight, Building2, Cpu, Factory, Package, Scissors, Wrench, Zap, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Search, ArrowUpRight, Building2, Cpu, Factory, Package, Scissors, Wrench, Zap, Sparkles, Star, FileSearch, Send, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
@@ -52,7 +52,7 @@ function HomePage() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [featured, setFeatured] = useState<CompanyCardProps[]>([]);
-  const [stats, setStats] = useState({ companies: 0, industries: INDUSTRIES.length, provinces: PROVINCES.length });
+  const [stats, setStats] = useState({ companies: 0, industries: INDUSTRIES.length, provinces: PROVINCES.length, rating: 0 });
 
   useEffect(() => {
     supabase
@@ -63,6 +63,13 @@ function HomePage() {
       .then(({ data }) => setFeatured((data ?? []) as CompanyCardProps[]));
     supabase.from("companies").select("id", { count: "exact", head: true })
       .then(({ count }) => setStats((s) => ({ ...s, companies: count ?? 0 })));
+    supabase.from("company_reviews").select("rating").eq("status", "published").limit(1000)
+      .then(({ data }) => {
+        const rows = data ?? [];
+        if (rows.length === 0) return;
+        const avg = rows.reduce((sum, r) => sum + (r.rating ?? 0), 0) / rows.length;
+        setStats((s) => ({ ...s, rating: Math.round(avg * 10) / 10 }));
+      });
   }, []);
 
   return (
@@ -122,6 +129,23 @@ function HomePage() {
         </div>
       </section>
 
+      {/* Trust stats bar */}
+      <section className="border-y border-border bg-card">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 px-6 py-6 md:grid-cols-4">
+          {[
+            { v: `${stats.companies || 500}+`, l: "Nhà máy" },
+            { v: `${stats.provinces}`, l: "Tỉnh thành" },
+            { v: `${stats.industries}+`, l: "Ngành" },
+            { v: stats.rating > 0 ? `${stats.rating.toFixed(1)}/5` : "Mới", l: "Đánh giá" },
+          ].map((s) => (
+            <div key={s.l} className="text-center">
+              <div className="text-xl font-bold text-foreground md:text-2xl">{s.v}</div>
+              <div className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{s.l}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Industries */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <div className="mb-8 flex items-end justify-between">
@@ -159,11 +183,52 @@ function HomePage() {
               <p className="mt-1 text-sm text-muted-foreground">Được xác thực và cập nhật gần đây.</p>
             </div>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((c) => <CompanyCard key={c.slug} {...c} />)}
-          </div>
+          <FeaturedCarousel items={featured} />
         </section>
       )}
+
+      {/* How it works */}
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="mb-8">
+          <div className="text-xs font-semibold uppercase tracking-widest text-brand">Quy trình</div>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">VNSupplier hoạt động thế nào</h2>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            { Icon: Search, t: "1. Tìm kiếm", d: "Tìm nhà máy theo ngành, tỉnh thành, quy mô và năng lực sản xuất." },
+            { Icon: FileSearch, t: "2. Xem hồ sơ", d: "So sánh năng lực, chứng nhận, sản phẩm và đánh giá thực tế." },
+            { Icon: Send, t: "3. Yêu cầu báo giá", d: "Gửi RFQ trực tiếp tới nhà máy, không qua trung gian." },
+          ].map(({ Icon, t, d }) => (
+            <div key={t} className="rounded-xl border border-border bg-card p-6">
+              <div className="grid h-11 w-11 place-items-center rounded-lg bg-brand-soft text-brand">
+                <Icon className="h-5 w-5" strokeWidth={1.75} />
+              </div>
+              <div className="mt-4 font-semibold">{t}</div>
+              <p className="mt-1.5 text-sm text-muted-foreground">{d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="mx-auto max-w-6xl px-6 pb-8">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-2xl border border-border bg-card p-8">
+            <h3 className="text-xl font-bold tracking-tight">Bạn là nhà máy?</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Đăng hồ sơ năng lực miễn phí, nhận yêu cầu báo giá từ buyer trong nước và quốc tế.</p>
+            <Link to="/auth" search={{ tab: "register" } as never} className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground transition hover:-translate-y-px hover:bg-brand/90">
+              Đăng nhà máy <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-border bg-card p-8">
+            <h3 className="text-xl font-bold tracking-tight">Cần tìm nhà cung cấp?</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Tìm kiếm bằng AI, xem hồ sơ đã xác thực và gửi RFQ chỉ trong vài phút.</p>
+            <Link to="/search" className="mt-5 inline-flex items-center gap-1.5 rounded-xl border border-border px-5 py-2.5 text-sm font-semibold transition hover:border-brand hover:text-brand">
+              Tìm nhà cung cấp <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Provinces */}
       <section className="mx-auto max-w-6xl px-6 py-16">
@@ -189,6 +254,61 @@ function HomePage() {
       </section>
 
       <SiteFooter />
+    </div>
+  );
+}
+
+function FeaturedCarousel({ items }: { items: CompanyCardProps[] }) {
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const [idx, setIdx] = useState(0);
+
+  function goTo(next: number) {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.firstElementChild as HTMLElement | null;
+    if (!card) return;
+    const target = ((next % items.length) + items.length) % items.length;
+    setIdx(target);
+    track.scrollTo({ left: target * (card.offsetWidth + 20), behavior: "smooth" });
+  }
+
+  useEffect(() => {
+    if (items.length < 2) return;
+    const t = setInterval(() => goTo(idx + 1), 5000);
+    return () => clearInterval(t);
+  }, [idx, items.length]);
+
+  return (
+    <div className="relative">
+      <div
+        ref={trackRef}
+        className="-mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {items.map((c) => (
+          <div key={c.slug} className="w-[85%] shrink-0 snap-start sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)]">
+            <CompanyCard {...c} />
+          </div>
+        ))}
+      </div>
+      {items.length > 1 && (
+        <div className="mt-4 flex items-center justify-center gap-2">
+          <button type="button" aria-label="Trước" onClick={() => goTo(idx - 1)} className="rounded-full border border-border p-1.5 hover:border-brand hover:text-brand">
+            <ChevronLeft className="h-4 w-4" strokeWidth={2} />
+          </button>
+          {items.map((c, i) => (
+            <button
+              key={c.slug}
+              type="button"
+              aria-label={`Tới thẻ ${i + 1}`}
+              onClick={() => goTo(i)}
+              className={"h-1.5 rounded-full transition-all " + (i === idx ? "w-6 bg-brand" : "w-1.5 bg-border")}
+            />
+          ))}
+          <button type="button" aria-label="Sau" onClick={() => goTo(idx + 1)} className="rounded-full border border-border p-1.5 hover:border-brand hover:text-brand">
+            <ChevronRight className="h-4 w-4" strokeWidth={2} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
