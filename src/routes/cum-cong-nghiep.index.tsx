@@ -8,16 +8,14 @@ import { PROVINCES } from "@/lib/factory";
 import { ZONE_META, zoneAbs, type ZoneRow } from "@/lib/zones";
 import { Building2, MapPin, Ruler, BadgeCheck } from "lucide-react";
 
-const KIND = "ccn" as const;
-const M = ZONE_META[KIND];
-
 const listQO = queryOptions({
-  queryKey: ["industrial-zones-list", KIND],
+  queryKey: ["industrial-zones-list", "ccn"],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("industrial_zones")
       .select("id,slug,name,province,area_ha,occupancy_percent,developer,industries,banner_url,is_featured")
-      .eq("kind", KIND)
+      .eq("kind", "ccn")
+
       .eq("status", "approved")
       .order("is_featured", { ascending: false })
       .order("area_ha", { ascending: false });
