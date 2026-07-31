@@ -153,6 +153,10 @@ function SubmitCompanyPage() {
       export_markets: (d.export_markets || "").split(",").map((s) => s.trim()).filter(Boolean),
       stock_exchange: d.stock_exchange || null,
       stock_ticker: d.stock_ticker ? d.stock_ticker.toUpperCase() : null,
+      tax_code: d.tax_code || null,
+      business_registration_number: d.business_registration_number || null,
+      legal_representative: d.legal_representative || null,
+
       verified: false,
       featured: false,
       source: "user",
