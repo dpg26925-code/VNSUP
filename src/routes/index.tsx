@@ -129,22 +129,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Trust stats bar */}
-      <section className="border-y border-border bg-card">
-        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 px-6 py-6 md:grid-cols-4">
-          {[
-            { v: `${stats.companies || 500}+`, l: "Nhà máy" },
-            { v: `${stats.provinces}`, l: "Tỉnh thành" },
-            { v: `${stats.industries}+`, l: "Ngành" },
-            { v: stats.rating > 0 ? `${stats.rating.toFixed(1)}/5` : "Mới", l: "Đánh giá" },
-          ].map((s) => (
-            <div key={s.l} className="text-center">
-              <div className="text-xl font-bold text-foreground md:text-2xl">{s.v}</div>
-              <div className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </section>
+
+
 
       {/* Industries */}
       <section className="mx-auto max-w-6xl px-6 py-16">
