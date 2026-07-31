@@ -325,6 +325,17 @@ function SubmitCompanyPage() {
             <F label="Mã chứng khoán" err={errors.stock_ticker} hint="VD: VNM, HPG, FPT">
               <input className="input" style={{ textTransform: "uppercase" }} maxLength={10} value={form.stock_ticker} onChange={(e) => set("stock_ticker", e.target.value.toUpperCase())} />
             </F>
+            <F label="Mã số thuế" err={errors.tax_code} hint="10 số, VD: 0301234567">
+              <input className="input" maxLength={20} value={form.tax_code} onChange={(e) => set("tax_code", e.target.value)} />
+            </F>
+            <F label="Số đăng ký kinh doanh" err={errors.business_registration_number}>
+              <input className="input" maxLength={40} value={form.business_registration_number} onChange={(e) => set("business_registration_number", e.target.value)} />
+            </F>
+            <F label="Người đại diện pháp luật" err={errors.legal_representative}>
+              <input className="input" maxLength={120} value={form.legal_representative} onChange={(e) => set("legal_representative", e.target.value)} />
+            </F>
+
+
 
             {errors._root && (
               <div className="md:col-span-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
