@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industryLabel, industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
+import { TrustBadges, VerificationBadge } from "@/components/trust-badges";
 import { BadgeCheck, Building2, Calendar, DollarSign, FileText, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare, UserSquare2 } from "lucide-react";
 
 
@@ -25,6 +26,9 @@ type Company = {
   capabilities: unknown; certifications: unknown; gallery_urls: unknown; faqs: unknown;
   export_markets: unknown;
   verified: boolean; featured: boolean;
+  verification_level: string | null;
+  email_verified: boolean | null; tax_verified: boolean | null; address_verified: boolean | null;
+  is_featured: boolean | null;
   stock_exchange: string | null; stock_ticker: string | null;
   submitted_by: string | null;
   industrial_zone_id: string | null;
@@ -374,6 +378,7 @@ function CompanyPage() {
             )}
             <div className="absolute right-4 top-4 flex flex-wrap gap-2">
               {c.verified && <span className="inline-flex items-center gap-1 rounded-full bg-success px-2.5 py-1 text-xs font-semibold text-success-foreground shadow"><BadgeCheck className="h-3.5 w-3.5" fill="currentColor" strokeWidth={2.25} /> Đã xác thực</span>}
+              <VerificationBadge level={c.verification_level} />
               {c.featured && <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-brand-foreground shadow"><Star className="h-3.5 w-3.5" fill="currentColor" /> Nổi bật</span>}
             </div>
           </div>
@@ -406,6 +411,14 @@ function CompanyPage() {
                     </Link>
                   )}
                 </div>
+                <TrustBadges
+                  className="mt-3"
+                  emailVerified={c.email_verified}
+                  taxVerified={c.tax_verified}
+                  addressVerified={c.address_verified}
+                  taxCode={c.tax_code}
+                  isFeatured={c.is_featured ?? c.featured}
+                />
               </div>
               {c.stock_ticker && (
                 <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary" title={c.stock_exchange ? `Niêm yết trên ${c.stock_exchange}` : "Đã niêm yết"}>
