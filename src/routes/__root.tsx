@@ -91,7 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           name: "VNSupplier",
           alternateName: "vnsupplier.cloud",
           url: "https://vnsupplier.cloud",
-          logo: "https://vnsupplier.cloud/favicon.ico",
+          logo: "https://vnsupplier.cloud/assets/vnsupplier-logo-light.svg",
           areaServed: "VN",
           description: SITE_DESC,
         }),
