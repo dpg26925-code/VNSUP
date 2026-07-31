@@ -90,6 +90,8 @@ function SubmitCompanyPage() {
     revenue_range: "", company_type: "", cover_url: "", video_url: "",
     certifications: "", gallery_urls: "", faqs: "", export_markets: "",
     stock_exchange: "", stock_ticker: "", logo_url: "", industrial_zone_id: "",
+    tax_code: "", business_registration_number: "", legal_representative: "",
+
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
