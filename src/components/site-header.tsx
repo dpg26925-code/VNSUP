@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Factory, LogIn, LogOut, Shield, Search, Facebook, Linkedin, Youtube, MessageCircle } from "lucide-react";
+import { Factory, LogIn, LogOut, Shield, Search, Facebook, Linkedin, Youtube, MessageCircle, Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -9,6 +9,7 @@ export function SiteHeader() {
   const [userId, setUserId] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [q, setQ] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setUserId(data.session?.user.id ?? null));
@@ -72,12 +73,67 @@ export function SiteHeader() {
               <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} /> Đăng xuất
             </button>
           ) : (
-            <Link to="/auth" className="inline-flex items-center gap-1.5 rounded-md bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground shadow-sm transition hover:-translate-y-px hover:bg-brand/90">
+            <Link to="/auth" className="hidden items-center gap-1.5 rounded-md bg-brand px-4 py-2 text-xs font-semibold text-brand-foreground shadow-sm transition hover:-translate-y-px hover:bg-brand/90 sm:inline-flex">
               <LogIn className="h-3.5 w-3.5" strokeWidth={2} /> Đăng nhập
             </Link>
           )}
+          <button
+            type="button"
+            aria-label="Mở menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(true)}
+            className="inline-flex items-center rounded-md border border-border p-2 sm:hidden"
+          >
+            <Menu className="h-4 w-4" strokeWidth={2} />
+          </button>
         </nav>
       </div>
+
+      {/* Mobile slide-out menu */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-50 sm:hidden">
+          <div className="absolute inset-0 bg-foreground/40" onClick={() => setMenuOpen(false)} />
+          <div className="absolute inset-y-0 right-0 flex w-72 max-w-[85%] flex-col gap-1 border-l border-border bg-background p-4 shadow-xl">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-sm font-bold tracking-tight">VNSupplier</span>
+              <button type="button" aria-label="Đóng menu" onClick={() => setMenuOpen(false)} className="rounded-md border border-border p-1.5">
+                <X className="h-4 w-4" strokeWidth={2} />
+              </button>
+            </div>
+            {[
+              { to: "/search", label: "Tìm kiếm" },
+              { to: "/khu-cong-nghiep", label: "Khu công nghiệp" },
+              { to: "/cum-cong-nghiep", label: "Cụm công nghiệp" },
+              { to: "/pricing", label: "Bảng giá" },
+            ].map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-secondary"
+              >
+                {item.label}
+              </Link>
+            ))}
+            {userId ? (
+              <button
+                onClick={() => { setMenuOpen(false); handleSignOut(); }}
+                className="mt-2 rounded-lg border border-border px-3 py-2.5 text-left text-sm font-medium hover:bg-secondary"
+              >
+                Đăng xuất
+              </button>
+            ) : (
+              <Link
+                to="/auth"
+                onClick={() => setMenuOpen(false)}
+                className="mt-2 rounded-lg bg-brand px-3 py-2.5 text-center text-sm font-semibold text-brand-foreground"
+              >
+                Đăng nhập
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
