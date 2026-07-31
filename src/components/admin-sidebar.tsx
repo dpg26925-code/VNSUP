@@ -5,6 +5,7 @@ import {
   FileCheck2,
   FileText,
   FolderTree,
+  Gavel,
   Home,
   Inbox,
   LogOut,
