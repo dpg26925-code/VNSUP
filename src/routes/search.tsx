@@ -268,7 +268,7 @@ function SearchPage() {
           })}
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-[240px,1fr]">
+        <div className="mt-4 grid gap-4 md:grid-cols-[240px_1fr]">
           <aside className={(showFilters ? "block " : "hidden ") + "md:block"}>
             <div className="space-y-2 rounded-md border bg-card p-4 text-sm">
               <label className="flex cursor-pointer items-center justify-between gap-2 pb-1">
