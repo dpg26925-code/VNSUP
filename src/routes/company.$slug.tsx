@@ -726,9 +726,19 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("sending"); setErr(null);
-    if (form.name.trim().length < 2 || !/^\S+@\S+\.\S+$/.test(form.email) || form.message.trim().length < 10) {
-      setStatus("error"); setErr("Vui lòng nhập tên, email hợp lệ và tin nhắn ≥ 10 ký tự."); return;
+    if (form.name.trim().length < 2) {
+      setStatus("error"); setErr("Vui lòng nhập họ và tên (tối thiểu 2 ký tự)."); return;
     }
+    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
+      setStatus("error"); setErr("Email công việc không hợp lệ."); return;
+    }
+    if (form.company.trim().length < 2) {
+      setStatus("error"); setErr("Vui lòng nhập tên công ty của bạn."); return;
+    }
+    if (form.message.trim().length < 20) {
+      setStatus("error"); setErr("Mô tả nhu cầu cần ít nhất 20 ký tự để nhà máy báo giá chính xác."); return;
+    }
+
     const { error } = await supabase.from("leads").insert({
       company_id: companyId, name: form.name.trim(), email: form.email.trim(),
       phone: form.phone.trim() || null, company: form.company.trim() || null,
