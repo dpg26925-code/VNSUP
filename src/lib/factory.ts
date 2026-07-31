@@ -77,6 +77,10 @@ const INDUSTRY_LABELS: Record<string, string> = {
   "kim-loai": "Kim loại",
   "cao-su": "Cao su",
   "det-may": "Dệt may",
+  go: "Gỗ",
+  "thuc-pham": "Thực phẩm",
+  "xay-dung": "Xây dựng",
+  "phan-bon": "Phân bón",
 };
 
 /** Nhãn tiếng Việt cho ngành; fallback về giá trị gốc nếu không có mapping. */

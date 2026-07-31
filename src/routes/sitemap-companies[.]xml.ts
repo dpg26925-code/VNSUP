@@ -23,7 +23,7 @@ export const Route = createFileRoute("/sitemap-companies.xml")({
             loc: `/company/${c.slug}`,
             lastmod: c.updated_at ?? undefined,
             changefreq: "weekly",
-            priority: "0.7",
+            priority: "0.8",
           }));
         }
         return renderUrlset(entries);
