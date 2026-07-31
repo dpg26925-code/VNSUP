@@ -104,7 +104,7 @@ export const smartSearch = createServerFn({ method: "POST" })
 
     let qb = supabase
       .from("companies")
-      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
+      .select("id,slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("status", "approved")
       .limit(60);
 
@@ -126,7 +126,7 @@ export const smartSearch = createServerFn({ method: "POST" })
     if (result.length === 0) {
       let fb = supabase
         .from("companies")
-        .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
+        .select("id,slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
         .eq("status", "approved")
         .limit(500);
       if (data.industry) fb = fb.eq("industry", data.industry);
