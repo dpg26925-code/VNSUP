@@ -34,7 +34,7 @@ export function CompanyCard(c: CompanyCardProps) {
         {c.logo_url ? (
           <img src={c.logo_url} alt={`Logo ${c.name}`} loading="lazy" className="h-11 w-11 shrink-0 rounded-xl border border-border bg-background object-contain p-1" />
         ) : (
-          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-brand text-sm font-bold text-primary-foreground shadow-sm">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-linear-to-br from-ink to-brand text-sm font-bold text-ink-foreground shadow-sm">
             {initials(c.name)}
           </div>
         )}

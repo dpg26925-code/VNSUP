@@ -6,6 +6,7 @@
 
 @theme inline {
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -32,77 +33,92 @@
   --color-ring: var(--ring);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-soft: var(--brand-soft);
+  --color-ink: var(--ink);
+  --color-ink-deep: var(--ink-deep);
+  --color-ink-foreground: var(--ink-foreground);
   --color-trust-verified: var(--trust-verified);
   --color-trust-premium: var(--trust-premium);
   --color-trust-enterprise: var(--trust-enterprise);
   --color-trust-foreground: var(--trust-foreground);
 }
 
-/* Modern SaaS minimal: navy dominant + orange accent, generous whitespace */
+/* Industrial B2B: White surface + near-black ink + orange accent */
 :root {
   --radius: 0.75rem;
-  --background: oklch(0.985 0.004 240);      /* slate-50 */
-  --foreground: oklch(0.18 0.03 250);        /* slate-900 */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.03 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.03 250);
-  --primary: oklch(0.22 0.03 250);           /* deep navy/slate-900 */
-  --primary-foreground: oklch(0.99 0.005 240);
-  --secondary: oklch(0.96 0.008 245);        /* slate-100 */
-  --secondary-foreground: oklch(0.25 0.03 250);
-  --muted: oklch(0.97 0.006 245);
-  --muted-foreground: oklch(0.55 0.02 250);  /* slate-500 */
-  --accent: oklch(0.95 0.01 250);
-  --accent-foreground: oklch(0.25 0.03 250);
-  --destructive: oklch(0.6 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --success: oklch(0.62 0.15 155);
-  --success-foreground: oklch(0.99 0 0);
-  --border: oklch(0.92 0.006 250);           /* slate-200 */
-  --input: oklch(0.93 0.006 250);
-  --ring: oklch(0.72 0.17 55);               /* orange focus ring */
-  --brand: oklch(0.72 0.17 55);              /* orange-500 accent */
-  --brand-foreground: oklch(0.99 0.005 60);
-  --brand-soft: oklch(0.97 0.03 60);         /* orange-50 */
-  --trust-verified: oklch(0.78 0.13 210);    /* cyan */
-  --trust-premium: oklch(0.82 0.15 85);      /* amber */
-  --trust-enterprise: oklch(0.62 0.20 300);  /* violet */
-  --trust-foreground: oklch(0.18 0.03 250);
+  --background: #ffffff;
+  --foreground: #0f172a;                  /* gray-900 */
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #ea580c;                     /* orange-600 — CTA */
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;                   /* gray-100 */
+  --secondary-foreground: #0f172a;
+  --muted: #f8fafc;                       /* gray-50 */
+  --muted-foreground: #64748b;            /* gray-500 */
+  --accent: #fff7ed;                      /* orange-50 */
+  --accent-foreground: #9a3412;           /* orange-800 */
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #0f172a;
+  --border: #e2e8f0;                      /* gray-200 */
+  --input: #e2e8f0;
+  --ring: #ea580c;
+  --brand: #ea580c;                       /* orange-600 */
+  --brand-foreground: #ffffff;
+  --brand-soft: #fff7ed;                  /* orange-50 */
+  --ink: #0f172a;                         /* quasi-black */
+  --ink-deep: #020617;                    /* hero / footer */
+  --ink-foreground: #ffffff;
+  --trust-verified: #0f172a;              /* verified = black badge */
+  --trust-premium: #ea580c;               /* premium = orange badge */
+  --trust-enterprise: #334155;            /* enterprise = gray-700 */
+  --trust-foreground: #ffffff;
 }
 
 .dark {
-  --background: oklch(0.16 0.02 250);          /* deep navy */
-  --foreground: oklch(0.97 0.005 240);
-  --card: oklch(0.20 0.025 250);
-  --card-foreground: oklch(0.97 0.005 240);
-  --popover: oklch(0.20 0.025 250);
-  --popover-foreground: oklch(0.97 0.005 240);
-  --primary: oklch(0.97 0.005 240);
-  --primary-foreground: oklch(0.18 0.03 250);
-  --secondary: oklch(0.26 0.025 250);
-  --secondary-foreground: oklch(0.97 0.005 240);
-  --muted: oklch(0.24 0.02 250);
-  --muted-foreground: oklch(0.72 0.02 250);
-  --accent: oklch(0.28 0.03 250);
-  --accent-foreground: oklch(0.97 0.005 240);
-  --destructive: oklch(0.62 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --success: oklch(0.66 0.15 155);
-  --success-foreground: oklch(0.12 0.02 250);
-  --border: oklch(0.30 0.02 250);
-  --input: oklch(0.30 0.02 250);
-  --ring: oklch(0.72 0.17 55);
-  --brand: oklch(0.75 0.17 55);
-  --brand-foreground: oklch(0.16 0.02 250);
-  --brand-soft: oklch(0.28 0.06 55);
-  --trust-verified: oklch(0.80 0.13 210);
-  --trust-premium: oklch(0.84 0.15 85);
-  --trust-enterprise: oklch(0.70 0.19 300);
-  --trust-foreground: oklch(0.16 0.02 250);
+  --background: #020617;                  /* gray-950 */
+  --foreground: #f8fafc;
+  --card: #0f172a;
+  --card-foreground: #f8fafc;
+  --popover: #0f172a;
+  --popover-foreground: #f8fafc;
+  --primary: #f97316;                     /* orange-500 on dark */
+  --primary-foreground: #0f172a;
+  --secondary: #1e293b;                   /* gray-800 */
+  --secondary-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;            /* gray-400 */
+  --accent: #1e293b;
+  --accent-foreground: #fdba74;           /* orange-300 */
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #22c55e;
+  --success-foreground: #020617;
+  --warning: #fbbf24;
+  --warning-foreground: #020617;
+  --border: #334155;                      /* gray-700 */
+  --input: #334155;
+  --ring: #f97316;
+  --brand: #fb923c;                       /* orange-400 */
+  --brand-foreground: #020617;
+  --brand-soft: #431407;
+  --ink: #f8fafc;
+  --ink-deep: #020617;
+  --ink-foreground: #f8fafc;
+  --trust-verified: #f8fafc;
+  --trust-premium: #fb923c;
+  --trust-enterprise: #cbd5e1;
+  --trust-foreground: #020617;
 }
 
 @layer base {
@@ -114,4 +130,14 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
   }
+  h1, h2, h3, h4 { letter-spacing: -0.02em; }
+}
+
+/* Nhãn kỹ thuật / mã số: dùng mono chữ hoa giãn cách kiểu industrial */
+@utility tech-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
