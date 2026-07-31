@@ -6,4 +6,33 @@ Disallow: /auth
 Disallow: /reset-password
 Disallow: /forgot-password
 
+# Google AI (Gemini/AI Overviews) — cho phép để nội dung được tham chiếu
+User-agent: Google-Extended
+Allow: /
+
+# Chặn các crawler thu thập dữ liệu huấn luyện AI
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: CloudflareBrowserRenderingCrawler
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
 Sitemap: https://vnsupplier.cloud/sitemap.xml
