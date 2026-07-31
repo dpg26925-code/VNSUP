@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
+import { industryLabel } from "@/lib/factory";
 import { parseFaqs, ZONE_META, type ZoneKind, type ZoneRow } from "@/lib/zones";
 import { Building2, Calendar, Globe, Mail, MapPin, Phone, Ruler, TrendingUp, DollarSign, Sparkles, HelpCircle, BadgeCheck } from "lucide-react";
 
@@ -174,7 +175,7 @@ export function ZoneDetail({ zone }: { zone: ZoneRow }) {
                       {co.verified && <BadgeCheck className="h-4 w-4 flex-shrink-0 text-brand" />}
                     </div>
                     <div className="truncate text-xs text-muted-foreground">
-                      {co.industry ?? "—"}{co.sub_industry ? ` · ${co.sub_industry}` : ""}
+                      {industryLabel(co.industry) || "—"}{co.sub_industry ? ` · ${co.sub_industry}` : ""}
                       {co.employee_range ? ` · ${co.employee_range}` : ""}
                     </div>
                   </div>

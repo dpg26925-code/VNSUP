@@ -67,8 +67,30 @@ export function industryBySlug(slug: string) {
 export function provinceSlug(name: string) {
   return PROVINCES.find((p) => p.name === name)?.slug ?? "";
 }
+// Ngành có thể được lưu dưới dạng tên tiếng Việt hoặc slug (dữ liệu import).
+const INDUSTRY_LABELS: Record<string, string> = {
+  nhua: "Nhựa",
+  cnc: "CNC",
+  "dien-tu": "Điện tử",
+  "bao-bi": "Bao bì",
+  "phan-bon": "Phân bón",
+  "kim-loai": "Kim loại",
+  "cao-su": "Cao su",
+  "det-may": "Dệt may",
+};
+
+/** Nhãn tiếng Việt cho ngành; fallback về giá trị gốc nếu không có mapping. */
+export function industryLabel(value: string | null | undefined) {
+  if (!value) return "";
+  const key = value.trim().toLowerCase();
+  return INDUSTRY_LABELS[key] ?? INDUSTRIES.find((i) => i.slug === key)?.name ?? value;
+}
+
 export function industrySlug(name: string) {
-  return INDUSTRIES.find((i) => i.name === name)?.slug ?? "";
+  if (!name) return "";
+  const key = name.trim().toLowerCase();
+  if (INDUSTRIES.some((i) => i.slug === key) || key in INDUSTRY_LABELS) return key;
+  return INDUSTRIES.find((i) => i.name.toLowerCase() === key)?.slug ?? "";
 }
 
 export function truncate(s: string | null | undefined, n = 155) {
