@@ -1,13 +1,16 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
-import { BadgeCheck, Building2, Calendar, DollarSign, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare } from "lucide-react";
+import { BadgeCheck, Building2, Calendar, DollarSign, FileText, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare, UserSquare2 } from "lucide-react";
+
 
 type FAQ = { q: string; a: string };
-type Certification = { name: string; issuer?: string; year?: number | string };
+type Certification = { name: string; issuer?: string; year?: number | string; url?: string; status?: string };
+type DbProduct = { id: string; name: string; category: string | null; description: string | null; moq?: string | null; lead_time?: string | null; price_range?: string | null; catalog_url?: string | null; image_url?: string | null };
+
 type Review = { id: string; rating: number; title: string | null; content: string; reviewer_name: string | null; created_at: string; user_id: string };
 
 type Company = {
@@ -25,19 +28,45 @@ type Company = {
   stock_exchange: string | null; stock_ticker: string | null;
   submitted_by: string | null;
   industrial_zone_id: string | null;
+  tax_code: string | null;
+  business_registration_number: string | null;
+  legal_representative: string | null;
 };
 
 type ZoneLite = { id: string; name: string; slug: string; kind: "kcn" | "ccn"; province: string | null };
 
-
+type DbCertification = { id: string; name: string; issuer: string | null; certificate_url: string | null; issued_at: string | null; expires_at: string | null; verification_status: string | null };
+type DbGallery = { id: string; image_url: string; caption: string | null };
+type DbVideo = { id: string; title: string | null; video_url: string; thumbnail_url: string | null };
+type DbFaq = { id: string; question: string; answer: string };
+type DbMarket = { id: string; country: string; share_percent: number | null; note: string | null };
 
 type UpdateSeo = { id: string; title: string; content: string | null; published_at: string | null };
 async function loadCompany(slug: string) {
   const { data, error } = await supabase.from("companies").select("*").eq("slug", slug).maybeSingle();
   if (error) throw error;
-  if (!data) throw notFound();
+  if (!data) {
+    const { data: redirectRow } = await supabase
+      .from("slug_redirects")
+      .select("new_slug")
+      .eq("entity_type", "company")
+      .eq("old_slug", slug)
+      .maybeSingle();
+    if (redirectRow?.new_slug && redirectRow.new_slug !== slug) {
+      throw redirect({ to: "/company/$slug", params: { slug: redirectRow.new_slug }, statusCode: 301 });
+    }
+    throw notFound();
+  }
   const id = (data as { id: string }).id;
-  const [{ data: ratingRows }, { data: updateRows }] = await Promise.all([
+  const [
+    { data: ratingRows },
+    { data: updateRows },
+    { data: certRows },
+    { data: galleryRows },
+    { data: videoRows },
+    { data: faqRows },
+    { data: marketRows },
+  ] = await Promise.all([
     supabase.from("company_reviews").select("rating").eq("company_id", id).eq("status", "published"),
     supabase
       .from("company_updates")
@@ -46,6 +75,11 @@ async function loadCompany(slug: string) {
       .not("published_at", "is", null)
       .order("published_at", { ascending: false })
       .limit(10),
+    supabase.from("certifications").select("id,name,issuer,certificate_url,issued_at,expires_at,verification_status").eq("company_id", id).order("sort_order"),
+    supabase.from("company_gallery").select("id,image_url,caption").eq("company_id", id).order("sort_order"),
+    supabase.from("company_videos").select("id,title,video_url,thumbnail_url").eq("company_id", id).order("sort_order"),
+    supabase.from("company_faqs").select("id,question,answer").eq("company_id", id).order("sort_order"),
+    supabase.from("company_export_markets").select("id,country,share_percent,note").eq("company_id", id).order("sort_order"),
   ]);
   const zoneId = (data as { industrial_zone_id?: string | null }).industrial_zone_id ?? null;
   let zone: ZoneLite | null = null;
@@ -66,8 +100,14 @@ async function loadCompany(slug: string) {
     _ratingAvg: ratingAvg,
     _updatesSeo: (updateRows ?? []) as UpdateSeo[],
     _zone: zone,
+    _certs: (certRows ?? []) as DbCertification[],
+    _gallery: (galleryRows ?? []) as DbGallery[],
+    _videos: (videoRows ?? []) as DbVideo[],
+    _faqs: (faqRows ?? []) as DbFaq[],
+    _markets: (marketRows ?? []) as DbMarket[],
   };
 }
+
 
 
 export const Route = createFileRoute("/company/$slug")({
@@ -91,9 +131,11 @@ export const Route = createFileRoute("/company/$slug")({
     }
     breadcrumbs.push({ "@type": "ListItem", position: breadcrumbs.length + 1, name: c.name, item: url });
 
-    const faqList = Array.isArray(c.faqs)
-      ? (c.faqs as { q?: string; a?: string }[]).filter((f) => f && f.q && f.a)
-      : [];
+    const faqList = [
+      ...((c as unknown as { _faqs?: DbFaq[] })._faqs ?? []).map((f) => ({ q: f.question, a: f.answer })),
+      ...(Array.isArray(c.faqs) ? (c.faqs as { q?: string; a?: string }[]).filter((f) => f && f.q && f.a) : []),
+    ] as { q?: string; a?: string }[];
+
 
     const scripts: { type: string; children: string }[] = [
       {
@@ -230,17 +272,33 @@ function initials(name: string) {
 }
 
 function CompanyPage() {
-  const c = Route.useLoaderData() as Company & { _zone: ZoneLite | null };
+  const c = Route.useLoaderData() as Company & {
+    _zone: ZoneLite | null; _certs: DbCertification[]; _gallery: DbGallery[];
+    _videos: DbVideo[]; _faqs: DbFaq[]; _markets: DbMarket[];
+  };
   const caps = Array.isArray(c.capabilities) ? (c.capabilities as string[]) : [];
-  const certs: Certification[] = Array.isArray(c.certifications)
-    ? (c.certifications as unknown[]).map((v) => (typeof v === "string" ? { name: v } : (v as Certification))).filter((v) => v && v.name)
-    : [];
-  const gallery: string[] = Array.isArray(c.gallery_urls) ? (c.gallery_urls as string[]).filter((u) => typeof u === "string" && u) : [];
-  const faqs: FAQ[] = Array.isArray(c.faqs) ? (c.faqs as FAQ[]).filter((f) => f && f.q && f.a) : [];
-  const exportMarkets: string[] = Array.isArray(c.export_markets) ? (c.export_markets as string[]).filter((v) => typeof v === "string" && v) : [];
+  const certs: Certification[] = [
+    ...(c._certs ?? []).map((x) => ({ name: x.name, issuer: x.issuer ?? undefined, year: x.issued_at ? new Date(x.issued_at).getFullYear() : undefined, url: x.certificate_url ?? undefined, status: x.verification_status ?? undefined })),
+    ...(Array.isArray(c.certifications)
+      ? (c.certifications as unknown[]).map((v) => (typeof v === "string" ? { name: v } : (v as Certification))).filter((v) => v && v.name)
+      : []),
+  ];
+  const gallery: string[] = [
+    ...(c._gallery ?? []).map((g) => g.image_url),
+    ...(Array.isArray(c.gallery_urls) ? (c.gallery_urls as string[]).filter((u) => typeof u === "string" && u) : []),
+  ];
+  const faqs: FAQ[] = [
+    ...(c._faqs ?? []).map((f) => ({ q: f.question, a: f.answer })),
+    ...(Array.isArray(c.faqs) ? (c.faqs as FAQ[]).filter((f) => f && f.q && f.a) : []),
+  ];
+  const exportMarkets: string[] = [
+    ...(c._markets ?? []).map((m) => (m.share_percent ? `${m.country} (${m.share_percent}%)` : m.country)),
+    ...(Array.isArray(c.export_markets) ? (c.export_markets as string[]).filter((v) => typeof v === "string" && v) : []),
+  ];
+  const extraVideos = c._videos ?? [];
   const [similar, setSimilar] = useState<CompanyCardProps[]>([]);
   const [showAllSimilar, setShowAllSimilar] = useState(false);
-  const [products, setProducts] = useState<{ id: string; name: string; category: string | null; description: string | null }[]>([]);
+  const [products, setProducts] = useState<DbProduct[]>([]);
   const [updates, setUpdates] = useState<{ id: string; title: string; content: string | null; update_type: string | null; published_at: string | null }[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewsVersion, setReviewsVersion] = useState(0);
@@ -249,8 +307,10 @@ function CompanyPage() {
     supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("industry", c.industry ?? "").neq("id", c.id).limit(18)
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
-    supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)
-      .then(({ data }) => setProducts(data ?? []));
+    supabase.from("products").select("id,name,category,description,moq,lead_time,price_range,catalog_url,image_url")
+      .eq("company_id", c.id).order("sort_order").limit(24)
+      .then(({ data }) => setProducts((data ?? []) as DbProduct[]));
+
     supabase.from("company_updates").select("id,title,content,update_type,published_at")
       .eq("company_id", c.id).not("published_at", "is", null)
       .order("published_at", { ascending: false }).limit(6)
@@ -419,9 +479,24 @@ function CompanyPage() {
                 <ul className="grid gap-3 sm:grid-cols-2">
                   {products.map((p) => (
                     <li key={p.id} className="rounded-lg border bg-background p-3.5 text-sm transition hover:border-brand/40">
+                      {p.image_url && (
+                        <img src={p.image_url} alt={`Sản phẩm ${p.name}`} loading="lazy" className="mb-2.5 aspect-[4/3] w-full rounded-md border object-cover" />
+                      )}
                       <div className="font-semibold">{p.name}</div>
                       {p.category && <div className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{p.category}</div>}
                       {p.description && <p className="mt-1.5 line-clamp-2 text-xs text-muted-foreground">{p.description}</p>}
+                      {(p.moq || p.lead_time || p.price_range) && (
+                        <dl className="mt-2 grid grid-cols-3 gap-2 border-t pt-2 text-[11px]">
+                          {p.moq && <div><dt className="text-muted-foreground">MOQ</dt><dd className="font-semibold">{p.moq}</dd></div>}
+                          {p.lead_time && <div><dt className="text-muted-foreground">Lead time</dt><dd className="font-semibold">{p.lead_time}</dd></div>}
+                          {p.price_range && <div><dt className="text-muted-foreground">Giá</dt><dd className="font-semibold">{p.price_range}</dd></div>}
+                        </dl>
+                      )}
+                      {p.catalog_url && (
+                        <a href={p.catalog_url} target="_blank" rel="noopener" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-brand hover:underline">
+                          <FileText className="h-3.5 w-3.5" />Xem catalogue
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -436,9 +511,19 @@ function CompanyPage() {
                     <div key={i} className="flex items-start gap-2.5 rounded-md border border-success/20 bg-success/5 p-3">
                       <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold">{cert.name}</div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-sm font-semibold">{cert.name}</span>
+                          {cert.status === "verified" && (
+                            <span className="rounded-full bg-success/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-success">Đã xác minh</span>
+                          )}
+                        </div>
                         {(cert.issuer || cert.year) && (
                           <div className="text-[11px] text-muted-foreground">{[cert.issuer, cert.year].filter(Boolean).join(" · ")}</div>
+                        )}
+                        {cert.url && (
+                          <a href={cert.url} target="_blank" rel="noopener" className="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-brand hover:underline">
+                            <FileText className="h-3 w-3" />Xem chứng chỉ
+                          </a>
                         )}
                       </div>
                     </div>
@@ -446,6 +531,7 @@ function CompanyPage() {
                 </div>
               </section>
             )}
+
 
             {gallery.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
@@ -473,6 +559,31 @@ function CompanyPage() {
                 </div>
               </section>
             )}
+
+            {extraVideos.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Play className="h-5 w-5 text-brand" />Video nhà máy</h2>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {extraVideos.map((v) => {
+                    const embed = getVideoEmbed(v.video_url);
+                    return (
+                      <div key={v.id} className="overflow-hidden rounded-lg border">
+                        <div className="aspect-video w-full bg-black">
+                          {embed ? (
+                            <iframe src={embed} title={v.title ?? `Video ${c.name}`} className="h-full w-full border-0" loading="lazy" allowFullScreen />
+                          ) : (
+                            <video src={v.video_url} poster={v.thumbnail_url ?? undefined} controls preload="none" className="h-full w-full" />
+                          )}
+                        </div>
+                        {v.title && <div className="p-3 text-sm font-semibold">{v.title}</div>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+
 
             {faqs.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
@@ -615,9 +726,19 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("sending"); setErr(null);
-    if (form.name.trim().length < 2 || !/^\S+@\S+\.\S+$/.test(form.email) || form.message.trim().length < 10) {
-      setStatus("error"); setErr("Vui lòng nhập tên, email hợp lệ và tin nhắn ≥ 10 ký tự."); return;
+    if (form.name.trim().length < 2) {
+      setStatus("error"); setErr("Vui lòng nhập họ và tên (tối thiểu 2 ký tự)."); return;
     }
+    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
+      setStatus("error"); setErr("Email công việc không hợp lệ."); return;
+    }
+    if (form.company.trim().length < 2) {
+      setStatus("error"); setErr("Vui lòng nhập tên công ty của bạn."); return;
+    }
+    if (form.message.trim().length < 20) {
+      setStatus("error"); setErr("Mô tả nhu cầu cần ít nhất 20 ký tự để nhà máy báo giá chính xác."); return;
+    }
+
     const { error } = await supabase.from("leads").insert({
       company_id: companyId, name: form.name.trim(), email: form.email.trim(),
       phone: form.phone.trim() || null, company: form.company.trim() || null,
@@ -645,8 +766,10 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
           <input required maxLength={100} placeholder="Họ và tên (VD: Nguyễn Văn A) *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
           <input required type="email" maxLength={200} placeholder="Email công việc (VD: buyer@congty.com) *" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} />
           <input maxLength={30} placeholder="Số điện thoại (VD: 0901 234 567)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputCls} />
-          <input maxLength={150} placeholder="Tên công ty (VD: Công ty ABC)" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputCls} />
-          <textarea required maxLength={2000} rows={4} placeholder="Mô tả nhu cầu: sản phẩm, số lượng/tháng, ngành, thời gian giao hàng… *" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputCls} />
+          <input required maxLength={150} placeholder="Tên công ty của bạn (VD: Công ty ABC) *" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputCls} />
+          <textarea required minLength={20} maxLength={2000} rows={4} placeholder="Mô tả nhu cầu: sản phẩm, số lượng/tháng, ngành, thời gian giao hàng… (tối thiểu 20 ký tự) *" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputCls} />
+          <div className="text-right text-[11px] text-muted-foreground">{form.message.trim().length}/20 ký tự tối thiểu</div>
+
           {err && <div className="rounded-md border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">{err}</div>}
           <button disabled={status === "sending"} className="w-full rounded-md bg-primary py-2.5 font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
             {status === "sending" ? "Đang gửi…" : "Gửi yêu cầu báo giá"}
@@ -759,12 +882,24 @@ function getVideoEmbed(url: string | null): string | null {
 }
 
 function QuickInfoStats({ c }: { c: Company }) {
-  const items: { icon: React.ReactNode; label: string; value: string }[] = [];
+  const items: { icon: React.ReactNode; label: string; value: React.ReactNode }[] = [];
   if (c.founded_year) items.push({ icon: <Calendar className="h-4 w-4" />, label: "Thành lập", value: `${c.founded_year} (${new Date().getFullYear() - c.founded_year}+ năm)` });
   if (c.employee_range) items.push({ icon: <Users className="h-4 w-4" />, label: "Quy mô", value: `${c.employee_range} lao động` });
   if (c.revenue_range) items.push({ icon: <DollarSign className="h-4 w-4" />, label: "Doanh thu", value: c.revenue_range });
   if (c.company_type) items.push({ icon: <Building2 className="h-4 w-4" />, label: "Loại hình", value: c.company_type });
+  if (c.tax_code) items.push({
+    icon: <FileText className="h-4 w-4" />,
+    label: "Mã số thuế",
+    value: (
+      <a href={`https://masothue.com/Search/?q=${encodeURIComponent(c.tax_code)}`} target="_blank" rel="noopener nofollow" className="text-brand hover:underline">
+        {c.tax_code}
+      </a>
+    ),
+  });
+  if (c.business_registration_number) items.push({ icon: <FileText className="h-4 w-4" />, label: "Giấy phép KD", value: c.business_registration_number });
+  if (c.legal_representative) items.push({ icon: <UserSquare2 className="h-4 w-4" />, label: "Người đại diện", value: c.legal_representative });
   if (items.length === 0) return null;
+
   return (
     <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {items.map((it) => (
