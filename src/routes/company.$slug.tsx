@@ -766,8 +766,10 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
           <input required maxLength={100} placeholder="Họ và tên (VD: Nguyễn Văn A) *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
           <input required type="email" maxLength={200} placeholder="Email công việc (VD: buyer@congty.com) *" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} />
           <input maxLength={30} placeholder="Số điện thoại (VD: 0901 234 567)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputCls} />
-          <input maxLength={150} placeholder="Tên công ty (VD: Công ty ABC)" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputCls} />
-          <textarea required maxLength={2000} rows={4} placeholder="Mô tả nhu cầu: sản phẩm, số lượng/tháng, ngành, thời gian giao hàng… *" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputCls} />
+          <input required maxLength={150} placeholder="Tên công ty của bạn (VD: Công ty ABC) *" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputCls} />
+          <textarea required minLength={20} maxLength={2000} rows={4} placeholder="Mô tả nhu cầu: sản phẩm, số lượng/tháng, ngành, thời gian giao hàng… (tối thiểu 20 ký tự) *" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputCls} />
+          <div className="text-right text-[11px] text-muted-foreground">{form.message.trim().length}/20 ký tự tối thiểu</div>
+
           {err && <div className="rounded-md border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">{err}</div>}
           <button disabled={status === "sending"} className="w-full rounded-md bg-primary py-2.5 font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
             {status === "sending" ? "Đang gửi…" : "Gửi yêu cầu báo giá"}
