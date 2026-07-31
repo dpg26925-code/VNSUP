@@ -870,12 +870,24 @@ function getVideoEmbed(url: string | null): string | null {
 }
 
 function QuickInfoStats({ c }: { c: Company }) {
-  const items: { icon: React.ReactNode; label: string; value: string }[] = [];
+  const items: { icon: React.ReactNode; label: string; value: React.ReactNode }[] = [];
   if (c.founded_year) items.push({ icon: <Calendar className="h-4 w-4" />, label: "Thành lập", value: `${c.founded_year} (${new Date().getFullYear() - c.founded_year}+ năm)` });
   if (c.employee_range) items.push({ icon: <Users className="h-4 w-4" />, label: "Quy mô", value: `${c.employee_range} lao động` });
   if (c.revenue_range) items.push({ icon: <DollarSign className="h-4 w-4" />, label: "Doanh thu", value: c.revenue_range });
   if (c.company_type) items.push({ icon: <Building2 className="h-4 w-4" />, label: "Loại hình", value: c.company_type });
+  if (c.tax_code) items.push({
+    icon: <FileText className="h-4 w-4" />,
+    label: "Mã số thuế",
+    value: (
+      <a href={`https://masothue.com/Search/?q=${encodeURIComponent(c.tax_code)}`} target="_blank" rel="noopener nofollow" className="text-brand hover:underline">
+        {c.tax_code}
+      </a>
+    ),
+  });
+  if (c.business_registration_number) items.push({ icon: <FileText className="h-4 w-4" />, label: "Giấy phép KD", value: c.business_registration_number });
+  if (c.legal_representative) items.push({ icon: <UserSquare2 className="h-4 w-4" />, label: "Người đại diện", value: c.legal_representative });
   if (items.length === 0) return null;
+
   return (
     <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {items.map((it) => (
