@@ -27,7 +27,8 @@ const listQO = queryOptions({
 export const Route = createFileRoute("/cum-cong-nghiep/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(listQO),
   head: () => {
-    const url = zoneAbs(KIND);
+    const M = ZONE_META["ccn"];
+    const url = zoneAbs("ccn");
     return {
       meta: [
         { title: M.listTitle },
@@ -49,6 +50,7 @@ export const Route = createFileRoute("/cum-cong-nghiep/")({
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Trang chủ", item: "https://vnsupplier.cloud/" },
             { "@type": "ListItem", position: 2, name: M.fullLabel, item: url },
+
           ],
         }),
       }],
