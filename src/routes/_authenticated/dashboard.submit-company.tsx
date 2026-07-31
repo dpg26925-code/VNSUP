@@ -50,6 +50,10 @@ const schema = z.object({
   gallery_urls: z.string().max(3000).optional().or(z.literal("")),
   faqs: z.string().max(5000).optional().or(z.literal("")),
   export_markets: z.string().max(500).optional().or(z.literal("")),
+  tax_code: z.string().trim().regex(/^\d{10}(-\d{3})?$/, "Mã số thuế gồm 10 số, hoặc 10 số-3 số").optional().or(z.literal("")),
+  business_registration_number: z.string().trim().max(40).optional().or(z.literal("")),
+  legal_representative: z.string().trim().max(120).optional().or(z.literal("")),
+
   stock_exchange: z.enum(["", "HOSE", "HNX", "UPCOM", "Khác"]).optional(),
   stock_ticker: z
     .string()
