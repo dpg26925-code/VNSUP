@@ -35,6 +35,10 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-soft: var(--brand-soft);
+  --color-trust-verified: var(--trust-verified);
+  --color-trust-premium: var(--trust-premium);
+  --color-trust-enterprise: var(--trust-enterprise);
+  --color-trust-foreground: var(--trust-foreground);
 }
 
 /* Modern SaaS minimal: navy dominant + orange accent, generous whitespace */
