@@ -732,6 +732,45 @@ export type Database = {
           },
         ]
       }
+      import_logs: {
+        Row: {
+          created_at: string
+          id: string
+          import_id: string
+          options: Json
+          performed_at: string
+          performed_by: string | null
+          results: Json
+          source: string
+          summary: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          import_id: string
+          options?: Json
+          performed_at?: string
+          performed_by?: string | null
+          results?: Json
+          source?: string
+          summary?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          import_id?: string
+          options?: Json
+          performed_at?: string
+          performed_by?: string | null
+          results?: Json
+          source?: string
+          summary?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       industrial_zones: {
         Row: {
           address: string | null

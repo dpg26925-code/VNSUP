@@ -56,9 +56,11 @@ import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/
 import { Route as AuthenticatedDashboardIntegrationsHermesRouteImport } from './routes/_authenticated/dashboard.integrations.hermes'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
 import { Route as AuthenticatedDashboardAdminZonesRouteImport } from './routes/_authenticated/dashboard.admin.zones'
+import { Route as AuthenticatedDashboardAdminImportRouteImport } from './routes/_authenticated/dashboard.admin.import'
 import { Route as AuthenticatedDashboardAdminEditRouteImport } from './routes/_authenticated/dashboard.admin.edit'
 import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './routes/_authenticated/dashboard.admin.companies'
 import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard.admin.claims'
+import { Route as ApiPublicAdminCompaniesBatchRouteImport } from './routes/api/public/admin/companies.batch'
 import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
 import { Route as ApiPublicAdminAnalyticsSummaryRouteImport } from './routes/api/public/admin/analytics.summary'
 import { Route as AuthenticatedDashboardArticlesIdEditRouteImport } from './routes/_authenticated/dashboard.articles.$id.edit'
@@ -314,6 +316,12 @@ const AuthenticatedDashboardAdminZonesRoute =
     path: '/admin/zones',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAdminImportRoute =
+  AuthenticatedDashboardAdminImportRouteImport.update({
+    id: '/admin/import',
+    path: '/admin/import',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAdminEditRoute =
   AuthenticatedDashboardAdminEditRouteImport.update({
     id: '/admin/edit',
@@ -331,6 +339,12 @@ const AuthenticatedDashboardAdminClaimsRoute =
     id: '/admin/claims',
     path: '/admin/claims',
     getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const ApiPublicAdminCompaniesBatchRoute =
+  ApiPublicAdminCompaniesBatchRouteImport.update({
+    id: '/public/admin/companies/batch',
+    path: '/public/admin/companies/batch',
+    getParentRoute: () => ApiRoute,
   } as any)
 const ApiPublicAdminArticlesIdRoute =
   ApiPublicAdminArticlesIdRouteImport.update({
@@ -399,6 +413,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
+  '/dashboard/admin/import': typeof AuthenticatedDashboardAdminImportRoute
   '/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
@@ -410,6 +425,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/companies/batch': typeof ApiPublicAdminCompaniesBatchRoute
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
 export interface FileRoutesByTo {
@@ -453,6 +469,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
+  '/dashboard/admin/import': typeof AuthenticatedDashboardAdminImportRoute
   '/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
@@ -464,6 +481,7 @@ export interface FileRoutesByTo {
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/companies/batch': typeof ApiPublicAdminCompaniesBatchRoute
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
 export interface FileRoutesById {
@@ -510,6 +528,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/_authenticated/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/_authenticated/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
+  '/_authenticated/dashboard/admin/import': typeof AuthenticatedDashboardAdminImportRoute
   '/_authenticated/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/_authenticated/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
@@ -521,6 +540,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/companies/batch': typeof ApiPublicAdminCompaniesBatchRoute
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
 export interface FileRouteTypes {
@@ -567,6 +587,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
     | '/dashboard/admin/edit'
+    | '/dashboard/admin/import'
     | '/dashboard/admin/zones'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
@@ -578,6 +599,7 @@ export interface FileRouteTypes {
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
+    | '/api/public/admin/companies/batch'
     | '/api/public/admin/articles/$id/publish'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -621,6 +643,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
     | '/dashboard/admin/edit'
+    | '/dashboard/admin/import'
     | '/dashboard/admin/zones'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
@@ -632,6 +655,7 @@ export interface FileRouteTypes {
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
+    | '/api/public/admin/companies/batch'
     | '/api/public/admin/articles/$id/publish'
   id:
     | '__root__'
@@ -677,6 +701,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin/claims'
     | '/_authenticated/dashboard/admin/companies'
     | '/_authenticated/dashboard/admin/edit'
+    | '/_authenticated/dashboard/admin/import'
     | '/_authenticated/dashboard/admin/zones'
     | '/_authenticated/dashboard/articles/new'
     | '/_authenticated/dashboard/integrations/hermes'
@@ -688,6 +713,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
+    | '/api/public/admin/companies/batch'
     | '/api/public/admin/articles/$id/publish'
   fileRoutesById: FileRoutesById
 }
@@ -1052,6 +1078,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminZonesRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/admin/import': {
+      id: '/_authenticated/dashboard/admin/import'
+      path: '/admin/import'
+      fullPath: '/dashboard/admin/import'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminImportRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/admin/edit': {
       id: '/_authenticated/dashboard/admin/edit'
       path: '/admin/edit'
@@ -1072,6 +1105,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/admin/claims'
       preLoaderRoute: typeof AuthenticatedDashboardAdminClaimsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/api/public/admin/companies/batch': {
+      id: '/api/public/admin/companies/batch'
+      path: '/public/admin/companies/batch'
+      fullPath: '/api/public/admin/companies/batch'
+      preLoaderRoute: typeof ApiPublicAdminCompaniesBatchRouteImport
+      parentRoute: typeof ApiRoute
     }
     '/api/public/admin/articles/$id': {
       id: '/api/public/admin/articles/$id'
@@ -1137,6 +1177,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAdminClaimsRoute: typeof AuthenticatedDashboardAdminClaimsRoute
   AuthenticatedDashboardAdminCompaniesRoute: typeof AuthenticatedDashboardAdminCompaniesRoute
   AuthenticatedDashboardAdminEditRoute: typeof AuthenticatedDashboardAdminEditRoute
+  AuthenticatedDashboardAdminImportRoute: typeof AuthenticatedDashboardAdminImportRoute
   AuthenticatedDashboardAdminZonesRoute: typeof AuthenticatedDashboardAdminZonesRoute
   AuthenticatedDashboardIntegrationsHermesRoute: typeof AuthenticatedDashboardIntegrationsHermesRoute
 }
@@ -1164,6 +1205,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardAdminCompaniesRoute:
       AuthenticatedDashboardAdminCompaniesRoute,
     AuthenticatedDashboardAdminEditRoute: AuthenticatedDashboardAdminEditRoute,
+    AuthenticatedDashboardAdminImportRoute:
+      AuthenticatedDashboardAdminImportRoute,
     AuthenticatedDashboardAdminZonesRoute:
       AuthenticatedDashboardAdminZonesRoute,
     AuthenticatedDashboardIntegrationsHermesRoute:
@@ -1221,6 +1264,7 @@ interface ApiRouteChildren {
   ApiPublicHooksExpireSubscriptionsRoute: typeof ApiPublicHooksExpireSubscriptionsRoute
   ApiPublicWebhooksPayosRoute: typeof ApiPublicWebhooksPayosRoute
   ApiPublicAdminAnalyticsSummaryRoute: typeof ApiPublicAdminAnalyticsSummaryRoute
+  ApiPublicAdminCompaniesBatchRoute: typeof ApiPublicAdminCompaniesBatchRoute
 }
 
 const ApiRouteChildren: ApiRouteChildren = {
@@ -1231,6 +1275,7 @@ const ApiRouteChildren: ApiRouteChildren = {
     ApiPublicHooksExpireSubscriptionsRoute,
   ApiPublicWebhooksPayosRoute: ApiPublicWebhooksPayosRoute,
   ApiPublicAdminAnalyticsSummaryRoute: ApiPublicAdminAnalyticsSummaryRoute,
+  ApiPublicAdminCompaniesBatchRoute: ApiPublicAdminCompaniesBatchRoute,
 }
 
 const ApiRouteWithChildren = ApiRoute._addFileChildren(ApiRouteChildren)
