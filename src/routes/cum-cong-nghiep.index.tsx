@@ -78,7 +78,7 @@ function CCNListPage() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold md:text-3xl">Danh sách Cụm Công Nghiệp tại Việt Nam</h1>
-            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{M.listDescription}</p>
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{ZONE_META["ccn"].listDescription}</p>
           </div>
           <div className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{filtered.length} CCN</div>
         </div>
