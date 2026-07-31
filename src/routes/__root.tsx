@@ -20,7 +20,7 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-lg text-center">
-        <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-primary to-brand text-2xl font-bold text-primary-foreground shadow-md">404</div>
+        <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-linear-to-br from-ink to-brand text-2xl font-bold text-primary-foreground shadow-md">404</div>
         <h1 className="mt-6 text-2xl font-bold tracking-tight">Không tìm thấy trang</h1>
         <p className="mt-2 text-sm text-muted-foreground">Trang bạn tìm không tồn tại hoặc đã bị di chuyển. Thử tìm nhà máy hoặc quay lại trang chủ.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">

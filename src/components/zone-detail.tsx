@@ -37,7 +37,7 @@ export function ZoneDetail({ zone }: { zone: ZoneRow }) {
         {zone.banner_url && (
           <div className="absolute inset-0">
             <img src={zone.banner_url} alt="" className="h-full w-full object-cover opacity-25" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background to-background/30" />
+            <div className="absolute inset-0 bg-linear-to-t from-background to-background/30" />
           </div>
         )}
         <div className="relative mx-auto max-w-7xl px-4 py-10">

@@ -363,7 +363,7 @@ function CompanyPage() {
 
         {/* Hero header with gradient banner */}
         <div className="overflow-hidden rounded-2xl border bg-card">
-          <div className="relative h-32 overflow-hidden bg-gradient-to-br from-primary via-primary to-brand md:h-48">
+          <div className="relative h-32 overflow-hidden bg-linear-to-br from-ink-deep via-ink to-brand md:h-48">
             {c.cover_url ? (
               <img src={c.cover_url} alt={`Banner ${c.name}`} className="h-full w-full object-cover" loading="lazy" />
             ) : (
@@ -372,7 +372,7 @@ function CompanyPage() {
             {c.logo_url ? (
               <img src={c.logo_url} alt={`Logo ${c.name}`} className="absolute -bottom-8 left-6 h-20 w-20 rounded-2xl border-4 border-card bg-background object-contain p-1.5 shadow-md" />
             ) : (
-              <div className="absolute -bottom-8 left-6 grid h-20 w-20 place-items-center rounded-2xl border-4 border-card bg-gradient-to-br from-brand to-primary text-2xl font-bold text-primary-foreground shadow-md">
+              <div className="absolute -bottom-8 left-6 grid h-20 w-20 place-items-center rounded-2xl border-4 border-card bg-linear-to-br from-ink to-brand text-2xl font-bold text-primary-foreground shadow-md">
                 {initials(c.name)}
               </div>
             )}
