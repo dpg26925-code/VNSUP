@@ -560,6 +560,31 @@ function CompanyPage() {
               </section>
             )}
 
+            {extraVideos.length > 0 && (
+              <section className="rounded-lg border bg-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Play className="h-5 w-5 text-brand" />Video nhà máy</h2>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {extraVideos.map((v) => {
+                    const embed = getVideoEmbed(v.video_url);
+                    return (
+                      <div key={v.id} className="overflow-hidden rounded-lg border">
+                        <div className="aspect-video w-full bg-black">
+                          {embed ? (
+                            <iframe src={embed} title={v.title ?? `Video ${c.name}`} className="h-full w-full border-0" loading="lazy" allowFullScreen />
+                          ) : (
+                            <video src={v.video_url} poster={v.thumbnail_url ?? undefined} controls preload="none" className="h-full w-full" />
+                          )}
+                        </div>
+                        {v.title && <div className="p-3 text-sm font-semibold">{v.title}</div>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+
+
             {faqs.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
                 <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><HelpCircle className="h-5 w-5 text-brand" />Câu hỏi thường gặp</h2>
