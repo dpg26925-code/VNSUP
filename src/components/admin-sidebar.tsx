@@ -37,7 +37,9 @@ const items = [
   { title: "Leads", url: "/dashboard/leads", icon: Inbox },
   { title: "Thống kê", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Nhật ký", url: "/dashboard/audit-log", icon: ScrollText },
+  { title: "Import hàng loạt", url: "/dashboard/admin/import", icon: Plug },
   { title: "Tích hợp Hermes", url: "/dashboard/integrations/hermes", icon: Plug },
+
 ];
 
 export function AdminSidebar({ role }: { role?: string | null }) {
