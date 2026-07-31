@@ -7,7 +7,6 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const now = new Date().toISOString();
         const children = [
           "sitemap-static.xml",
           "sitemap-industries.xml",
@@ -16,7 +15,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           "sitemap-zones.xml",
         ];
         const body = children
-          .map((c) => `  <sitemap><loc>${BASE_URL}/${c}</loc><lastmod>${now}</lastmod></sitemap>`)
+          .map((c) => `  <sitemap><loc>${BASE_URL}/${c}</loc></sitemap>`)
           .join("\n");
         const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</sitemapindex>`;
         return new Response(xml, {
