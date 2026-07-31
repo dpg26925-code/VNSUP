@@ -691,7 +691,9 @@ function CompanyPage() {
 
             {!c.submitted_by && <ClaimCard companyId={c.id} companyName={c.name} />}
 
-            <ContactForm companyId={c.id} companyName={c.name} />
+            <div id="rfq" className="scroll-mt-20">
+              <ContactForm companyId={c.id} companyName={c.name} />
+            </div>
           </aside>
         </div>
 
@@ -727,6 +729,15 @@ function CompanyPage() {
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-xs text-white">{lightboxIdx + 1} / {gallery.length}</div>
         </div>
       )}
+      {/* Sticky CTA trên mobile */}
+      <div className="sticky bottom-0 z-30 border-t border-border bg-background/95 p-3 backdrop-blur md:hidden">
+        <a
+          href="#rfq"
+          className="block rounded-xl bg-brand px-4 py-3 text-center text-sm font-semibold text-brand-foreground shadow-sm"
+        >
+          Yêu cầu báo giá
+        </a>
+      </div>
       <SiteFooter />
     </div>
   );
