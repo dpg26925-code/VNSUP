@@ -344,11 +344,30 @@ function AdminPage() {
               <Field label="Thị trường xuất khẩu (phân tách bằng dấu phẩy)" full>
                 <input value={Array.isArray(edit.export_markets) ? (edit.export_markets as string[]).join(", ") : String(edit.export_markets ?? "")} onChange={(e) => setEdit({ ...edit, export_markets: e.target.value as any })} className="input" placeholder="Mỹ, EU, Nhật Bản" />
               </Field>
-
+              <Field label="Mã số thuế">
+                <input value={edit.tax_code ?? ""} maxLength={20} onChange={(e) => setEdit({ ...edit, tax_code: e.target.value })} className="input" placeholder="VD: 0301234567" />
+              </Field>
+              <Field label="Số ĐKKD">
+                <input value={edit.business_registration_number ?? ""} maxLength={40} onChange={(e) => setEdit({ ...edit, business_registration_number: e.target.value })} className="input" />
+              </Field>
+              <Field label="Người đại diện pháp luật" full>
+                <input value={edit.legal_representative ?? ""} maxLength={120} onChange={(e) => setEdit({ ...edit, legal_representative: e.target.value })} className="input" placeholder="VD: Nguyễn Văn A" />
+              </Field>
 
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.verified} onChange={(e) => setEdit({ ...edit, verified: e.target.checked })} /> Đã xác thực</label>
               <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!edit.featured} onChange={(e) => setEdit({ ...edit, featured: e.target.checked })} /> Nổi bật</label>
             </div>
+            {edit.id ? (
+              <div className="mt-5">
+                <h4 className="mb-2 text-sm font-semibold">Nội dung chi tiết hồ sơ</h4>
+                <CompanySectionsEditor companyId={edit.id} />
+              </div>
+            ) : (
+              <p className="mt-4 rounded-md border bg-muted/40 p-3 text-xs text-muted-foreground">
+                Lưu doanh nghiệp trước để thêm sản phẩm, chứng chỉ, thư viện ảnh, video, FAQ và thị trường xuất khẩu.
+              </p>
+            )}
+
             {saveError && (
               <div className="mt-4 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
                 {saveError}
