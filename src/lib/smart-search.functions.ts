@@ -93,11 +93,11 @@ export const smartSearch = createServerFn({ method: "POST" })
       const pat = `%${t}%`;
       orParts.push(`name.ilike.${pat}`);
       orParts.push(`description.ilike.${pat}`);
+      orParts.push(`ai_summary.ilike.${pat}`);
       orParts.push(`industry.ilike.${pat}`);
       orParts.push(`sub_industry.ilike.${pat}`);
-      // capabilities is text[]; use cs (contains) via array
-      orParts.push(`capabilities.cs.{${t}}`);
     }
+
     for (const ind of expansion.industries.map(escapeIlike)) {
       orParts.push(`industry.ilike.%${ind}%`);
     }
@@ -119,5 +119,29 @@ export const smartSearch = createServerFn({ method: "POST" })
     if (error) {
       return { rows: [], expansion, error: error.message };
     }
-    return { rows: rows ?? [], expansion, error: null as string | null };
+
+    let result = rows ?? [];
+
+    // Fallback: capabilities is jsonb — match its text content client-side
+    if (result.length === 0) {
+      let fb = supabase
+        .from("companies")
+        .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
+        .eq("status", "approved")
+        .limit(500);
+      if (data.industry) fb = fb.eq("industry", data.industry);
+      if (data.province) fb = fb.eq("province", data.province);
+      if (data.size) fb = fb.eq("employee_range", data.size);
+      const { data: all } = await fb;
+      const needles = terms.map((t) => t.toLowerCase());
+      result = (all ?? [])
+        .filter((c) => {
+          const hay = JSON.stringify(c).toLowerCase();
+          return needles.some((n) => hay.includes(n));
+        })
+        .slice(0, 60);
+    }
+
+    return { rows: result, expansion, error: null as string | null };
   });
+

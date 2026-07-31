@@ -8,16 +8,14 @@ import { PROVINCES } from "@/lib/factory";
 import { ZONE_META, zoneAbs, type ZoneRow } from "@/lib/zones";
 import { Building2, MapPin, Ruler, BadgeCheck } from "lucide-react";
 
-const KIND = "ccn" as const;
-const M = ZONE_META[KIND];
-
 const listQO = queryOptions({
-  queryKey: ["industrial-zones-list", KIND],
+  queryKey: ["industrial-zones-list", "ccn"],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("industrial_zones")
       .select("id,slug,name,province,area_ha,occupancy_percent,developer,industries,banner_url,is_featured")
-      .eq("kind", KIND)
+      .eq("kind", "ccn")
+
       .eq("status", "approved")
       .order("is_featured", { ascending: false })
       .order("area_ha", { ascending: false });
@@ -29,7 +27,8 @@ const listQO = queryOptions({
 export const Route = createFileRoute("/cum-cong-nghiep/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(listQO),
   head: () => {
-    const url = zoneAbs(KIND);
+    const M = ZONE_META["ccn"];
+    const url = zoneAbs("ccn");
     return {
       meta: [
         { title: M.listTitle },
@@ -51,6 +50,7 @@ export const Route = createFileRoute("/cum-cong-nghiep/")({
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Trang chủ", item: "https://vnsupplier.cloud/" },
             { "@type": "ListItem", position: 2, name: M.fullLabel, item: url },
+
           ],
         }),
       }],
@@ -78,7 +78,7 @@ function CCNListPage() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold md:text-3xl">Danh sách Cụm Công Nghiệp tại Việt Nam</h1>
-            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{M.listDescription}</p>
+            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{ZONE_META["ccn"].listDescription}</p>
           </div>
           <div className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{filtered.length} CCN</div>
         </div>
