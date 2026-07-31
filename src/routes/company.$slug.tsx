@@ -1,10 +1,11 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
-import { BadgeCheck, Building2, Calendar, DollarSign, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare } from "lucide-react";
+import { BadgeCheck, Building2, Calendar, DollarSign, FileText, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare, UserSquare2 } from "lucide-react";
+
 
 type FAQ = { q: string; a: string };
 type Certification = { name: string; issuer?: string; year?: number | string };
