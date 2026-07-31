@@ -270,17 +270,33 @@ function initials(name: string) {
 }
 
 function CompanyPage() {
-  const c = Route.useLoaderData() as Company & { _zone: ZoneLite | null };
+  const c = Route.useLoaderData() as Company & {
+    _zone: ZoneLite | null; _certs: DbCertification[]; _gallery: DbGallery[];
+    _videos: DbVideo[]; _faqs: DbFaq[]; _markets: DbMarket[];
+  };
   const caps = Array.isArray(c.capabilities) ? (c.capabilities as string[]) : [];
-  const certs: Certification[] = Array.isArray(c.certifications)
-    ? (c.certifications as unknown[]).map((v) => (typeof v === "string" ? { name: v } : (v as Certification))).filter((v) => v && v.name)
-    : [];
-  const gallery: string[] = Array.isArray(c.gallery_urls) ? (c.gallery_urls as string[]).filter((u) => typeof u === "string" && u) : [];
-  const faqs: FAQ[] = Array.isArray(c.faqs) ? (c.faqs as FAQ[]).filter((f) => f && f.q && f.a) : [];
-  const exportMarkets: string[] = Array.isArray(c.export_markets) ? (c.export_markets as string[]).filter((v) => typeof v === "string" && v) : [];
+  const certs: Certification[] = [
+    ...(c._certs ?? []).map((x) => ({ name: x.name, issuer: x.issuer ?? undefined, year: x.issued_at ? new Date(x.issued_at).getFullYear() : undefined, url: x.certificate_url ?? undefined, status: x.verification_status ?? undefined })),
+    ...(Array.isArray(c.certifications)
+      ? (c.certifications as unknown[]).map((v) => (typeof v === "string" ? { name: v } : (v as Certification))).filter((v) => v && v.name)
+      : []),
+  ];
+  const gallery: string[] = [
+    ...(c._gallery ?? []).map((g) => g.image_url),
+    ...(Array.isArray(c.gallery_urls) ? (c.gallery_urls as string[]).filter((u) => typeof u === "string" && u) : []),
+  ];
+  const faqs: FAQ[] = [
+    ...(c._faqs ?? []).map((f) => ({ q: f.question, a: f.answer })),
+    ...(Array.isArray(c.faqs) ? (c.faqs as FAQ[]).filter((f) => f && f.q && f.a) : []),
+  ];
+  const exportMarkets: string[] = [
+    ...(c._markets ?? []).map((m) => (m.share_percent ? `${m.country} (${m.share_percent}%)` : m.country)),
+    ...(Array.isArray(c.export_markets) ? (c.export_markets as string[]).filter((v) => typeof v === "string" && v) : []),
+  ];
+  const extraVideos = c._videos ?? [];
   const [similar, setSimilar] = useState<CompanyCardProps[]>([]);
   const [showAllSimilar, setShowAllSimilar] = useState(false);
-  const [products, setProducts] = useState<{ id: string; name: string; category: string | null; description: string | null }[]>([]);
+  const [products, setProducts] = useState<DbProduct[]>([]);
   const [updates, setUpdates] = useState<{ id: string; title: string; content: string | null; update_type: string | null; published_at: string | null }[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewsVersion, setReviewsVersion] = useState(0);
@@ -289,8 +305,10 @@ function CompanyPage() {
     supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("industry", c.industry ?? "").neq("id", c.id).limit(18)
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
-    supabase.from("products").select("id,name,category,description").eq("company_id", c.id).limit(20)
-      .then(({ data }) => setProducts(data ?? []));
+    supabase.from("products").select("id,name,category,description,moq,lead_time,price_range,catalog_url,image_url")
+      .eq("company_id", c.id).order("sort_order").limit(24)
+      .then(({ data }) => setProducts((data ?? []) as DbProduct[]));
+
     supabase.from("company_updates").select("id,title,content,update_type,published_at")
       .eq("company_id", c.id).not("published_at", "is", null)
       .order("published_at", { ascending: false }).limit(6)
