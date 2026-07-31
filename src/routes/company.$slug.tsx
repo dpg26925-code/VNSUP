@@ -55,7 +55,8 @@ async function loadCompany(slug: string) {
     if (redirectRow?.new_slug && redirectRow.new_slug !== slug) {
       throw redirect({ to: "/company/$slug", params: { slug: redirectRow.new_slug }, statusCode: 301 });
     }
-    throw notFound();
+    // Không có hồ sơ: đưa người dùng về tìm kiếm thay vì trang 404 cụt.
+    throw redirect({ to: "/search", search: { q: slug.replace(/-/g, " ") }, statusCode: 302 });
   }
   const id = (data as { id: string }).id;
   const [
