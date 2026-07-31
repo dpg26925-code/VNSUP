@@ -299,6 +299,7 @@ export type Database = {
       companies: {
         Row: {
           address: string | null
+          address_verified: boolean
           ai_summary: string | null
           business_registration_number: string | null
           canonical_url: string | null
@@ -310,6 +311,7 @@ export type Database = {
           description: string | null
           district: string | null
           email: string | null
+          email_verified: boolean
           employee_range: string | null
           export_markets: Json | null
           faqs: Json
@@ -341,7 +343,9 @@ export type Database = {
           sub_industry: string | null
           submitted_by: string | null
           tax_code: string | null
+          tax_verified: boolean
           updated_at: string
+          verification_level: string
           verified: boolean
           verified_expires_at: string | null
           video_url: string | null
@@ -349,6 +353,7 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          address_verified?: boolean
           ai_summary?: string | null
           business_registration_number?: string | null
           canonical_url?: string | null
@@ -360,6 +365,7 @@ export type Database = {
           description?: string | null
           district?: string | null
           email?: string | null
+          email_verified?: boolean
           employee_range?: string | null
           export_markets?: Json | null
           faqs?: Json
@@ -391,7 +397,9 @@ export type Database = {
           sub_industry?: string | null
           submitted_by?: string | null
           tax_code?: string | null
+          tax_verified?: boolean
           updated_at?: string
+          verification_level?: string
           verified?: boolean
           verified_expires_at?: string | null
           video_url?: string | null
@@ -399,6 +407,7 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          address_verified?: boolean
           ai_summary?: string | null
           business_registration_number?: string | null
           canonical_url?: string | null
@@ -410,6 +419,7 @@ export type Database = {
           description?: string | null
           district?: string | null
           email?: string | null
+          email_verified?: boolean
           employee_range?: string | null
           export_markets?: Json | null
           faqs?: Json
@@ -441,7 +451,9 @@ export type Database = {
           sub_industry?: string | null
           submitted_by?: string | null
           tax_code?: string | null
+          tax_verified?: boolean
           updated_at?: string
+          verification_level?: string
           verified?: boolean
           verified_expires_at?: string | null
           video_url?: string | null
@@ -1092,6 +1104,36 @@ export type Database = {
           id?: string
           query?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      search_logs: {
+        Row: {
+          created_at: string
+          filters: Json
+          id: string
+          query: string | null
+          results_count: number
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          filters?: Json
+          id?: string
+          query?: string | null
+          results_count?: number
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          filters?: Json
+          id?: string
+          query?: string | null
+          results_count?: number
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
