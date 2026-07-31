@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Factory, LogIn, LogOut, Shield, Search, Facebook, Linkedin, Youtube, MessageCircle, Menu, X } from "lucide-react";
+import { LogIn, LogOut, Shield, Search, Facebook, Linkedin, Youtube, MessageCircle, Menu, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -36,14 +36,10 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-6">
-        <Link to="/" className="flex shrink-0 items-center gap-2">
-          <div className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-brand-foreground">
-            <Factory className="h-4 w-4" strokeWidth={1.75} />
-          </div>
-          <span className="text-lg font-bold tracking-tight">
-            VNSupplier
-          </span>
+        <Link to="/" className="flex shrink-0 items-center" aria-label="VNSupplier">
+          <img src="/assets/vnsupplier-logo-light.svg" alt="VNSupplier" width={162} height={40} className="h-10 w-auto" />
         </Link>
+
 
         <form onSubmit={submitSearch} className="hidden flex-1 md:block">
           <div className="mx-auto flex max-w-md items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 transition focus-within:ring-2 focus-within:ring-brand/25">
@@ -95,7 +91,7 @@ export function SiteHeader() {
           <div className="absolute inset-0 bg-foreground/40" onClick={() => setMenuOpen(false)} />
           <div className="absolute inset-y-0 right-0 flex w-72 max-w-[85%] flex-col gap-1 border-l border-border bg-background p-4 shadow-xl">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-bold tracking-tight">VNSupplier</span>
+              <img src="/assets/vnsupplier-logo-light.svg" alt="VNSupplier" width={130} height={32} className="h-8 w-auto" />
               <button type="button" aria-label="Đóng menu" onClick={() => setMenuOpen(false)} className="rounded-md border border-border p-1.5">
                 <X className="h-4 w-4" strokeWidth={2} />
               </button>
@@ -145,12 +141,8 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-3">
           <div>
-            <div className="flex items-center gap-2">
-              <div className="grid h-7 w-7 place-items-center rounded-md bg-brand text-brand-foreground">
-                <Factory className="h-3.5 w-3.5" strokeWidth={1.75} />
-              </div>
-              <span className="font-bold tracking-tight">VNSupplier</span>
-            </div>
+            <img src="/assets/vnsupplier-logo-light.svg" alt="VNSupplier" width={146} height={36} className="h-9 w-auto" />
+
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
               Danh bạ AI nhà máy & nhà cung cấp sản xuất Việt Nam.
             </p>
