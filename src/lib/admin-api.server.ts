@@ -81,24 +81,53 @@ export async function requireAdmin(
   const token = bearerFrom(request);
   if (!token) return json({ error: "unauthorized", message: "Missing Bearer token" }, 401);
 
-  const url = process.env.SUPABASE_URL;
-  const anon = process.env.SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !anon) return json({ error: "server_misconfigured" }, 500);
+  const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
+  const anon =
+    process.env.SUPABASE_PUBLISHABLE_KEY ??
+    process.env.SUPABASE_ANON_KEY ??
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !anon) {
+    console.error("[admin-api] missing SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY env");
+    return json({ error: "server_misconfigured", message: "Supabase env not configured" }, 500);
+  }
 
   const supabase = createClient<Database>(url, anon, {
     global: { headers: { Authorization: `Bearer ${token}` } },
     auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
   });
 
-  const { data: userData, error: userErr } = await supabase.auth.getUser(token);
-  if (userErr || !userData.user) {
-    return json({ error: "invalid_token", message: userErr?.message ?? "Invalid token" }, 401);
+  let user: { id: string; email?: string | null } | null = null;
+  try {
+    const { data: userData, error: userErr } = await supabase.auth.getUser(token);
+    if (userErr) {
+      console.error("[admin-api] auth error:", userErr.message);
+      return json({ error: "invalid_token", message: userErr.message || "Unauthorized" }, 401);
+    }
+    user = userData?.user ?? null;
+    if (!user) return json({ error: "invalid_token", message: "Unauthorized" }, 401);
+  } catch (err) {
+    console.error("[admin-api] auth exception:", err);
+    return json({ error: "invalid_token", message: "Auth provider error" }, 401);
   }
 
-  const { data: roleRows, error: roleErr } = await supabase
-    .from("user_roles")
-    .select("role, allowed_categories, can_publish, can_delete, can_manage_users");
-  if (roleErr) return json({ error: "role_lookup_failed", message: roleErr.message }, 500);
+  let roleRows: Array<Record<string, unknown>> | null = null;
+  try {
+    const { data, error: roleErr } = await supabase
+      .from("user_roles")
+      .select("role, allowed_categories, can_publish, can_delete, can_manage_users");
+    if (roleErr) {
+      const msg = roleErr.message ?? "";
+      if (/jwt|token|expired|unauthor/i.test(msg)) {
+        return json({ error: "invalid_token", message: msg }, 401);
+      }
+      return json({ error: "role_lookup_failed", message: msg }, 500);
+    }
+    roleRows = data as never;
+  } catch (err) {
+    console.error("[admin-api] role lookup exception:", err);
+    return json({ error: "role_lookup_failed", message: (err as Error).message }, 500);
+  }
+
 
   const rows = roleRows ?? [];
   const roles = rows
