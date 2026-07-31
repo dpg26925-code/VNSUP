@@ -18,8 +18,8 @@ const searchSchema = z.object({
   size: z.string().optional(),
   cert: z.string().optional(),
   market: z.string().optional(),
-  rating: z.string().optional(),
-  verified: z.string().optional(),
+  rating: z.coerce.string().optional(),
+  verified: z.coerce.string().optional(),
   sort: z.string().optional(),
 });
 
