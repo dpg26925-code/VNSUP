@@ -91,7 +91,7 @@ export function SiteHeader() {
           <div className="absolute inset-0 bg-foreground/40" onClick={() => setMenuOpen(false)} />
           <div className="absolute inset-y-0 right-0 flex w-72 max-w-[85%] flex-col gap-1 border-l border-border bg-background p-4 shadow-xl">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-bold tracking-tight">VNSupplier</span>
+              <img src="/assets/vnsupplier-logo-light.svg" alt="VNSupplier" width={130} height={32} className="h-8 w-auto" />
               <button type="button" aria-label="Đóng menu" onClick={() => setMenuOpen(false)} className="rounded-md border border-border p-1.5">
                 <X className="h-4 w-4" strokeWidth={2} />
               </button>
