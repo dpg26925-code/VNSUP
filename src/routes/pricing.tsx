@@ -83,6 +83,7 @@ function PricingPage() {
       <SiteHeader />
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="text-center">
+          <img src="/assets/vnsupplier-icon.svg" alt="VNSupplier" className="mx-auto mb-4 h-10 w-10" />
           <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
             <Star className="h-3.5 w-3.5 text-brand" fill="currentColor" /> Không hợp đồng dài hạn
           </div>
