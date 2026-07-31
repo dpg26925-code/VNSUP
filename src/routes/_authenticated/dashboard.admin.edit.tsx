@@ -17,7 +17,9 @@ type Row = {
   stock_exchange: string | null; stock_ticker: string | null;
   status: string | null; submitted_by: string | null; rejection_reason: string | null;
   industrial_zone_id: string | null;
+  tax_code: string | null; business_registration_number: string | null; legal_representative: string | null;
 };
+
 
 const REVENUE_RANGES = ["< 1 tỷ", "1-10 tỷ", "10-50 tỷ", "50-200 tỷ", "200 tỷ - 1000 tỷ", "> 1000 tỷ"];
 const COMPANY_TYPES = ["TNHH", "Cổ phần", "Cổ phần niêm yết", "Doanh nghiệp tư nhân", "FDI", "Nhà nước", "Hợp tác xã"];
