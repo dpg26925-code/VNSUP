@@ -89,14 +89,26 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
       }
     );
 
+    // Prefer local/JWKS claim verification, but fall back to the Auth server
+    // (getUser) when claims cannot be resolved (e.g. JWKS unavailable, or
+    // symmetric secret rotated). Only fail when both paths reject the token.
+    let userId: string | undefined;
+    let claims: Record<string, unknown> = {};
+
     const { data, error } = await supabase.auth.getClaims(token);
-    if (error || !data?.claims) {
-      throw new Error('Unauthorized: Invalid token');
+    if (!error && data?.claims?.sub) {
+      userId = data.claims.sub as string;
+      claims = data.claims as Record<string, unknown>;
+    } else {
+      const { data: userData, error: userError } = await supabase.auth.getUser(token);
+      if (userError || !userData?.user?.id) {
+        console.error('[Supabase] Token rejected:', error?.message ?? userError?.message);
+        throw new Error('Unauthorized: Invalid token');
+      }
+      userId = userData.user.id;
+      claims = { sub: userData.user.id, email: userData.user.email } as Record<string, unknown>;
     }
 
-    if (!data.claims.sub) {
-      throw new Error('Unauthorized: No user ID found in token');
-    }
 
     return next({
       context: {
