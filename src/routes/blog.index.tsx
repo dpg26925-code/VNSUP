@@ -9,7 +9,7 @@ const blogListQO = queryOptions({
   queryFn: async () => {
     const { data, error } = await supabase
       .from("articles")
-      .select("id,slug,title,excerpt,published_at,cover_image,author:profiles(full_name)")
+      .select("id,slug,title,excerpt,published_at,cover_image,author:profiles(display_name)")
       .eq("status", "published")
       .order("published_at", { ascending: false });
     if (error) throw error;
