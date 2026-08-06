@@ -4,9 +4,9 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { SkeletonCard, EmptyState } from "@/components/skeleton-card";
-import { PROVINCES } from "@/lib/factory";
-import { ZONE_META, zoneAbs, type ZoneRow } from "@/lib/zones";
-import { Building2, MapPin, Ruler, BadgeCheck } from "lucide-react";
+import { PROVINCES, abs } from "@/lib/factory";
+import { ZONE_META, type ZoneRow } from "@/lib/zones";
+import { Building2, MapPin, BadgeCheck } from "lucide-react";
 
 const listQO = queryOptions({
   queryKey: ["companies-list"],
@@ -25,7 +25,7 @@ const listQO = queryOptions({
 export const Route = createFileRoute("/companies/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(listQO),
   head: () => {
-    const M = ZONE_META["companies" as any] as any;
+    const M = (ZONE_META as any)["companies"];
     const url = abs("/companies");
     return {
       meta: [
