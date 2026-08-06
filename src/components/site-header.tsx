@@ -59,6 +59,7 @@ export function SiteHeader() {
           <Link to="/kcn-ccn" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-block">KCN/CCN</Link>
           <Link to="/blog" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground md:inline-block">Tin tức</Link>
           <Link to="/pricing" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground lg:inline-block">Bảng giá</Link>
+          <Link to="/language-selector" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">Cải thiện</Link>
           <ThemeToggle />
           {isAdmin && (
             <Link to="/dashboard/admin/edit" className="hidden items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary sm:inline-flex">

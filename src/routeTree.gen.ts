@@ -22,6 +22,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LanguageSelectorRouteImport } from './routes/language-selector'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ApiRouteImport } from './routes/api'
@@ -141,6 +142,11 @@ const PricingRoute = PricingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LanguageSelectorRoute = LanguageSelectorRouteImport.update({
+  id: '/language-selector',
+  path: '/language-selector',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -452,6 +458,7 @@ export interface FileRoutesByFullPath {
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/language-selector': typeof LanguageSelectorRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -521,6 +528,7 @@ export interface FileRoutesByTo {
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/language-selector': typeof LanguageSelectorRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -591,6 +599,7 @@ export interface FileRoutesById {
   '/api': typeof ApiRouteWithChildren
   '/auth': typeof AuthRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/language-selector': typeof LanguageSelectorRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/register': typeof RegisterRoute
@@ -662,6 +671,7 @@ export interface FileRouteTypes {
     | '/api'
     | '/auth'
     | '/forgot-password'
+    | '/language-selector'
     | '/login'
     | '/pricing'
     | '/register'
@@ -731,6 +741,7 @@ export interface FileRouteTypes {
     | '/api'
     | '/auth'
     | '/forgot-password'
+    | '/language-selector'
     | '/login'
     | '/pricing'
     | '/register'
@@ -800,6 +811,7 @@ export interface FileRouteTypes {
     | '/api'
     | '/auth'
     | '/forgot-password'
+    | '/language-selector'
     | '/login'
     | '/pricing'
     | '/register'
@@ -871,6 +883,7 @@ export interface RootRouteChildren {
   ApiRoute: typeof ApiRouteWithChildren
   AuthRoute: typeof AuthRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  LanguageSelectorRoute: typeof LanguageSelectorRoute
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
   RegisterRoute: typeof RegisterRoute
@@ -992,6 +1005,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/language-selector': {
+      id: '/language-selector'
+      path: '/language-selector'
+      fullPath: '/language-selector'
+      preLoaderRoute: typeof LanguageSelectorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -1544,6 +1564,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiRoute: ApiRouteWithChildren,
   AuthRoute: AuthRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  LanguageSelectorRoute: LanguageSelectorRoute,
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
   RegisterRoute: RegisterRoute,
