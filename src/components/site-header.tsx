@@ -54,10 +54,11 @@ export function SiteHeader() {
         </form>
 
         <nav className="ml-auto flex items-center gap-1 text-sm">
-          <Link to="/search" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-block">Tìm kiếm</Link>
-          <Link to="/khu-cong-nghiep" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground md:inline-block">KCN</Link>
-          <Link to="/cum-cong-nghiep" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground md:inline-block">CCN</Link>
-          <Link to="/pricing" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-block">Bảng giá</Link>
+          <Link to="/search" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground lg:inline-block">Tìm kiếm</Link>
+          <Link to="/companies" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-block">Nhà máy</Link>
+          <Link to="/kcn-ccn" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:inline-block">KCN/CCN</Link>
+          <Link to="/blog" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground md:inline-block">Tin tức</Link>
+          <Link to="/pricing" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground lg:inline-block">Bảng giá</Link>
           <ThemeToggle />
           {isAdmin && (
             <Link to="/dashboard/admin/edit" className="hidden items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-secondary sm:inline-flex">
@@ -98,8 +99,9 @@ export function SiteHeader() {
             </div>
             {[
               { to: "/search", label: "Tìm kiếm" },
-              { to: "/khu-cong-nghiep", label: "Khu công nghiệp" },
-              { to: "/cum-cong-nghiep", label: "Cụm công nghiệp" },
+              { to: "/companies", label: "Nhà máy" },
+              { to: "/kcn-ccn", label: "Khu công nghiệp" },
+              { to: "/blog", label: "Tin tức" },
               { to: "/pricing", label: "Bảng giá" },
             ].map((item) => (
               <Link
@@ -164,12 +166,11 @@ export function SiteFooter() {
           <div>
             <div className="text-sm font-semibold">Khám phá</div>
             <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
-              <li><Link to="/search" className="hover:text-foreground">Tìm nhà máy</Link></li>
-              <li><Link to="/industry/$slug" params={{ slug: "cnc" }} className="hover:text-foreground">CNC</Link></li>
-              <li><Link to="/industry/$slug" params={{ slug: "nhua" }} className="hover:text-foreground">Ép nhựa</Link></li>
-              <li><Link to="/industry/$slug" params={{ slug: "dien-tu" }} className="hover:text-foreground">Điện tử SMT</Link></li>
-              <li><Link to="/industry/$slug" params={{ slug: "kim-loai" }} className="hover:text-foreground">Kim loại</Link></li>
-              <li><Link to="/industry/$slug" params={{ slug: "bao-bi" }} className="hover:text-foreground">Bao bì</Link></li>
+              <li><Link to="/companies" className="hover:text-foreground">Danh sách nhà máy</Link></li>
+              <li><Link to="/kcn-ccn" className="hover:text-foreground">Khu công nghiệp</Link></li>
+              <li><Link to="/blog" className="hover:text-foreground">Blog & Tin tức</Link></li>
+              <li><Link to="/pricing" className="hover:text-foreground">Bảng giá dịch vụ</Link></li>
+              <li><Link to="/search" className="hover:text-foreground">Tìm kiếm nâng cao</Link></li>
             </ul>
           </div>
           <div>

@@ -147,7 +147,7 @@ function HomePage() {
             <div className="text-xs font-semibold uppercase tracking-widest text-brand">Ngành sản xuất</div>
             <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Khám phá theo lĩnh vực</h2>
           </div>
-          <Link to="/search" className="hidden text-sm font-semibold text-muted-foreground hover:text-brand sm:inline-flex sm:items-center sm:gap-1">
+          <Link to="/companies" className="hidden text-sm font-semibold text-muted-foreground hover:text-brand sm:inline-flex sm:items-center sm:gap-1">
             Xem tất cả <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
           </Link>
         </div>
@@ -190,7 +190,7 @@ function HomePage() {
               <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Nhà máy vừa cập nhật</h2>
               <p className="mt-1 text-sm text-muted-foreground">Thông tin năng lực và sản phẩm mới nhất.</p>
             </div>
-            <Link to="/search" className="hidden text-sm font-semibold text-muted-foreground hover:text-brand sm:inline-flex sm:items-center sm:gap-1">
+            <Link to="/companies" className="hidden text-sm font-semibold text-muted-foreground hover:text-brand sm:inline-flex sm:items-center sm:gap-1">
               Xem tất cả <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
             </Link>
           </div>
@@ -200,7 +200,7 @@ function HomePage() {
             ))}
           </div>
           <div className="mt-6 text-center sm:hidden">
-            <Link to="/search" className="text-sm font-medium text-brand hover:underline">Xem tất cả nhà máy →</Link>
+            <Link to="/companies" className="text-sm font-medium text-brand hover:underline">Xem tất cả nhà máy →</Link>
           </div>
         </section>
       )}
@@ -267,7 +267,7 @@ function HomePage() {
           ))}
         </div>
         <div className="mt-6 text-center">
-          <Link to="/search" className="text-sm font-medium text-brand hover:underline">Xem tất cả tỉnh thành →</Link>
+          <Link to="/companies" className="text-sm font-medium text-brand hover:underline">Xem tất cả tỉnh thành →</Link>
         </div>
       </section>
 
