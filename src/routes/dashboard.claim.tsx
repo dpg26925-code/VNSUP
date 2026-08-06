@@ -51,7 +51,7 @@ function ClaimPage() {
       company_id: selected.id,
       user_id: userData.user.id,
       requester_name: userData.user.user_metadata?.full_name || userData.user.email?.split("@")[0],
-      requester_email: userData.user.email,
+      requester_email: userData.user.email || "",
       note: note.trim() || null,
       status: "pending",
     });

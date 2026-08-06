@@ -38,6 +38,7 @@ import { Route as PaymentCancelRouteImport } from './routes/payment.cancel'
 import { Route as KhuCongNghiepSlugRouteImport } from './routes/khu-cong-nghiep.$slug'
 import { Route as KcnCcnProvinceRouteImport } from './routes/kcn-ccn.$province'
 import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
+import { Route as DashboardClaimRouteImport } from './routes/dashboard.claim'
 import { Route as CumCongNghiepSlugRouteImport } from './routes/cum-cong-nghiep.$slug'
 import { Route as CompanySlugRouteImport } from './routes/company.$slug'
 import { Route as CompaniesProvinceRouteImport } from './routes/companies.$province'
@@ -216,6 +217,11 @@ const KcnCcnProvinceRoute = KcnCcnProvinceRouteImport.update({
 const IndustrySlugRoute = IndustrySlugRouteImport.update({
   id: '/industry/$slug',
   path: '/industry/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardClaimRoute = DashboardClaimRouteImport.update({
+  id: '/dashboard/claim',
+  path: '/dashboard/claim',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CumCongNghiepSlugRoute = CumCongNghiepSlugRouteImport.update({
@@ -444,6 +450,7 @@ export interface FileRoutesByFullPath {
   '/companies/$province': typeof CompaniesProvinceRoute
   '/company/$slug': typeof CompanySlugRoute
   '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
+  '/dashboard/claim': typeof DashboardClaimRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/kcn-ccn/$province': typeof KcnCcnProvinceRoute
   '/khu-cong-nghiep/$slug': typeof KhuCongNghiepSlugRoute
@@ -508,6 +515,7 @@ export interface FileRoutesByTo {
   '/companies/$province': typeof CompaniesProvinceRoute
   '/company/$slug': typeof CompanySlugRoute
   '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
+  '/dashboard/claim': typeof DashboardClaimRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/kcn-ccn/$province': typeof KcnCcnProvinceRoute
   '/khu-cong-nghiep/$slug': typeof KhuCongNghiepSlugRoute
@@ -575,6 +583,7 @@ export interface FileRoutesById {
   '/companies/$province': typeof CompaniesProvinceRoute
   '/company/$slug': typeof CompanySlugRoute
   '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
+  '/dashboard/claim': typeof DashboardClaimRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/kcn-ccn/$province': typeof KcnCcnProvinceRoute
   '/khu-cong-nghiep/$slug': typeof KhuCongNghiepSlugRoute
@@ -642,6 +651,7 @@ export interface FileRouteTypes {
     | '/companies/$province'
     | '/company/$slug'
     | '/cum-cong-nghiep/$slug'
+    | '/dashboard/claim'
     | '/industry/$slug'
     | '/kcn-ccn/$province'
     | '/khu-cong-nghiep/$slug'
@@ -706,6 +716,7 @@ export interface FileRouteTypes {
     | '/companies/$province'
     | '/company/$slug'
     | '/cum-cong-nghiep/$slug'
+    | '/dashboard/claim'
     | '/industry/$slug'
     | '/kcn-ccn/$province'
     | '/khu-cong-nghiep/$slug'
@@ -772,6 +783,7 @@ export interface FileRouteTypes {
     | '/companies/$province'
     | '/company/$slug'
     | '/cum-cong-nghiep/$slug'
+    | '/dashboard/claim'
     | '/industry/$slug'
     | '/kcn-ccn/$province'
     | '/khu-cong-nghiep/$slug'
@@ -838,6 +850,7 @@ export interface RootRouteChildren {
   CompaniesProvinceRoute: typeof CompaniesProvinceRoute
   CompanySlugRoute: typeof CompanySlugRoute
   CumCongNghiepSlugRoute: typeof CumCongNghiepSlugRoute
+  DashboardClaimRoute: typeof DashboardClaimRoute
   IndustrySlugRoute: typeof IndustrySlugRoute
   KcnCcnProvinceRoute: typeof KcnCcnProvinceRoute
   KhuCongNghiepSlugRoute: typeof KhuCongNghiepSlugRoute
@@ -1054,6 +1067,13 @@ declare module '@tanstack/react-router' {
       path: '/industry/$slug'
       fullPath: '/industry/$slug'
       preLoaderRoute: typeof IndustrySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/claim': {
+      id: '/dashboard/claim'
+      path: '/dashboard/claim'
+      fullPath: '/dashboard/claim'
+      preLoaderRoute: typeof DashboardClaimRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cum-cong-nghiep/$slug': {
@@ -1456,6 +1476,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompaniesProvinceRoute: CompaniesProvinceRoute,
   CompanySlugRoute: CompanySlugRoute,
   CumCongNghiepSlugRoute: CumCongNghiepSlugRoute,
+  DashboardClaimRoute: DashboardClaimRoute,
   IndustrySlugRoute: IndustrySlugRoute,
   KcnCcnProvinceRoute: KcnCcnProvinceRoute,
   KhuCongNghiepSlugRoute: KhuCongNghiepSlugRoute,
