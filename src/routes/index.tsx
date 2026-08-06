@@ -52,6 +52,7 @@ function HomePage() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [featured, setFeatured] = useState<CompanyCardProps[]>([]);
+  const [recent, setRecent] = useState<CompanyCardProps[]>([]);
   const [stats, setStats] = useState({ companies: 0, industries: INDUSTRIES.length, provinces: PROVINCES.length, rating: 0 });
 
   useEffect(() => {
