@@ -7,7 +7,19 @@ export const Route = createFileRoute("/language-selector")({
 });
 
 function LanguageSelectorPage() {
-  const text = "Có. 3 cải thiện chính cần làm trên VNSupplier:\n\n🔴 Cần sửa code/Lovable\n\nCompany profile metadata đang sai — /company/{slug} và /companies/{province}/{slug} đang trả SEO metadata của /search\n\nThiếu canonical/hreflang — /pricing, /auth, /blog, /province/*, /industry/*\n\n🟠 Cần bổ sung data\n\nCompanies thiếu thông tin pháp lý — tax_code, legal_representative, business_registration_number đang null ở phần lớn records\n\nMột số tỉnh còn ít companies — có thể crawl thêm từ Google Maps hoặc web scrapers";
+  const text = `Có. 3 cải thiện chính cần làm trên VNSupplier:
+
+🔴 Cần sửa code/Lovable
+
+Company profile metadata đang sai — /company/{slug} và /companies/{province}/{slug} đang trả SEO metadata của /search
+
+Thiếu canonical/hreflang — /pricing, /auth, /blog, /province/*, /industry/*
+
+🟠 Cần bổ sung data
+
+Companies thiếu thông tin pháp lý — tax_code, legal_representative, business_registration_number đang null ở phần lớn records
+
+Một số tỉnh còn ít companies — có thể crawl thêm từ Google Maps hoặc web scrapers`;
 
   return (
     <div className="min-h-screen bg-background">
