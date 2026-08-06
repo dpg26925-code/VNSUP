@@ -116,7 +116,14 @@ async function loadCompany(slug: string) {
 
 
 export const Route = createFileRoute("/company/$slug")({
-  loader: async ({ params }) => loadCompany(params.slug),
+  loader: async ({ params }) => {
+    try {
+      return await loadCompany(params.slug);
+    } catch (e) {
+      if (typeof e === 'object' && e !== null && 'statusCode' in e) throw e;
+      throw notFound();
+    }
+  },
   head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [{ title: "Không tìm thấy nhà máy" }, { name: "robots", content: "noindex" }] };
     const c = loaderData;

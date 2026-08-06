@@ -9,6 +9,11 @@ export const Route = createFileRoute("/auth")({
       { title: "Đăng nhập | VNSupplier" },
       { name: "description", content: "Đăng nhập hoặc đăng ký tài khoản VNSupplier." },
     ],
+    links: [
+      { rel: "canonical", href: "https://vnsupplier.cloud/auth" },
+      { rel: "alternate", hrefLang: "vi", href: "https://vnsupplier.cloud/auth" },
+      { rel: "alternate", hrefLang: "x-default", href: "https://vnsupplier.cloud/auth" },
+    ],
   }),
   component: AuthPage,
 });

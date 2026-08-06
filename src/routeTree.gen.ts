@@ -15,6 +15,7 @@ import { Route as SitemapZonesDotxmlRouteImport } from './routes/sitemap-zones[.
 import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
 import { Route as SitemapProvincesDotxmlRouteImport } from './routes/sitemap-provinces[.]xml'
 import { Route as SitemapIndustriesDotxmlRouteImport } from './routes/sitemap-industries[.]xml'
+import { Route as SitemapEnDotxmlRouteImport } from './routes/sitemap-en[.]xml'
 import { Route as SitemapCompaniesDotxmlRouteImport } from './routes/sitemap-companies[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -105,6 +106,11 @@ const SitemapProvincesDotxmlRoute = SitemapProvincesDotxmlRouteImport.update({
 const SitemapIndustriesDotxmlRoute = SitemapIndustriesDotxmlRouteImport.update({
   id: '/sitemap-industries.xml',
   path: '/sitemap-industries.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapEnDotxmlRoute = SitemapEnDotxmlRouteImport.update({
+  id: '/sitemap-en.xml',
+  path: '/sitemap-en.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapCompaniesDotxmlRoute = SitemapCompaniesDotxmlRouteImport.update({
@@ -452,6 +458,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/sitemap-companies.xml': typeof SitemapCompaniesDotxmlRoute
+  '/sitemap-en.xml': typeof SitemapEnDotxmlRoute
   '/sitemap-industries.xml': typeof SitemapIndustriesDotxmlRoute
   '/sitemap-provinces.xml': typeof SitemapProvincesDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
@@ -520,6 +527,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/sitemap-companies.xml': typeof SitemapCompaniesDotxmlRoute
+  '/sitemap-en.xml': typeof SitemapEnDotxmlRoute
   '/sitemap-industries.xml': typeof SitemapIndustriesDotxmlRoute
   '/sitemap-provinces.xml': typeof SitemapProvincesDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
@@ -589,6 +597,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/sitemap-companies.xml': typeof SitemapCompaniesDotxmlRoute
+  '/sitemap-en.xml': typeof SitemapEnDotxmlRoute
   '/sitemap-industries.xml': typeof SitemapIndustriesDotxmlRoute
   '/sitemap-provinces.xml': typeof SitemapProvincesDotxmlRoute
   '/sitemap-static.xml': typeof SitemapStaticDotxmlRoute
@@ -659,6 +668,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/sitemap-companies.xml'
+    | '/sitemap-en.xml'
     | '/sitemap-industries.xml'
     | '/sitemap-provinces.xml'
     | '/sitemap-static.xml'
@@ -727,6 +737,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/sitemap-companies.xml'
+    | '/sitemap-en.xml'
     | '/sitemap-industries.xml'
     | '/sitemap-provinces.xml'
     | '/sitemap-static.xml'
@@ -795,6 +806,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/sitemap-companies.xml'
+    | '/sitemap-en.xml'
     | '/sitemap-industries.xml'
     | '/sitemap-provinces.xml'
     | '/sitemap-static.xml'
@@ -865,6 +877,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   SitemapCompaniesDotxmlRoute: typeof SitemapCompaniesDotxmlRoute
+  SitemapEnDotxmlRoute: typeof SitemapEnDotxmlRoute
   SitemapIndustriesDotxmlRoute: typeof SitemapIndustriesDotxmlRoute
   SitemapProvincesDotxmlRoute: typeof SitemapProvincesDotxmlRoute
   SitemapStaticDotxmlRoute: typeof SitemapStaticDotxmlRoute
@@ -930,6 +943,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap-industries.xml'
       fullPath: '/sitemap-industries.xml'
       preLoaderRoute: typeof SitemapIndustriesDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-en.xml': {
+      id: '/sitemap-en.xml'
+      path: '/sitemap-en.xml'
+      fullPath: '/sitemap-en.xml'
+      preLoaderRoute: typeof SitemapEnDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap-companies.xml': {
@@ -1530,6 +1550,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   SitemapCompaniesDotxmlRoute: SitemapCompaniesDotxmlRoute,
+  SitemapEnDotxmlRoute: SitemapEnDotxmlRoute,
   SitemapIndustriesDotxmlRoute: SitemapIndustriesDotxmlRoute,
   SitemapProvincesDotxmlRoute: SitemapProvincesDotxmlRoute,
   SitemapStaticDotxmlRoute: SitemapStaticDotxmlRoute,
