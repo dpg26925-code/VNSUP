@@ -17,7 +17,7 @@ const blogListQO = queryOptions({
     if (articlesError) throw articlesError;
     if (!articles || articles.length === 0) return [];
 
-    const authorIds = [...new Set(articles.map(a => a.author_id).filter(Boolean))];
+    const authorIds = [...new Set(articles.map(a => a.author_id).filter((id): id is string => !!id))];
     
     if (authorIds.length > 0) {
       const { data: profiles, error: profilesError } = await supabase

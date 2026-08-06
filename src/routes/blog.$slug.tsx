@@ -52,6 +52,21 @@ function BlogPostPage() {
   const { slug } = useParams({ from: "/blog/$slug" });
   const { data: post } = useSuspenseQuery(articleQO(slug));
 
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader />
+        <main className="py-24 text-center">
+          <Container>
+            <h1 className="text-2xl font-bold">Không tìm thấy bài viết</h1>
+            <Link to="/blog" className="mt-4 inline-block text-brand hover:underline">Quay lại Blog</Link>
+          </Container>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
