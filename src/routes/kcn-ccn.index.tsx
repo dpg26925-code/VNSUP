@@ -4,16 +4,18 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { SkeletonCard, EmptyState } from "@/components/skeleton-card";
+import { Container, CardGrid, SectionHeader } from "@/components/primitives";
 import { PROVINCES, abs } from "@/lib/factory";
 import { ZONE_META, type ZoneRow } from "@/lib/zones";
+import { cn } from "@/lib/utils";
 import { Building2, MapPin, Ruler, BadgeCheck } from "lucide-react";
 
 const listQO = queryOptions({
-  queryKey: ["industrial-zones-list", "all"],
+  queryKey: ["industrial-zones-list", "all-approved"],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("industrial_zones")
-      .select("id,slug,kind,name,province,area_ha,occupancy_percent,developer,industries,banner_url,is_featured")
+      .select("id,slug,kind,name,province,area_ha,occupancy_percent,developer,industries,banner_url,is_featured,status")
       .eq("status", "approved")
       .order("is_featured", { ascending: false })
       .order("area_ha", { ascending: false });
@@ -67,76 +69,81 @@ function KCNListPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        <nav className="mb-3 text-xs text-muted-foreground">
-          <Link to="/" className="hover:text-foreground">Trang chủ</Link>
-          <span className="mx-1">/</span>
-          <span className="text-foreground">Khu Công Nghiệp</span>
-        </nav>
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold md:text-3xl">Danh sách Khu Công Nghiệp tại Việt Nam</h1>
-            <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{ZONE_META["zones"].listDescription}</p>
-          </div>
-          <div className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{filtered.length} KCN</div>
-        </div>
+      <main className="py-12">
+        <Container>
+          <nav className="mb-8 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <Link to="/" className="hover:text-brand transition-colors">Trang chủ</Link>
+            <span className="text-border">/</span>
+            <span className="text-foreground">Khu Công Nghiệp</span>
+          </nav>
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          <select
-            value={province}
-            onChange={(e) => setProvince(e.target.value)}
-            className="rounded-md border border-border bg-background px-3 py-2 text-sm"
-          >
-            <option value="">Tất cả tỉnh/thành</option>
-            {PROVINCES.map((p) => <option key={p.slug} value={p.name}>{p.name}</option>)}
-          </select>
-        </div>
+          <SectionHeader
+            title="Khu Công Nghiệp & Cụm Công Nghiệp"
+            description={ZONE_META["zones"].listDescription}
+            actions={
+              <div className="flex items-center gap-2 rounded-full bg-brand/5 px-4 py-1.5 text-xs font-bold text-brand ring-1 ring-brand/10">
+                {filtered.length} Khu vực
+              </div>
+            }
+          />
 
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.length === 0 ? (
-            <div className="col-span-full">
-              <EmptyState title="Chưa có KCN" description="Không có KCN nào phù hợp bộ lọc." />
-            </div>
-          ) : filtered.map((z) => (
-            <Link
-              key={z.id}
-              to={z.kind === "ccn" ? "/cum-cong-nghiep/$slug" : "/khu-cong-nghiep/$slug"}
-              params={{ slug: z.slug }}
-              className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-lg"
+          <div className="mb-10 flex flex-wrap gap-3 border-b border-border pb-8">
+            <select
+              value={province}
+              onChange={(e) => setProvince(e.target.value)}
+              className="w-full sm:w-64 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-medium hover:border-brand focus:border-brand focus:ring-1 focus:ring-brand outline-hidden transition-all shadow-xs"
             >
-              <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
-                {z.banner_url ? (
-                  <img src={z.banner_url} alt={z.name} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
-                ) : null}
-                {z.is_featured && (
-                  <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-brand px-2 py-0.5 text-[10px] font-semibold text-brand-foreground">
-                    <BadgeCheck className="h-3 w-3" /> Nổi bật
-                  </span>
-                )}
-              </div>
-              <div className="p-4">
-                <h3 className="line-clamp-2 text-sm font-semibold group-hover:text-brand">{z.name}</h3>
-                <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-muted-foreground">
-                  {z.province && <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" />{z.province}</span>}
-                  {z.area_ha && <span className="inline-flex items-center gap-1"><Ruler className="h-3 w-3" />{z.area_ha} ha</span>}
-                  {typeof z.occupancy_percent === "number" && <span>Lấp đầy {z.occupancy_percent}%</span>}
-                </div>
-                {z.developer && (
-                  <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                    <Building2 className="h-3 w-3" />{z.developer}
+              <option value="">Tất cả tỉnh/thành</option>
+              {PROVINCES.map((p) => <option key={p.slug} value={p.name}>{p.name}</option>)}
+            </select>
+          </div>
+
+          {filtered.length === 0 ? (
+            <EmptyState 
+              title="Chưa có KCN/CCN" 
+              description="Không có khu công nghiệp nào phù hợp với bộ lọc." 
+            />
+          ) : (
+            <CardGrid gap="6">
+              {filtered.map((z) => (
+                <Link
+                  key={z.id}
+                  to={z.kind === "ccn" ? "/cum-cong-nghiep/$slug" : "/khu-cong-nghiep/$slug"}
+                  params={{ slug: z.slug }}
+                  className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg"
+                >
+                  <div className="relative aspect-video overflow-hidden bg-muted">
+                    {z.banner_url ? (
+                      <img src={z.banner_url} alt={z.name} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center">
+                         <Building2 className="h-12 w-12 text-muted-foreground/20" />
+                      </div>
+                    )}
+                    {z.is_featured && (
+                      <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-1 text-[10px] font-bold text-brand-foreground shadow-sm">
+                        <BadgeCheck className="h-3 w-3" /> NỔI BẬT
+                      </span>
+                    )}
                   </div>
-                )}
-                {Array.isArray(z.industries) && z.industries.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    {z.industries.slice(0, 3).map((i) => (
-                      <span key={i} className="rounded-full bg-secondary px-2 py-0.5 text-[10px] text-foreground">{i}</span>
-                    ))}
+                  <div className="p-5">
+                    <h3 className="line-clamp-2 text-base font-bold leading-tight group-hover:text-brand">{z.name}</h3>
+                    <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted-foreground">
+                      {z.province && <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" strokeWidth={1.5} />{z.province}</span>}
+                      {z.area_ha && <span className="inline-flex items-center gap-1.5"><Ruler className="h-3.5 w-3.5" strokeWidth={1.5} />{z.area_ha} ha</span>}
+                    </div>
+                    {z.developer && (
+                      <div className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Building2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                        <span className="truncate">{z.developer}</span>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </Link>
-          ))}
-        </div>
+                </Link>
+              ))}
+            </CardGrid>
+          )}
+        </Container>
       </main>
       <SiteFooter />
     </div>
