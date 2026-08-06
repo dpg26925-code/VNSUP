@@ -7,13 +7,34 @@ import { supabase } from "@/integrations/supabase/client";
 const blogListQO = queryOptions({
   queryKey: ["blog-articles"],
   queryFn: async () => {
-    const { data, error } = await supabase
+    // We fetch articles and profiles separately because the relationship is not defined in the schema cache
+    const { data: articles, error: articlesError } = await supabase
       .from("articles")
-      .select("id,slug,title,excerpt,published_at,cover_image,author:profiles(display_name)")
+      .select("id,slug,title,excerpt,published_at,cover_image,author_id")
       .eq("status", "published")
       .order("published_at", { ascending: false });
-    if (error) throw error;
-    return data ?? [];
+      
+    if (articlesError) throw articlesError;
+    if (!articles || articles.length === 0) return [];
+
+    const authorIds = [...new Set(articles.map(a => a.author_id).filter(Boolean))];
+    
+    if (authorIds.length > 0) {
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id,display_name")
+        .in("id", authorIds);
+        
+      if (!profilesError && profiles) {
+        const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
+        return articles.map(a => ({
+          ...a,
+          author: a.author_id ? profileMap[a.author_id] : null
+        }));
+      }
+    }
+
+    return articles.map(a => ({ ...a, author: null }));
   },
 });
 

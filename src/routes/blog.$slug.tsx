@@ -8,14 +8,31 @@ import { ArrowLeft, Clock, User, Share2 } from "lucide-react";
 const articleQO = (slug: string) => queryOptions({
   queryKey: ["article", slug],
   queryFn: async () => {
-    const { data, error } = await supabase
+    // Fetch article first
+    const { data: article, error: articleError } = await supabase
       .from("articles")
-      .select("*, author:profiles(display_name)")
+      .select("*")
       .eq("slug", slug)
       .eq("status", "published")
       .single();
-    if (error) throw error;
-    return data;
+      
+    if (articleError) throw articleError;
+    if (!article) return null;
+
+    // Fetch author separately if present
+    if (article.author_id) {
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", article.author_id)
+        .maybeSingle();
+        
+      if (!profileError && profile) {
+        return { ...article, author: profile };
+      }
+    }
+
+    return { ...article, author: null };
   },
 });
 
