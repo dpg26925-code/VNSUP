@@ -8,14 +8,31 @@ import { ArrowLeft, Clock, User, Share2 } from "lucide-react";
 const articleQO = (slug: string) => queryOptions({
   queryKey: ["article", slug],
   queryFn: async () => {
-    const { data, error } = await supabase
+    // Fetch article first
+    const { data: article, error: articleError } = await supabase
       .from("articles")
-      .select("*, author:profiles(display_name)")
+      .select("*")
       .eq("slug", slug)
       .eq("status", "published")
       .single();
-    if (error) throw error;
-    return data;
+      
+    if (articleError) throw articleError;
+    if (!article) return null;
+
+    // Fetch author separately if present
+    if (article.author_id) {
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", article.author_id)
+        .maybeSingle();
+        
+      if (!profileError && profile) {
+        return { ...article, author: profile };
+      }
+    }
+
+    return { ...article, author: null };
   },
 });
 
@@ -34,6 +51,21 @@ export const Route = createFileRoute("/blog/$slug")({
 function BlogPostPage() {
   const { slug } = useParams({ from: "/blog/$slug" });
   const { data: post } = useSuspenseQuery(articleQO(slug));
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader />
+        <main className="py-24 text-center">
+          <Container>
+            <h1 className="text-2xl font-bold">Không tìm thấy bài viết</h1>
+            <Link to="/blog" className="mt-4 inline-block text-brand hover:underline">Quay lại Blog</Link>
+          </Container>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
