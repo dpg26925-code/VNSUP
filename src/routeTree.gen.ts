@@ -54,7 +54,6 @@ import { Route as AuthenticatedDashboardLeadsRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardClaimRouteImport } from './routes/_authenticated/dashboard/claim'
 import { Route as AuthenticatedDashboardCategoriesRouteImport } from './routes/_authenticated/dashboard.categories'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
-import { Route as AuthenticatedDashboardAuditLogRouteImport } from './routes/_authenticated/dashboard.audit-log'
 import { Route as AuthenticatedDashboardAuctionRouteImport } from './routes/_authenticated/dashboard.auction'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
 import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
@@ -66,11 +65,12 @@ import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/publi
 import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
 import { Route as AuthenticatedDashboardIntegrationsHermesRouteImport } from './routes/_authenticated/dashboard.integrations.hermes'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
-import { Route as AuthenticatedDashboardAdminZonesRouteImport } from './routes/_authenticated/dashboard.admin.zones'
-import { Route as AuthenticatedDashboardAdminImportRouteImport } from './routes/_authenticated/dashboard.admin.import'
-import { Route as AuthenticatedDashboardAdminEditRouteImport } from './routes/_authenticated/dashboard.admin.edit'
-import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './routes/_authenticated/dashboard.admin.companies'
-import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard.admin.claims'
+import { Route as AuthenticatedDashboardAdminZonesRouteImport } from './routes/_authenticated/dashboard/admin/zones'
+import { Route as AuthenticatedDashboardAdminImportRouteImport } from './routes/_authenticated/dashboard/admin/import'
+import { Route as AuthenticatedDashboardAdminEditRouteImport } from './routes/_authenticated/dashboard/admin/edit'
+import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './routes/_authenticated/dashboard/admin/companies'
+import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard/admin/claims'
+import { Route as AuthenticatedDashboardAdminAuditLogRouteImport } from './routes/_authenticated/dashboard/admin/audit-log'
 import { Route as ApiPublicAdminCompaniesBatchRouteImport } from './routes/api/public/admin/companies.batch'
 import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
 import { Route as ApiPublicAdminAnalyticsSummaryRouteImport } from './routes/api/public/admin/analytics.summary'
@@ -310,12 +310,6 @@ const AuthenticatedDashboardBuyerRoute =
     path: '/buyer',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const AuthenticatedDashboardAuditLogRoute =
-  AuthenticatedDashboardAuditLogRouteImport.update({
-    id: '/audit-log',
-    path: '/audit-log',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
 const AuthenticatedDashboardAuctionRoute =
   AuthenticatedDashboardAuctionRouteImport.update({
     id: '/auction',
@@ -409,6 +403,12 @@ const AuthenticatedDashboardAdminClaimsRoute =
     path: '/admin/claims',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAdminAuditLogRoute =
+  AuthenticatedDashboardAdminAuditLogRouteImport.update({
+    id: '/admin/audit-log',
+    path: '/admin/audit-log',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const ApiPublicAdminCompaniesBatchRoute =
   ApiPublicAdminCompaniesBatchRouteImport.update({
     id: '/public/admin/companies/batch',
@@ -476,7 +476,6 @@ export interface FileRoutesByFullPath {
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
-  '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
   '/dashboard/claim': typeof AuthenticatedDashboardClaimRoute
@@ -488,6 +487,7 @@ export interface FileRoutesByFullPath {
   '/companies/$province/$slug': typeof CompaniesProvinceSlugRoute
   '/kcn-ccn/$province/$slug': typeof KcnCcnProvinceSlugRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/admin/audit-log': typeof AuthenticatedDashboardAdminAuditLogRoute
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
@@ -543,7 +543,6 @@ export interface FileRoutesByTo {
   '/khu-cong-nghiep': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
-  '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
   '/dashboard/claim': typeof AuthenticatedDashboardClaimRoute
@@ -555,6 +554,7 @@ export interface FileRoutesByTo {
   '/companies/$province/$slug': typeof CompaniesProvinceSlugRoute
   '/kcn-ccn/$province/$slug': typeof KcnCcnProvinceSlugRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/admin/audit-log': typeof AuthenticatedDashboardAdminAuditLogRoute
   '/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
@@ -613,7 +613,6 @@ export interface FileRoutesById {
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/_authenticated/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
-  '/_authenticated/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/_authenticated/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
   '/_authenticated/dashboard/claim': typeof AuthenticatedDashboardClaimRoute
@@ -625,6 +624,7 @@ export interface FileRoutesById {
   '/companies/$province/$slug': typeof CompaniesProvinceSlugRoute
   '/kcn-ccn/$province/$slug': typeof KcnCcnProvinceSlugRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/admin/audit-log': typeof AuthenticatedDashboardAdminAuditLogRoute
   '/_authenticated/dashboard/admin/claims': typeof AuthenticatedDashboardAdminClaimsRoute
   '/_authenticated/dashboard/admin/companies': typeof AuthenticatedDashboardAdminCompaniesRoute
   '/_authenticated/dashboard/admin/edit': typeof AuthenticatedDashboardAdminEditRoute
@@ -683,7 +683,6 @@ export interface FileRouteTypes {
     | '/khu-cong-nghiep/'
     | '/dashboard/analytics'
     | '/dashboard/auction'
-    | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
     | '/dashboard/claim'
@@ -695,6 +694,7 @@ export interface FileRouteTypes {
     | '/companies/$province/$slug'
     | '/kcn-ccn/$province/$slug'
     | '/dashboard/'
+    | '/dashboard/admin/audit-log'
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
     | '/dashboard/admin/edit'
@@ -750,7 +750,6 @@ export interface FileRouteTypes {
     | '/khu-cong-nghiep'
     | '/dashboard/analytics'
     | '/dashboard/auction'
-    | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
     | '/dashboard/claim'
@@ -762,6 +761,7 @@ export interface FileRouteTypes {
     | '/companies/$province/$slug'
     | '/kcn-ccn/$province/$slug'
     | '/dashboard'
+    | '/dashboard/admin/audit-log'
     | '/dashboard/admin/claims'
     | '/dashboard/admin/companies'
     | '/dashboard/admin/edit'
@@ -819,7 +819,6 @@ export interface FileRouteTypes {
     | '/khu-cong-nghiep/'
     | '/_authenticated/dashboard/analytics'
     | '/_authenticated/dashboard/auction'
-    | '/_authenticated/dashboard/audit-log'
     | '/_authenticated/dashboard/buyer'
     | '/_authenticated/dashboard/categories'
     | '/_authenticated/dashboard/claim'
@@ -831,6 +830,7 @@ export interface FileRouteTypes {
     | '/companies/$province/$slug'
     | '/kcn-ccn/$province/$slug'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/admin/audit-log'
     | '/_authenticated/dashboard/admin/claims'
     | '/_authenticated/dashboard/admin/companies'
     | '/_authenticated/dashboard/admin/edit'
@@ -1205,13 +1205,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBuyerRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/audit-log': {
-      id: '/_authenticated/dashboard/audit-log'
-      path: '/audit-log'
-      fullPath: '/dashboard/audit-log'
-      preLoaderRoute: typeof AuthenticatedDashboardAuditLogRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
     '/_authenticated/dashboard/auction': {
       id: '/_authenticated/dashboard/auction'
       path: '/auction'
@@ -1324,6 +1317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminClaimsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/admin/audit-log': {
+      id: '/_authenticated/dashboard/admin/audit-log'
+      path: '/admin/audit-log'
+      fullPath: '/dashboard/admin/audit-log'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminAuditLogRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/api/public/admin/companies/batch': {
       id: '/api/public/admin/companies/batch'
       path: '/public/admin/companies/batch'
@@ -1365,7 +1365,6 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAnalyticsRoute: typeof AuthenticatedDashboardAnalyticsRoute
   AuthenticatedDashboardAuctionRoute: typeof AuthenticatedDashboardAuctionRoute
-  AuthenticatedDashboardAuditLogRoute: typeof AuthenticatedDashboardAuditLogRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
   AuthenticatedDashboardCategoriesRoute: typeof AuthenticatedDashboardCategoriesRoute
   AuthenticatedDashboardClaimRoute: typeof AuthenticatedDashboardClaimRoute
@@ -1375,6 +1374,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardSubmitCompanyRoute: typeof AuthenticatedDashboardSubmitCompanyRoute
   AuthenticatedDashboardSubscriptionsRoute: typeof AuthenticatedDashboardSubscriptionsRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedDashboardAdminAuditLogRoute: typeof AuthenticatedDashboardAdminAuditLogRoute
   AuthenticatedDashboardAdminClaimsRoute: typeof AuthenticatedDashboardAdminClaimsRoute
   AuthenticatedDashboardAdminCompaniesRoute: typeof AuthenticatedDashboardAdminCompaniesRoute
   AuthenticatedDashboardAdminEditRoute: typeof AuthenticatedDashboardAdminEditRoute
@@ -1390,7 +1390,6 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAnalyticsRoute: AuthenticatedDashboardAnalyticsRoute,
     AuthenticatedDashboardAuctionRoute: AuthenticatedDashboardAuctionRoute,
-    AuthenticatedDashboardAuditLogRoute: AuthenticatedDashboardAuditLogRoute,
     AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
     AuthenticatedDashboardCategoriesRoute:
       AuthenticatedDashboardCategoriesRoute,
@@ -1404,6 +1403,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardSubscriptionsRoute:
       AuthenticatedDashboardSubscriptionsRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+    AuthenticatedDashboardAdminAuditLogRoute:
+      AuthenticatedDashboardAdminAuditLogRoute,
     AuthenticatedDashboardAdminClaimsRoute:
       AuthenticatedDashboardAdminClaimsRoute,
     AuthenticatedDashboardAdminCompaniesRoute:
@@ -1554,3 +1555,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
