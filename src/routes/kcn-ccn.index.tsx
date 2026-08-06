@@ -11,11 +11,11 @@ import { cn } from "@/lib/utils";
 import { Building2, MapPin, Ruler, BadgeCheck } from "lucide-react";
 
 const listQO = queryOptions({
-  queryKey: ["industrial-zones-list", "all"],
+  queryKey: ["industrial-zones-list", "all-approved"],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("industrial_zones")
-      .select("id,slug,kind,name,province,area_ha,occupancy_percent,developer,industries,banner_url,is_featured")
+      .select("id,slug,kind,name,province,area_ha,occupancy_percent,developer,industries,banner_url,is_featured,status")
       .eq("status", "approved")
       .order("is_featured", { ascending: false })
       .order("area_ha", { ascending: false });

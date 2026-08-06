@@ -12,13 +12,14 @@ import { cn } from "@/lib/utils";
 import { Building2, MapPin, BadgeCheck } from "lucide-react";
 
 const listQO = queryOptions({
-  queryKey: ["companies-list"],
+  queryKey: ["companies-list", "all-approved"],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("companies")
-      .select("id,slug,name,province,industry,employee_range,logo_url,featured,verified,status")
+      .select("id,slug,name,province,industry,employee_range,logo_url,featured,verified,status,ai_summary,capabilities")
       .eq("status", "approved")
       .order("featured", { ascending: false })
+      .order("updated_at", { ascending: false })
       .limit(100);
     if (error) throw error;
     return data ?? [];
