@@ -10,7 +10,7 @@ const articleQO = (slug: string) => queryOptions({
   queryFn: async () => {
     const { data, error } = await supabase
       .from("articles")
-      .select("*, author:profiles(full_name)")
+      .select("*, author:profiles(display_name)")
       .eq("slug", slug)
       .eq("status", "published")
       .single();
@@ -53,7 +53,7 @@ function BlogPostPage() {
               </div>
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                {(post.author as any)?.full_name || "Ban biên tập"}
+                {(post.author as any)?.display_name || "Ban biên tập"}
               </div>
               <button className="flex items-center gap-2 hover:text-brand">
                 <Share2 className="h-4 w-4" /> Chia sẻ
