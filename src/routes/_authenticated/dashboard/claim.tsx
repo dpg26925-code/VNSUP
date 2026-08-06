@@ -6,7 +6,7 @@ import { Container } from "@/components/primitives";
 import { Search, Building2, CheckCircle, Clock, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/dashboard/claim")({
+export const Route = createFileRoute("/_authenticated/dashboard/claim")({
   head: () => ({ meta: [{ title: "Xác thực doanh nghiệp | VNSupplier" }, { name: "robots", content: "noindex" }] }),
   component: ClaimPage,
 });

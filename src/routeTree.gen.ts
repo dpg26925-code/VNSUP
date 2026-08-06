@@ -38,7 +38,6 @@ import { Route as PaymentCancelRouteImport } from './routes/payment.cancel'
 import { Route as KhuCongNghiepSlugRouteImport } from './routes/khu-cong-nghiep.$slug'
 import { Route as KcnCcnProvinceRouteImport } from './routes/kcn-ccn.$province'
 import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
-import { Route as DashboardClaimRouteImport } from './routes/dashboard/claim'
 import { Route as CumCongNghiepSlugRouteImport } from './routes/cum-cong-nghiep.$slug'
 import { Route as CompanySlugRouteImport } from './routes/company.$slug'
 import { Route as CompaniesProvinceRouteImport } from './routes/companies.$province'
@@ -52,6 +51,7 @@ import { Route as AuthenticatedDashboardSubmitCompanyRouteImport } from './route
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
 import { Route as AuthenticatedDashboardMyCompaniesRouteImport } from './routes/_authenticated/dashboard.my-companies'
 import { Route as AuthenticatedDashboardLeadsRouteImport } from './routes/_authenticated/dashboard.leads'
+import { Route as AuthenticatedDashboardClaimRouteImport } from './routes/_authenticated/dashboard/claim'
 import { Route as AuthenticatedDashboardCategoriesRouteImport } from './routes/_authenticated/dashboard.categories'
 import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
 import { Route as AuthenticatedDashboardAuditLogRouteImport } from './routes/_authenticated/dashboard.audit-log'
@@ -221,11 +221,6 @@ const IndustrySlugRoute = IndustrySlugRouteImport.update({
   path: '/industry/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardClaimRoute = DashboardClaimRouteImport.update({
-  id: '/dashboard/claim',
-  path: '/dashboard/claim',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CumCongNghiepSlugRoute = CumCongNghiepSlugRouteImport.update({
   id: '/cum-cong-nghiep/$slug',
   path: '/cum-cong-nghiep/$slug',
@@ -295,6 +290,12 @@ const AuthenticatedDashboardLeadsRoute =
   AuthenticatedDashboardLeadsRouteImport.update({
     id: '/leads',
     path: '/leads',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardClaimRoute =
+  AuthenticatedDashboardClaimRouteImport.update({
+    id: '/claim',
+    path: '/claim',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardCategoriesRoute =
@@ -462,7 +463,6 @@ export interface FileRoutesByFullPath {
   '/companies/$province': typeof CompaniesProvinceRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
-  '/dashboard/claim': typeof DashboardClaimRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/kcn-ccn/$province': typeof KcnCcnProvinceRouteWithChildren
   '/khu-cong-nghiep/$slug': typeof KhuCongNghiepSlugRoute
@@ -479,6 +479,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
+  '/dashboard/claim': typeof AuthenticatedDashboardClaimRoute
   '/dashboard/leads': typeof AuthenticatedDashboardLeadsRoute
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
@@ -529,7 +530,6 @@ export interface FileRoutesByTo {
   '/companies/$province': typeof CompaniesProvinceRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
-  '/dashboard/claim': typeof DashboardClaimRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/kcn-ccn/$province': typeof KcnCcnProvinceRouteWithChildren
   '/khu-cong-nghiep/$slug': typeof KhuCongNghiepSlugRoute
@@ -546,6 +546,7 @@ export interface FileRoutesByTo {
   '/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
+  '/dashboard/claim': typeof AuthenticatedDashboardClaimRoute
   '/dashboard/leads': typeof AuthenticatedDashboardLeadsRoute
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
@@ -599,7 +600,6 @@ export interface FileRoutesById {
   '/companies/$province': typeof CompaniesProvinceRouteWithChildren
   '/company/$slug': typeof CompanySlugRoute
   '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
-  '/dashboard/claim': typeof DashboardClaimRoute
   '/industry/$slug': typeof IndustrySlugRoute
   '/kcn-ccn/$province': typeof KcnCcnProvinceRouteWithChildren
   '/khu-cong-nghiep/$slug': typeof KhuCongNghiepSlugRoute
@@ -616,6 +616,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/audit-log': typeof AuthenticatedDashboardAuditLogRoute
   '/_authenticated/dashboard/buyer': typeof AuthenticatedDashboardBuyerRoute
   '/_authenticated/dashboard/categories': typeof AuthenticatedDashboardCategoriesRoute
+  '/_authenticated/dashboard/claim': typeof AuthenticatedDashboardClaimRoute
   '/_authenticated/dashboard/leads': typeof AuthenticatedDashboardLeadsRoute
   '/_authenticated/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
@@ -669,7 +670,6 @@ export interface FileRouteTypes {
     | '/companies/$province'
     | '/company/$slug'
     | '/cum-cong-nghiep/$slug'
-    | '/dashboard/claim'
     | '/industry/$slug'
     | '/kcn-ccn/$province'
     | '/khu-cong-nghiep/$slug'
@@ -686,6 +686,7 @@ export interface FileRouteTypes {
     | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
+    | '/dashboard/claim'
     | '/dashboard/leads'
     | '/dashboard/my-companies'
     | '/dashboard/owner'
@@ -736,7 +737,6 @@ export interface FileRouteTypes {
     | '/companies/$province'
     | '/company/$slug'
     | '/cum-cong-nghiep/$slug'
-    | '/dashboard/claim'
     | '/industry/$slug'
     | '/kcn-ccn/$province'
     | '/khu-cong-nghiep/$slug'
@@ -753,6 +753,7 @@ export interface FileRouteTypes {
     | '/dashboard/audit-log'
     | '/dashboard/buyer'
     | '/dashboard/categories'
+    | '/dashboard/claim'
     | '/dashboard/leads'
     | '/dashboard/my-companies'
     | '/dashboard/owner'
@@ -805,7 +806,6 @@ export interface FileRouteTypes {
     | '/companies/$province'
     | '/company/$slug'
     | '/cum-cong-nghiep/$slug'
-    | '/dashboard/claim'
     | '/industry/$slug'
     | '/kcn-ccn/$province'
     | '/khu-cong-nghiep/$slug'
@@ -822,6 +822,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/audit-log'
     | '/_authenticated/dashboard/buyer'
     | '/_authenticated/dashboard/categories'
+    | '/_authenticated/dashboard/claim'
     | '/_authenticated/dashboard/leads'
     | '/_authenticated/dashboard/my-companies'
     | '/_authenticated/dashboard/owner'
@@ -874,7 +875,6 @@ export interface RootRouteChildren {
   CompaniesProvinceRoute: typeof CompaniesProvinceRouteWithChildren
   CompanySlugRoute: typeof CompanySlugRoute
   CumCongNghiepSlugRoute: typeof CumCongNghiepSlugRoute
-  DashboardClaimRoute: typeof DashboardClaimRoute
   IndustrySlugRoute: typeof IndustrySlugRoute
   KcnCcnProvinceRoute: typeof KcnCcnProvinceRouteWithChildren
   KhuCongNghiepSlugRoute: typeof KhuCongNghiepSlugRoute
@@ -1093,13 +1093,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndustrySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/claim': {
-      id: '/dashboard/claim'
-      path: '/dashboard/claim'
-      fullPath: '/dashboard/claim'
-      preLoaderRoute: typeof DashboardClaimRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/cum-cong-nghiep/$slug': {
       id: '/cum-cong-nghiep/$slug'
       path: '/cum-cong-nghiep/$slug'
@@ -1189,6 +1182,13 @@ declare module '@tanstack/react-router' {
       path: '/leads'
       fullPath: '/dashboard/leads'
       preLoaderRoute: typeof AuthenticatedDashboardLeadsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/claim': {
+      id: '/_authenticated/dashboard/claim'
+      path: '/claim'
+      fullPath: '/dashboard/claim'
+      preLoaderRoute: typeof AuthenticatedDashboardClaimRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/categories': {
@@ -1368,6 +1368,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAuditLogRoute: typeof AuthenticatedDashboardAuditLogRoute
   AuthenticatedDashboardBuyerRoute: typeof AuthenticatedDashboardBuyerRoute
   AuthenticatedDashboardCategoriesRoute: typeof AuthenticatedDashboardCategoriesRoute
+  AuthenticatedDashboardClaimRoute: typeof AuthenticatedDashboardClaimRoute
   AuthenticatedDashboardLeadsRoute: typeof AuthenticatedDashboardLeadsRoute
   AuthenticatedDashboardMyCompaniesRoute: typeof AuthenticatedDashboardMyCompaniesRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
@@ -1393,6 +1394,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardBuyerRoute: AuthenticatedDashboardBuyerRoute,
     AuthenticatedDashboardCategoriesRoute:
       AuthenticatedDashboardCategoriesRoute,
+    AuthenticatedDashboardClaimRoute: AuthenticatedDashboardClaimRoute,
     AuthenticatedDashboardLeadsRoute: AuthenticatedDashboardLeadsRoute,
     AuthenticatedDashboardMyCompaniesRoute:
       AuthenticatedDashboardMyCompaniesRoute,
@@ -1537,7 +1539,6 @@ const rootRouteChildren: RootRouteChildren = {
   CompaniesProvinceRoute: CompaniesProvinceRouteWithChildren,
   CompanySlugRoute: CompanySlugRoute,
   CumCongNghiepSlugRoute: CumCongNghiepSlugRoute,
-  DashboardClaimRoute: DashboardClaimRoute,
   IndustrySlugRoute: IndustrySlugRoute,
   KcnCcnProvinceRoute: KcnCcnProvinceRouteWithChildren,
   KhuCongNghiepSlugRoute: KhuCongNghiepSlugRoute,
