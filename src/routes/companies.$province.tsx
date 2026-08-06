@@ -5,15 +5,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { EmptyState } from "@/components/skeleton-card";
 import { PROVINCES, provinceBySlug } from "@/lib/factory";
-import { Building2, MapPin, BadgeCheck } from "lucide-react";
+import { Building2, MapPin, BadgeCheck, Star } from "lucide-react";
 import { Container } from "@/components/primitives";
+import { CompanyCard } from "@/components/company-card";
 
 const provinceCompaniesQO = (provinceName: string) => queryOptions({
   queryKey: ["companies-list", provinceName],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("companies")
-      .select("id,slug,name,province,industry,employee_range,logo_url,featured,verified,status")
+      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("status", "approved")
       .eq("province", provinceName)
       .order("featured", { ascending: false });
@@ -64,37 +65,13 @@ function ProvinceCompaniesPage() {
             <div className="text-sm text-muted-foreground">{rows.length} kết quả</div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {rows.length === 0 ? (
               <div className="col-span-full">
                 <EmptyState title="Chưa có dữ liệu" description={`Chúng tôi chưa có dữ liệu doanh nghiệp tại ${p?.name || slug}.`} />
               </div>
             ) : (
-              rows.map((c: any) => (
-                <Link
-                  key={c.id}
-                  to="/company/$slug"
-                  params={{ slug: c.slug }}
-                  className="group overflow-hidden rounded-2xl border bg-card transition hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <div className="relative aspect-video overflow-hidden bg-muted">
-                    {c.logo_url ? (
-                      <img src={c.logo_url} alt={c.name} className="h-full w-full object-contain p-4 transition group-hover:scale-105" />
-                    ) : (
-                      <div className="flex h-full items-center justify-center">
-                        <Building2 className="h-12 w-12 text-muted-foreground/20" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-5">
-                    <h3 className="line-clamp-2 font-bold group-hover:text-brand">{c.name}</h3>
-                    <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {c.province}</span>
-                      <span className="rounded-full bg-secondary px-2 py-0.5">{c.industry}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))
+              rows.map((c: any) => <CompanyCard key={c.slug} {...c} />)
             )}
           </div>
         </Container>
