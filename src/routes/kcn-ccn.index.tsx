@@ -25,8 +25,8 @@ const listQO = queryOptions({
 export const Route = createFileRoute("/kcn-ccn/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(listQO),
   head: () => {
-    const M = ZONE_META["zones"];
-    const url = zoneAbs("zones");
+    const M = ZONE_META["zones" as any] as any;
+    const url = abs("/kcn-ccn");
     return {
       meta: [
         { title: M.listTitle },

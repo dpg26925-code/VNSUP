@@ -25,8 +25,8 @@ const listQO = queryOptions({
 export const Route = createFileRoute("/companies/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(listQO),
   head: () => {
-    const M = ZONE_META["companies"];
-    const url = zoneAbs("companies");
+    const M = ZONE_META["companies" as any] as any;
+    const url = abs("/companies");
     return {
       meta: [
         { title: M.listTitle },

@@ -9,7 +9,7 @@ const blogListQO = queryOptions({
   queryFn: async () => {
     const { data, error } = await supabase
       .from("articles")
-      .select("id,slug,title,excerpt,published_at,image_url,author:profiles(full_name)")
+      .select("id,slug,title,excerpt,published_at,cover_image,author:profiles(full_name)")
       .eq("status", "published")
       .order("published_at", { ascending: false });
     if (error) throw error;
@@ -50,8 +50,8 @@ function BlogListPage() {
                 className="group flex flex-col overflow-hidden rounded-2xl border bg-card transition hover:shadow-lg"
               >
                 <div className="aspect-video overflow-hidden bg-muted">
-                  {post.image_url ? (
-                    <img src={post.image_url} alt={post.title} className="h-full w-full object-cover transition group-hover:scale-105" />
+                  {post.cover_image ? (
+                    <img src={post.cover_image} alt={post.title} className="h-full w-full object-cover transition group-hover:scale-105" />
                   ) : (
                     <div className="flex h-full items-center justify-center text-muted-foreground">No image</div>
                   )}

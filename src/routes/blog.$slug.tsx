@@ -23,9 +23,9 @@ export const Route = createFileRoute("/blog/$slug")({
   loader: ({ context, params }) => context.queryClient.ensureQueryData(articleQO(params.slug)),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title} | VNSupplier Blog` },
-      { name: "description", content: loaderData?.excerpt },
-      { property: "og:image", content: loaderData?.image_url },
+      { title: `${loaderData?.title || ""} | VNSupplier Blog` },
+      { name: "description", content: loaderData?.excerpt || "" },
+      { property: "og:image", content: loaderData?.cover_image || "" },
     ],
   }),
   component: BlogPostPage,
@@ -49,7 +49,7 @@ function BlogPostPage() {
             <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                {new Date(post.published_at).toLocaleDateString("vi-VN")}
+                {post.published_at ? new Date(post.published_at).toLocaleDateString("vi-VN") : "N/A"}
               </div>
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4" />
@@ -61,9 +61,9 @@ function BlogPostPage() {
             </div>
           </header>
 
-          {post.image_url && (
+          {post.cover_image && (
             <div className="mb-12 aspect-video overflow-hidden rounded-3xl bg-muted shadow-xl">
-              <img src={post.image_url} alt={post.title} className="h-full w-full object-cover" />
+              <img src={post.cover_image} alt={post.title} className="h-full w-full object-cover" />
             </div>
           )}
 
