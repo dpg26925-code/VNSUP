@@ -37,7 +37,7 @@ const items = [
   { title: "Sửa chi tiết DN", url: "/dashboard/admin/edit", icon: Building2 },
   { title: "Leads", url: "/dashboard/leads", icon: Inbox },
   { title: "Thống kê", url: "/dashboard/analytics", icon: BarChart3 },
-  { title: "Nhật ký", url: "/dashboard/audit-log", icon: ScrollText },
+  { title: "Nhật ký", url: "/dashboard/admin/audit-log", icon: ScrollText },
   { title: "Import hàng loạt", url: "/dashboard/admin/import", icon: Plug },
   { title: "Đấu giá Featured", url: "/dashboard/auction", icon: Gavel },
   { title: "Tích hợp Hermes", url: "/dashboard/integrations/hermes", icon: Plug },

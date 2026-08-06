@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/_authenticated/dashboard/audit-log")({
+export const Route = createFileRoute("/_authenticated/dashboard/admin/audit-log")({
   head: () => ({ meta: [{ title: "Nhật ký | VNSupplier Admin" }, { name: "robots", content: "noindex" }] }),
   component: AuditLogPage,
 });
