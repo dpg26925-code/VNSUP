@@ -4,8 +4,11 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { SkeletonCard, EmptyState } from "@/components/skeleton-card";
+import { Container, CardGrid, SectionHeader } from "@/components/primitives";
+import { CompanyCard } from "@/components/company-card";
 import { PROVINCES, abs } from "@/lib/factory";
 import { ZONE_META, type ZoneRow } from "@/lib/zones";
+import { cn } from "@/lib/utils";
 import { Building2, MapPin, BadgeCheck } from "lucide-react";
 
 const listQO = queryOptions({
