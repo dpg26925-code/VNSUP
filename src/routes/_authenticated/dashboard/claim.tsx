@@ -32,7 +32,7 @@ function ClaimPage() {
     if (error) {
       toast.error("Lỗi tìm kiếm");
     } else {
-      setResults(data || []);
+      setResults((data ?? []) as any[]);
     }
     setLoading(false);
   };
