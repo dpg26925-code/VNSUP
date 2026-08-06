@@ -6,7 +6,7 @@ import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { EmptyState } from "@/components/skeleton-card";
 import { PROVINCES, provinceBySlug } from "@/lib/factory";
 import { Building2, MapPin, BadgeCheck, Star } from "lucide-react";
-import { Container } from "@/components/primitives";
+import { Container, CardGrid, SectionHeader } from "@/components/primitives";
 import { CompanyCard } from "@/components/company-card";
 
 const provinceCompaniesQO = (provinceName: string) => queryOptions({
@@ -52,26 +52,34 @@ function ProvinceCompaniesPage() {
       <SiteHeader />
       <main className="py-12">
         <Container>
-          <nav className="mb-6 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-foreground">Trang chủ</Link>
-            <span className="mx-2">/</span>
-            <Link to="/companies" className="hover:text-foreground">Doanh nghiệp</Link>
-            <span className="mx-2">/</span>
+          <nav className="mb-8 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <Link to="/" className="hover:text-brand transition-colors">Trang chủ</Link>
+            <span className="text-border">/</span>
+            <Link to="/companies" className="hover:text-brand transition-colors">Doanh nghiệp</Link>
+            <span className="text-border">/</span>
             <span className="text-foreground">{p?.name || slug}</span>
           </nav>
 
-          <div className="mb-10 flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Doanh nghiệp tại {p?.name || slug}</h1>
-            <div className="text-sm text-muted-foreground">{rows.length} kết quả</div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {rows.length === 0 ? (
-              <div className="col-span-full">
-                <EmptyState title="Chưa có dữ liệu" description={`Chúng tôi chưa có dữ liệu doanh nghiệp tại ${p?.name || slug}.`} />
+          <SectionHeader
+            title={`Doanh nghiệp tại ${p?.name || slug}`}
+            description={`Danh sách các nhà máy và công ty sản xuất uy tín tọa lạc tại khu vực ${p?.name || slug}.`}
+            actions={
+              <div className="flex items-center gap-2 rounded-full bg-brand/5 px-4 py-1.5 text-xs font-bold text-brand ring-1 ring-brand/10">
+                {rows.length} Doanh nghiệp
               </div>
+            }
+          />
+
+          <div className="mt-10">
+            {rows.length === 0 ? (
+              <EmptyState 
+                title="Chưa có dữ liệu" 
+                description={`Chúng tôi đang cập nhật thêm dữ liệu doanh nghiệp tại ${p?.name || slug}.`} 
+              />
             ) : (
-              rows.map((c: any) => <CompanyCard key={c.slug} {...c} />)
+              <CardGrid gap="6">
+                {rows.map((c: any) => <CompanyCard key={c.slug} {...c} />)}
+              </CardGrid>
             )}
           </div>
         </Container>
