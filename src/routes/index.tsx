@@ -60,8 +60,15 @@ function HomePage() {
       .from("companies")
       .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("featured", true)
-      .limit(6)
+      .limit(12)
       .then(({ data }) => setFeatured((data ?? []) as CompanyCardProps[]));
+    supabase
+      .from("companies")
+      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
+      .eq("status", "approved")
+      .order("updated_at", { ascending: false })
+      .limit(8)
+      .then(({ data }) => setRecent((data ?? []) as CompanyCardProps[]));
     supabase.from("companies").select("id", { count: "exact", head: true })
       .then(({ count }) => setStats((s) => ({ ...s, companies: count ?? 0 })));
     supabase.from("company_reviews").select("rating").eq("status", "published").limit(1000)
