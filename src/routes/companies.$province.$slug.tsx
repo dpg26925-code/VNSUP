@@ -33,7 +33,7 @@ export const Route = createFileRoute("/companies/$province/$slug")({
     return {
       meta: [
         { title: `${loaderData.name} | VNSupplier` },
-        { name: "description", content: loaderData.ai_summary },
+        { name: "description", content: loaderData.ai_summary || "" },
       ],
     };
   },
