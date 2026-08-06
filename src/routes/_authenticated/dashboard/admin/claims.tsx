@@ -66,13 +66,31 @@ function AdminClaimsPage() {
     if (r.companies?.submitted_by && r.companies.submitted_by !== r.user_id) {
       if (!confirm("Doanh nghiệp này đã có chủ sở hữu khác. Duyệt sẽ thay chủ sở hữu. Tiếp tục?")) return;
     }
-    const { error } = await supabase.from("company_claims").update({ status: "approved" }).eq("id", r.id);
+    
+    // Update company owner
+    if (r.company_id && r.user_id) {
+      const { error: updateErr } = await supabase
+        .from("companies")
+        .update({ submitted_by: r.user_id })
+        .eq("id", r.company_id);
+      if (updateErr) { alert(`Lỗi cập nhật chủ sở hữu: ${updateErr.message}`); return; }
+    }
+
+    const { error } = await supabase.from("company_claims").update({ 
+      status: "approved",
+      reviewed_at: new Date().toISOString()
+    }).eq("id", r.id);
+    
     if (error) { alert(error.message); return; }
     load(); loadStats();
   };
 
   const reject = async (r: Row) => {
-    const { error } = await supabase.from("company_claims").update({ status: "rejected" }).eq("id", r.id);
+    const reason = prompt("Lý do từ chối (tùy chọn):") || "";
+    const { error } = await supabase.from("company_claims").update({ 
+      status: "rejected",
+      reviewed_at: new Date().toISOString()
+    }).eq("id", r.id);
     if (error) { alert(error.message); return; }
     load(); loadStats();
   };

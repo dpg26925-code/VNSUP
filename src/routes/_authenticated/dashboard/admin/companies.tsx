@@ -80,12 +80,21 @@ function AdminCompaniesPage() {
   const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
 
   const approve = async (id: string) => {
-    await supabase.from("companies").update({ status: "approved", rejection_reason: null }).eq("id", id);
+    await supabase.from("companies").update({ 
+      status: "approved", 
+      rejection_reason: null,
+      verified: true // Auto-verify on admin approval if coming from pending
+    }).eq("id", id);
     load(); loadStats();
   };
   const doReject = async () => {
     if (!rejectFor) return;
-    await supabase.from("companies").update({ status: "rejected", rejection_reason: rejectReason.trim() || null }).eq("id", rejectFor.id);
+    await supabase.from("companies").update({ 
+      status: "rejected", 
+      rejection_reason: rejectReason.trim() || null,
+      verified: false,
+      featured: false
+    }).eq("id", rejectFor.id);
     setRejectFor(null); setRejectReason("");
     load(); loadStats();
   };
@@ -203,7 +212,7 @@ function AdminCompaniesPage() {
                       </Link>
                       {r.status === "pending" && (
                         <>
-                          <button onClick={() => approve(r.id)} title="Duyệt" className="rounded p-1.5 text-success hover:bg-success/10"><Check className="h-4 w-4" /></button>
+                          <button onClick={() => approve(r.id)} title="Duyệt & Xác thực" className="rounded p-1.5 text-success hover:bg-success/10"><Check className="h-4 w-4" /></button>
                           <button onClick={() => { setRejectFor(r); setRejectReason(""); }} title="Từ chối" className="rounded p-1.5 text-destructive hover:bg-destructive/10"><XCircle className="h-4 w-4" /></button>
                         </>
                       )}
@@ -211,7 +220,19 @@ function AdminCompaniesPage() {
                         <button onClick={() => approve(r.id)} title="Khôi phục & duyệt" className="rounded p-1.5 text-success hover:bg-success/10"><Check className="h-4 w-4" /></button>
                       )}
                       {r.status === "approved" && (
-                        <button onClick={() => { setRejectFor(r); setRejectReason(""); }} title="Từ chối" className="rounded p-1.5 text-destructive hover:bg-destructive/10"><XCircle className="h-4 w-4" /></button>
+                        <>
+                          <button 
+                            onClick={async () => {
+                              await supabase.from("companies").update({ featured: !r.featured }).eq("id", r.id);
+                              load();
+                            }} 
+                            title={r.featured ? "Bỏ nổi bật" : "Đánh dấu nổi bật"} 
+                            className={`rounded p-1.5 ${r.featured ? 'text-brand' : 'text-muted-foreground'} hover:bg-brand/10`}
+                          >
+                            <Building2 className="h-4 w-4" />
+                          </button>
+                          <button onClick={() => { setRejectFor(r); setRejectReason(""); }} title="Gỡ niêm yết (Từ chối)" className="rounded p-1.5 text-destructive hover:bg-destructive/10"><XCircle className="h-4 w-4" /></button>
+                        </>
                       )}
                     </div>
                   </td>
