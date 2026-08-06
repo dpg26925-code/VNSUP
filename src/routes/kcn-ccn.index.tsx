@@ -23,7 +23,7 @@ const listQO = queryOptions({
   },
 });
 
-export const Route = createFileRoute("/zones-ccn/")({
+export const Route = createFileRoute("/kcn-ccn/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(listQO),
   head: () => {
     const M = ZONE_META["zones"];
