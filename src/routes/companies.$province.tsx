@@ -32,10 +32,16 @@ export const Route = createFileRoute("/companies/$province")({
   head: ({ params }) => {
     const p = provinceBySlug(params.province);
     const title = `Doanh nghiệp sản xuất tại ${p?.name || params.province} | VNSupplier`;
+    const url = `https://vnsupplier.cloud/companies/${params.province}`;
     return {
       meta: [
         { title },
         { name: "description", content: `Danh sách các nhà máy và công ty sản xuất tại ${p?.name || params.province}. Tìm kiếm đối tác sản xuất uy tín.` },
+      ],
+      links: [
+        { rel: "canonical", href: url },
+        { rel: "alternate", hrefLang: "vi", href: url },
+        { rel: "alternate", hrefLang: "x-default", href: url },
       ],
     };
   },

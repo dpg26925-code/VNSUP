@@ -31,10 +31,16 @@ export const Route = createFileRoute("/kcn-ccn/$province")({
   head: ({ params }) => {
     const p = provinceBySlug(params.province);
     const title = `Khu công nghiệp tại ${p?.name || params.province} | VNSupplier`;
+    const url = `https://vnsupplier.cloud/kcn-ccn/${params.province}`;
     return {
       meta: [
         { title },
         { name: "description", content: `Tra cứu danh sách các khu công nghiệp (KCN) và cụm công nghiệp (CCN) tại ${p?.name || params.province}.` },
+      ],
+      links: [
+        { rel: "canonical", href: url },
+        { rel: "alternate", hrefLang: "vi", href: url },
+        { rel: "alternate", hrefLang: "x-default", href: url },
       ],
     };
   },

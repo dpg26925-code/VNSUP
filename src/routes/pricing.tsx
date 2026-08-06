@@ -17,7 +17,11 @@ export const Route = createFileRoute("/pricing")({
       { property: "og:description", content: DESC },
       { property: "og:url", content: URL_ },
     ],
-    links: [{ rel: "canonical", href: URL_ }],
+    links: [
+      { rel: "canonical", href: URL_ },
+      { rel: "alternate", hrefLang: "vi", href: URL_ },
+      { rel: "alternate", hrefLang: "x-default", href: URL_ },
+    ],
   }),
   component: PricingPage,
 });
