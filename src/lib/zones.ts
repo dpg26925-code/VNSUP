@@ -3,11 +3,11 @@ import { abs } from "@/lib/factory";
 
 export type ZoneKind = "kcn" | "ccn";
 
-export const ZONE_META: Record<ZoneKind, {
-  kind: ZoneKind;
-  label: string;        // "KCN"
-  fullLabel: string;    // "Khu Công Nghiệp"
-  path: string;         // "/khu-cong-nghiep"
+export const ZONE_META: Record<ZoneKind | "companies" | "zones", {
+  kind: string;
+  label: string;
+  fullLabel: string;
+  path: string;
   listTitle: string;
   listDescription: string;
 }> = {
@@ -28,6 +28,22 @@ export const ZONE_META: Record<ZoneKind, {
     listTitle: "Danh sách Cụm Công Nghiệp (CCN) tại Việt Nam | VNSupplier",
     listDescription:
       "Danh sách các Cụm Công Nghiệp (CCN) trên khắp Việt Nam: diện tích, chủ đầu tư, ngành ưu tiên và giá thuê.",
+  },
+  companies: {
+    kind: "companies",
+    label: "Doanh nghiệp",
+    fullLabel: "Danh sách Doanh nghiệp",
+    path: "/companies",
+    listTitle: "Danh mục Doanh nghiệp sản xuất Việt Nam | VNSupplier",
+    listDescription: "Khám phá hàng nghìn nhà máy sản xuất tại Việt Nam theo ngành và khu vực.",
+  },
+  zones: {
+    kind: "zones",
+    label: "KCN/CCN",
+    fullLabel: "Khu & Cụm Công Nghiệp",
+    path: "/kcn-ccn",
+    listTitle: "Khu công nghiệp & Cụm công nghiệp Việt Nam | VNSupplier",
+    listDescription: "Tra cứu thông tin chi tiết các khu công nghiệp và cụm công nghiệp trên toàn quốc.",
   },
 };
 

@@ -9,17 +9,16 @@ import { ZONE_META, zoneAbs, type ZoneRow } from "@/lib/zones";
 import { Building2, MapPin, Ruler, BadgeCheck } from "lucide-react";
 
 const listQO = queryOptions({
-  queryKey: ["industrial-zones-list", "zones"],
+  queryKey: ["industrial-zones-list", "all"],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("industrial_zones")
-      .select("id,slug,name,province,area_ha,occupancy_percent,developer,industries,banner_url,is_featured")
-      .eq("kind", "zones")
+      .select("id,slug,kind,name,province,area_ha,occupancy_percent,developer,industries,banner_url,is_featured")
       .eq("status", "approved")
       .order("is_featured", { ascending: false })
       .order("area_ha", { ascending: false });
     if (error) throw error;
-    return (data ?? []) as Pick<ZoneRow, "id" | "slug" | "name" | "province" | "area_ha" | "occupancy_percent" | "developer" | "industries" | "banner_url" | "is_featured">[];
+    return data ?? [];
   },
 });
 
@@ -101,7 +100,7 @@ function KCNListPage() {
           ) : filtered.map((z) => (
             <Link
               key={z.id}
-              to="/zones-ccn/$slug"
+              to={z.kind === "ccn" ? "/cum-cong-nghiep/$slug" : "/khu-cong-nghiep/$slug"}
               params={{ slug: z.slug }}
               className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-lg"
             >

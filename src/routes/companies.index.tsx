@@ -9,17 +9,16 @@ import { ZONE_META, zoneAbs, type ZoneRow } from "@/lib/zones";
 import { Building2, MapPin, Ruler, BadgeCheck } from "lucide-react";
 
 const listQO = queryOptions({
-  queryKey: ["industrial-zones-list", "companies"],
+  queryKey: ["companies-list"],
   queryFn: async () => {
     const { data, error } = await supabase
       .from("companies")
-      .select("id,slug,name,province,area_ha,occupancy_percent,developer,industries,banner_url,is_featured")
-      .eq("kind", "companies")
+      .select("id,slug,name,province,industry,employee_range,logo_url,featured,verified,status")
       .eq("status", "approved")
-      .order("is_featured", { ascending: false })
-      .order("area_ha", { ascending: false });
+      .order("featured", { ascending: false })
+      .limit(100);
     if (error) throw error;
-    return (data ?? []) as Pick<ZoneRow, "id" | "slug" | "name" | "province" | "area_ha" | "occupancy_percent" | "developer" | "industries" | "banner_url" | "is_featured">[];
+    return data ?? [];
   },
 });
 
@@ -57,10 +56,10 @@ export const Route = createFileRoute("/companies/")({
   },
   errorComponent: () => <div className="p-6 text-sm text-destructive">Không tải được danh sách.</div>,
   notFoundComponent: () => <div className="p-6 text-sm">Không tìm thấy.</div>,
-  component: Công tyListPage,
+  component: CompanyListPage,
 });
 
-function Công tyListPage() {
+function CompanyListPage() {
   const { data: rows } = useSuspenseQuery(listQO);
   const [province, setProvince] = useState<string>("");
   const filtered = useMemo(() => rows.filter((r) => !province || r.province === province), [rows, province]);
@@ -98,40 +97,37 @@ function Công tyListPage() {
             <div className="col-span-full">
               <EmptyState title="Chưa có Công ty" description="Không có Công ty nào phù hợp bộ lọc." />
             </div>
-          ) : filtered.map((z) => (
+          ) : filtered.map((c: any) => (
             <Link
-              key={z.id}
-              to="/companies/$slug"
-              params={{ slug: z.slug }}
+              key={c.id}
+              to="/company/$slug"
+              params={{ slug: c.slug }}
               className="group overflow-hidden rounded-2xl border border-border bg-card transition hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-lg"
             >
               <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
-                {z.banner_url ? (
-                  <img src={z.banner_url} alt={z.name} loading="lazy" className="h-full w-full object-cover transition group-hover:scale-105" />
-                ) : null}
-                {z.is_featured && (
+                {c.logo_url ? (
+                  <img src={c.logo_url} alt={c.name} loading="lazy" className="h-full w-full object-contain p-4 transition group-hover:scale-105" />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-secondary/20">
+                    <Building2 className="h-10 w-10 text-muted-foreground/20" />
+                  </div>
+                )}
+                {c.featured && (
                   <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-brand px-2 py-0.5 text-[10px] font-semibold text-brand-foreground">
                     <BadgeCheck className="h-3 w-3" /> Nổi bật
                   </span>
                 )}
               </div>
               <div className="p-4">
-                <h3 className="line-clamp-2 text-sm font-semibold group-hover:text-brand">{z.name}</h3>
+                <h3 className="line-clamp-2 text-sm font-semibold group-hover:text-brand">{c.name}</h3>
                 <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-muted-foreground">
-                  {z.province && <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" />{z.province}</span>}
-                  {z.area_ha && <span className="inline-flex items-center gap-1"><Ruler className="h-3 w-3" />{z.area_ha} ha</span>}
-                  {typeof z.occupancy_percent === "number" && <span>Lấp đầy {z.occupancy_percent}%</span>}
+                  {c.province && <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" />{c.province}</span>}
+                  {c.industry && <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] text-foreground">{c.industry}</span>}
+                  {c.employee_range && <span>Quy mô: {c.employee_range}</span>}
                 </div>
-                {z.developer && (
-                  <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                    <Building2 className="h-3 w-3" />{z.developer}
-                  </div>
-                )}
-                {Array.isArray(z.industries) && z.industries.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    {z.industries.slice(0, 3).map((i) => (
-                      <span key={i} className="rounded-full bg-secondary px-2 py-0.5 text-[10px] text-foreground">{i}</span>
-                    ))}
+                {c.verified && (
+                  <div className="mt-3 inline-flex items-center gap-1 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+                    <BadgeCheck className="h-3 w-3" /> Đã xác thực
                   </div>
                 )}
               </div>
