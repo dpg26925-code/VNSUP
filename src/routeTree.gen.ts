@@ -28,7 +28,10 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KhuCongNghiepIndexRouteImport } from './routes/khu-cong-nghiep.index'
+import { Route as KcnCcnIndexRouteImport } from './routes/kcn-ccn.index'
 import { Route as CumCongNghiepIndexRouteImport } from './routes/cum-cong-nghiep.index'
+import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ProvinceSlugRouteImport } from './routes/province.$slug'
 import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
 import { Route as PaymentCancelRouteImport } from './routes/payment.cancel'
@@ -36,6 +39,7 @@ import { Route as KhuCongNghiepSlugRouteImport } from './routes/khu-cong-nghiep.
 import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
 import { Route as CumCongNghiepSlugRouteImport } from './routes/cum-cong-nghiep.$slug'
 import { Route as CompanySlugRouteImport } from './routes/company.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardSubscriptionsRouteImport } from './routes/_authenticated/dashboard.subscriptions'
@@ -162,9 +166,24 @@ const KhuCongNghiepIndexRoute = KhuCongNghiepIndexRouteImport.update({
   path: '/khu-cong-nghiep/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KcnCcnIndexRoute = KcnCcnIndexRouteImport.update({
+  id: '/kcn-ccn/',
+  path: '/kcn-ccn/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CumCongNghiepIndexRoute = CumCongNghiepIndexRouteImport.update({
   id: '/cum-cong-nghiep/',
   path: '/cum-cong-nghiep/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
+  id: '/companies/',
+  path: '/companies/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProvinceSlugRoute = ProvinceSlugRouteImport.update({
@@ -200,6 +219,11 @@ const CumCongNghiepSlugRoute = CumCongNghiepSlugRouteImport.update({
 const CompanySlugRoute = CompanySlugRouteImport.update({
   id: '/company/$slug',
   path: '/company/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -404,6 +428,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/company/$slug': typeof CompanySlugRoute
   '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
@@ -411,7 +436,10 @@ export interface FileRoutesByFullPath {
   '/payment/cancel': typeof PaymentCancelRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
+  '/blog/': typeof BlogIndexRoute
+  '/companies/': typeof CompaniesIndexRoute
   '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
+  '/kcn-ccn/': typeof KcnCcnIndexRoute
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
@@ -462,6 +490,7 @@ export interface FileRoutesByTo {
   '/sitemap-zones.xml': typeof SitemapZonesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/company/$slug': typeof CompanySlugRoute
   '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
@@ -469,7 +498,10 @@ export interface FileRoutesByTo {
   '/payment/cancel': typeof PaymentCancelRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
+  '/blog': typeof BlogIndexRoute
+  '/companies': typeof CompaniesIndexRoute
   '/cum-cong-nghiep': typeof CumCongNghiepIndexRoute
+  '/kcn-ccn': typeof KcnCcnIndexRoute
   '/khu-cong-nghiep': typeof KhuCongNghiepIndexRoute
   '/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
@@ -523,6 +555,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/company/$slug': typeof CompanySlugRoute
   '/cum-cong-nghiep/$slug': typeof CumCongNghiepSlugRoute
   '/industry/$slug': typeof IndustrySlugRoute
@@ -530,7 +563,10 @@ export interface FileRoutesById {
   '/payment/cancel': typeof PaymentCancelRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/province/$slug': typeof ProvinceSlugRoute
+  '/blog/': typeof BlogIndexRoute
+  '/companies/': typeof CompaniesIndexRoute
   '/cum-cong-nghiep/': typeof CumCongNghiepIndexRoute
+  '/kcn-ccn/': typeof KcnCcnIndexRoute
   '/khu-cong-nghiep/': typeof KhuCongNghiepIndexRoute
   '/_authenticated/dashboard/analytics': typeof AuthenticatedDashboardAnalyticsRoute
   '/_authenticated/dashboard/auction': typeof AuthenticatedDashboardAuctionRoute
@@ -584,6 +620,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/unauthorized'
     | '/dashboard'
+    | '/blog/$slug'
     | '/company/$slug'
     | '/cum-cong-nghiep/$slug'
     | '/industry/$slug'
@@ -591,7 +628,10 @@ export interface FileRouteTypes {
     | '/payment/cancel'
     | '/payment/success'
     | '/province/$slug'
+    | '/blog/'
+    | '/companies/'
     | '/cum-cong-nghiep/'
+    | '/kcn-ccn/'
     | '/khu-cong-nghiep/'
     | '/dashboard/analytics'
     | '/dashboard/auction'
@@ -642,6 +682,7 @@ export interface FileRouteTypes {
     | '/sitemap-zones.xml'
     | '/sitemap.xml'
     | '/unauthorized'
+    | '/blog/$slug'
     | '/company/$slug'
     | '/cum-cong-nghiep/$slug'
     | '/industry/$slug'
@@ -649,7 +690,10 @@ export interface FileRouteTypes {
     | '/payment/cancel'
     | '/payment/success'
     | '/province/$slug'
+    | '/blog'
+    | '/companies'
     | '/cum-cong-nghiep'
+    | '/kcn-ccn'
     | '/khu-cong-nghiep'
     | '/dashboard/analytics'
     | '/dashboard/auction'
@@ -702,6 +746,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/unauthorized'
     | '/_authenticated/dashboard'
+    | '/blog/$slug'
     | '/company/$slug'
     | '/cum-cong-nghiep/$slug'
     | '/industry/$slug'
@@ -709,7 +754,10 @@ export interface FileRouteTypes {
     | '/payment/cancel'
     | '/payment/success'
     | '/province/$slug'
+    | '/blog/'
+    | '/companies/'
     | '/cum-cong-nghiep/'
+    | '/kcn-ccn/'
     | '/khu-cong-nghiep/'
     | '/_authenticated/dashboard/analytics'
     | '/_authenticated/dashboard/auction'
@@ -762,6 +810,7 @@ export interface RootRouteChildren {
   SitemapZonesDotxmlRoute: typeof SitemapZonesDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CompanySlugRoute: typeof CompanySlugRoute
   CumCongNghiepSlugRoute: typeof CumCongNghiepSlugRoute
   IndustrySlugRoute: typeof IndustrySlugRoute
@@ -769,7 +818,10 @@ export interface RootRouteChildren {
   PaymentCancelRoute: typeof PaymentCancelRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
   ProvinceSlugRoute: typeof ProvinceSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+  CompaniesIndexRoute: typeof CompaniesIndexRoute
   CumCongNghiepIndexRoute: typeof CumCongNghiepIndexRoute
+  KcnCcnIndexRoute: typeof KcnCcnIndexRoute
   KhuCongNghiepIndexRoute: typeof KhuCongNghiepIndexRoute
 }
 
@@ -908,11 +960,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KhuCongNghiepIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kcn-ccn/': {
+      id: '/kcn-ccn/'
+      path: '/kcn-ccn'
+      fullPath: '/kcn-ccn/'
+      preLoaderRoute: typeof KcnCcnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cum-cong-nghiep/': {
       id: '/cum-cong-nghiep/'
       path: '/cum-cong-nghiep'
       fullPath: '/cum-cong-nghiep/'
       preLoaderRoute: typeof CumCongNghiepIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/companies/': {
+      id: '/companies/'
+      path: '/companies'
+      fullPath: '/companies/'
+      preLoaderRoute: typeof CompaniesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/province/$slug': {
@@ -962,6 +1035,13 @@ declare module '@tanstack/react-router' {
       path: '/company/$slug'
       fullPath: '/company/$slug'
       preLoaderRoute: typeof CompanySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard': {
@@ -1332,6 +1412,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapZonesDotxmlRoute: SitemapZonesDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   UnauthorizedRoute: UnauthorizedRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CompanySlugRoute: CompanySlugRoute,
   CumCongNghiepSlugRoute: CumCongNghiepSlugRoute,
   IndustrySlugRoute: IndustrySlugRoute,
@@ -1339,19 +1420,12 @@ const rootRouteChildren: RootRouteChildren = {
   PaymentCancelRoute: PaymentCancelRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
   ProvinceSlugRoute: ProvinceSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
+  CompaniesIndexRoute: CompaniesIndexRoute,
   CumCongNghiepIndexRoute: CumCongNghiepIndexRoute,
+  KcnCcnIndexRoute: KcnCcnIndexRoute,
   KhuCongNghiepIndexRoute: KhuCongNghiepIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
