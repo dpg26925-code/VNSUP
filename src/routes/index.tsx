@@ -52,6 +52,7 @@ function HomePage() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [featured, setFeatured] = useState<CompanyCardProps[]>([]);
+  const [recent, setRecent] = useState<CompanyCardProps[]>([]);
   const [stats, setStats] = useState({ companies: 0, industries: INDUSTRIES.length, provinces: PROVINCES.length, rating: 0 });
 
   useEffect(() => {
@@ -59,8 +60,15 @@ function HomePage() {
       .from("companies")
       .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("featured", true)
-      .limit(6)
+      .limit(12)
       .then(({ data }) => setFeatured((data ?? []) as CompanyCardProps[]));
+    supabase
+      .from("companies")
+      .select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
+      .eq("status", "approved")
+      .order("updated_at", { ascending: false })
+      .limit(8)
+      .then(({ data }) => setRecent((data ?? []) as CompanyCardProps[]));
     supabase.from("companies").select("id", { count: "exact", head: true })
       .then(({ count }) => setStats((s) => ({ ...s, companies: count ?? 0 })));
     supabase.from("company_reviews").select("rating").eq("status", "published").limit(1000)
@@ -170,6 +178,30 @@ function HomePage() {
             </div>
           </div>
           <FeaturedCarousel items={featured} />
+        </section>
+      )}
+
+      {/* Recently updated */}
+      {recent.length > 0 && (
+        <section className="mx-auto max-w-6xl px-6 py-8">
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-widest text-brand">Hồ sơ mới cập nhật</div>
+              <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-3xl">Nhà máy vừa cập nhật</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Thông tin năng lực và sản phẩm mới nhất.</p>
+            </div>
+            <Link to="/search" className="hidden text-sm font-semibold text-muted-foreground hover:text-brand sm:inline-flex sm:items-center sm:gap-1">
+              Xem tất cả <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
+            </Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {recent.map((c) => (
+              <CompanyCard key={c.slug} {...c} />
+            ))}
+          </div>
+          <div className="mt-6 text-center sm:hidden">
+            <Link to="/search" className="text-sm font-medium text-brand hover:underline">Xem tất cả nhà máy →</Link>
+          </div>
         </section>
       )}
 
