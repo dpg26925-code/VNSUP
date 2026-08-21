@@ -306,6 +306,7 @@ export type Database = {
           capabilities: Json
           certifications: Json
           company_type: string | null
+          confidence_score: number | null
           cover_url: string | null
           created_at: string
           description: string | null
@@ -360,6 +361,7 @@ export type Database = {
           capabilities?: Json
           certifications?: Json
           company_type?: string | null
+          confidence_score?: number | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
@@ -414,6 +416,7 @@ export type Database = {
           capabilities?: Json
           certifications?: Json
           company_type?: string | null
+          confidence_score?: number | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
@@ -469,6 +472,53 @@ export type Database = {
           },
         ]
       }
+      company_certifications: {
+        Row: {
+          cert_name: string
+          cert_number: string | null
+          company_id: string
+          confidence: number | null
+          created_at: string | null
+          expiry_date: string | null
+          id: string
+          issued_by: string | null
+          issued_date: string | null
+          source_url: string | null
+        }
+        Insert: {
+          cert_name: string
+          cert_number?: string | null
+          company_id: string
+          confidence?: number | null
+          created_at?: string | null
+          expiry_date?: string | null
+          id?: string
+          issued_by?: string | null
+          issued_date?: string | null
+          source_url?: string | null
+        }
+        Update: {
+          cert_name?: string
+          cert_number?: string | null
+          company_id?: string
+          confidence?: number | null
+          created_at?: string | null
+          expiry_date?: string | null
+          id?: string
+          issued_by?: string | null
+          issued_date?: string | null
+          source_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_certifications_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       company_claims: {
         Row: {
           company_id: string
@@ -513,6 +563,166 @@ export type Database = {
           },
         ]
       }
+      company_contacts: {
+        Row: {
+          company_id: string
+          confidence: number | null
+          contact_type: string
+          created_at: string | null
+          id: string
+          label: string | null
+          source_url: string | null
+          updated_at: string | null
+          value: string
+          verified: boolean | null
+        }
+        Insert: {
+          company_id: string
+          confidence?: number | null
+          contact_type: string
+          created_at?: string | null
+          id?: string
+          label?: string | null
+          source_url?: string | null
+          updated_at?: string | null
+          value: string
+          verified?: boolean | null
+        }
+        Update: {
+          company_id?: string
+          confidence?: number | null
+          contact_type?: string
+          created_at?: string | null
+          id?: string
+          label?: string | null
+          source_url?: string | null
+          updated_at?: string | null
+          value?: string
+          verified?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_contacts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_crawl_jobs: {
+        Row: {
+          company_id: string
+          completed_at: string | null
+          crawled_urls: string[] | null
+          created_at: string | null
+          discovered_urls: string[] | null
+          error_message: string | null
+          facts_extracted: number | null
+          id: string
+          job_type: string
+          pages_crawled: number | null
+          source_url: string
+          started_at: string | null
+          status: string | null
+        }
+        Insert: {
+          company_id: string
+          completed_at?: string | null
+          crawled_urls?: string[] | null
+          created_at?: string | null
+          discovered_urls?: string[] | null
+          error_message?: string | null
+          facts_extracted?: number | null
+          id?: string
+          job_type: string
+          pages_crawled?: number | null
+          source_url: string
+          started_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          company_id?: string
+          completed_at?: string | null
+          crawled_urls?: string[] | null
+          created_at?: string | null
+          discovered_urls?: string[] | null
+          error_message?: string | null
+          facts_extracted?: number | null
+          id?: string
+          job_type?: string
+          pages_crawled?: number | null
+          source_url?: string
+          started_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_crawl_jobs_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_crawl_pages: {
+        Row: {
+          company_id: string
+          content_hash: string | null
+          crawled_at: string | null
+          http_status: number | null
+          id: string
+          job_id: string | null
+          markdown_content: string | null
+          processed: boolean | null
+          raw_html: string | null
+          title: string | null
+          url: string
+        }
+        Insert: {
+          company_id: string
+          content_hash?: string | null
+          crawled_at?: string | null
+          http_status?: number | null
+          id?: string
+          job_id?: string | null
+          markdown_content?: string | null
+          processed?: boolean | null
+          raw_html?: string | null
+          title?: string | null
+          url: string
+        }
+        Update: {
+          company_id?: string
+          content_hash?: string | null
+          crawled_at?: string | null
+          http_status?: number | null
+          id?: string
+          job_id?: string | null
+          markdown_content?: string | null
+          processed?: boolean | null
+          raw_html?: string | null
+          title?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_crawl_pages_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_crawl_pages_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "company_crawl_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       company_export_markets: {
         Row: {
           company_id: string
@@ -544,6 +754,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "company_export_markets_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_facts: {
+        Row: {
+          company_id: string
+          confidence: number
+          created_at: string | null
+          evidence: string | null
+          field_name: string
+          id: string
+          source_url: string
+          value: string
+          verified_at: string | null
+        }
+        Insert: {
+          company_id: string
+          confidence: number
+          created_at?: string | null
+          evidence?: string | null
+          field_name: string
+          id?: string
+          source_url: string
+          value: string
+          verified_at?: string | null
+        }
+        Update: {
+          company_id?: string
+          confidence?: number
+          created_at?: string | null
+          evidence?: string | null
+          field_name?: string
+          id?: string
+          source_url?: string
+          value?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_facts_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
@@ -621,6 +875,50 @@ export type Database = {
           },
         ]
       }
+      company_products: {
+        Row: {
+          category: string | null
+          company_id: string
+          confidence: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          product_type: string
+          source_url: string | null
+        }
+        Insert: {
+          category?: string | null
+          company_id: string
+          confidence?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          product_type: string
+          source_url?: string | null
+        }
+        Update: {
+          category?: string | null
+          company_id?: string
+          confidence?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          product_type?: string
+          source_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_products_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       company_reviews: {
         Row: {
           company_id: string
@@ -661,6 +959,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "company_reviews_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_sources: {
+        Row: {
+          company_id: string
+          content_hash: string | null
+          content_type: string | null
+          crawled_at: string | null
+          http_status: number | null
+          id: string
+          page_title: string | null
+          source_type: string
+          url: string
+        }
+        Insert: {
+          company_id: string
+          content_hash?: string | null
+          content_type?: string | null
+          crawled_at?: string | null
+          http_status?: number | null
+          id?: string
+          page_title?: string | null
+          source_type: string
+          url: string
+        }
+        Update: {
+          company_id?: string
+          content_hash?: string | null
+          content_type?: string | null
+          crawled_at?: string | null
+          http_status?: number | null
+          id?: string
+          page_title?: string | null
+          source_type?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_sources_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
