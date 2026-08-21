@@ -7,8 +7,8 @@ export const Route = createFileRoute("/sitemap-zones.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const url = process.env.SUPABASE_URL ?? import.meta.env.VITE_SUPABASE_URL;
-        const key = process.env.SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const url = process.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL;
+        const key = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
         const entries: SitemapEntry[] = [
           { loc: "/khu-cong-nghiep", changefreq: "weekly", priority: "0.8" },
           { loc: "/cum-cong-nghiep", changefreq: "weekly", priority: "0.7" },
