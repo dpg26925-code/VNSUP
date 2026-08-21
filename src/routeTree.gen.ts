@@ -74,6 +74,7 @@ import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './rout
 import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard/admin/claims'
 import { Route as AuthenticatedDashboardAdminAuditLogRouteImport } from './routes/_authenticated/dashboard/admin/audit-log'
 import { Route as ApiPublicAdminCompaniesBatchRouteImport } from './routes/api/public/admin/companies.batch'
+import { Route as ApiPublicAdminArticlesBatchDeleteRouteImport } from './routes/api/public/admin/articles.batch-delete'
 import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
 import { Route as ApiPublicAdminAnalyticsSummaryRouteImport } from './routes/api/public/admin/analytics.summary'
 import { Route as AuthenticatedDashboardArticlesIdEditRouteImport } from './routes/_authenticated/dashboard.articles.$id.edit'
@@ -427,6 +428,12 @@ const ApiPublicAdminCompaniesBatchRoute =
     path: '/public/admin/companies/batch',
     getParentRoute: () => ApiRoute,
   } as any)
+const ApiPublicAdminArticlesBatchDeleteRoute =
+  ApiPublicAdminArticlesBatchDeleteRouteImport.update({
+    id: '/batch-delete',
+    path: '/batch-delete',
+    getParentRoute: () => ApiPublicAdminArticlesRoute,
+  } as any)
 const ApiPublicAdminArticlesIdRoute =
   ApiPublicAdminArticlesIdRouteImport.update({
     id: '/$id',
@@ -519,6 +526,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/articles/batch-delete': typeof ApiPublicAdminArticlesBatchDeleteRoute
   '/api/public/admin/companies/batch': typeof ApiPublicAdminCompaniesBatchRoute
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
@@ -588,6 +596,7 @@ export interface FileRoutesByTo {
   '/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/articles/batch-delete': typeof ApiPublicAdminArticlesBatchDeleteRoute
   '/api/public/admin/companies/batch': typeof ApiPublicAdminCompaniesBatchRoute
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
@@ -660,6 +669,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/articles/$id/edit': typeof AuthenticatedDashboardArticlesIdEditRoute
   '/api/public/admin/analytics/summary': typeof ApiPublicAdminAnalyticsSummaryRoute
   '/api/public/admin/articles/$id': typeof ApiPublicAdminArticlesIdRouteWithChildren
+  '/api/public/admin/articles/batch-delete': typeof ApiPublicAdminArticlesBatchDeleteRoute
   '/api/public/admin/companies/batch': typeof ApiPublicAdminCompaniesBatchRoute
   '/api/public/admin/articles/$id/publish': typeof ApiPublicAdminArticlesIdPublishRoute
 }
@@ -732,6 +742,7 @@ export interface FileRouteTypes {
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
+    | '/api/public/admin/articles/batch-delete'
     | '/api/public/admin/companies/batch'
     | '/api/public/admin/articles/$id/publish'
   fileRoutesByTo: FileRoutesByTo
@@ -801,6 +812,7 @@ export interface FileRouteTypes {
     | '/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
+    | '/api/public/admin/articles/batch-delete'
     | '/api/public/admin/companies/batch'
     | '/api/public/admin/articles/$id/publish'
   id:
@@ -872,6 +884,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/articles/$id/edit'
     | '/api/public/admin/analytics/summary'
     | '/api/public/admin/articles/$id'
+    | '/api/public/admin/articles/batch-delete'
     | '/api/public/admin/companies/batch'
     | '/api/public/admin/articles/$id/publish'
   fileRoutesById: FileRoutesById
@@ -1371,6 +1384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAdminCompaniesBatchRouteImport
       parentRoute: typeof ApiRoute
     }
+    '/api/public/admin/articles/batch-delete': {
+      id: '/api/public/admin/articles/batch-delete'
+      path: '/batch-delete'
+      fullPath: '/api/public/admin/articles/batch-delete'
+      preLoaderRoute: typeof ApiPublicAdminArticlesBatchDeleteRouteImport
+      parentRoute: typeof ApiPublicAdminArticlesRoute
+    }
     '/api/public/admin/articles/$id': {
       id: '/api/public/admin/articles/$id'
       path: '/$id'
@@ -1496,11 +1516,14 @@ const ApiPublicAdminArticlesIdRouteWithChildren =
 
 interface ApiPublicAdminArticlesRouteChildren {
   ApiPublicAdminArticlesIdRoute: typeof ApiPublicAdminArticlesIdRouteWithChildren
+  ApiPublicAdminArticlesBatchDeleteRoute: typeof ApiPublicAdminArticlesBatchDeleteRoute
 }
 
 const ApiPublicAdminArticlesRouteChildren: ApiPublicAdminArticlesRouteChildren =
   {
     ApiPublicAdminArticlesIdRoute: ApiPublicAdminArticlesIdRouteWithChildren,
+    ApiPublicAdminArticlesBatchDeleteRoute:
+      ApiPublicAdminArticlesBatchDeleteRoute,
   }
 
 const ApiPublicAdminArticlesRouteWithChildren =
