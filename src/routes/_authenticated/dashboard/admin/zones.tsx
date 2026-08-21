@@ -64,7 +64,17 @@ function AdminZonesPage() {
     if (statusFilter) q = q.eq("status", statusFilter);
     const { data, error } = await q;
     if (error) setErr(error.message);
-    setRows((data ?? []) as ZoneRow[]);
+    const allRows = (data ?? []) as ZoneRow[];
+    setRows(allRows);
+
+    // Check for ID in search params (from quick edit button)
+    const params = new URLSearchParams(window.location.search);
+    const quickEditId = params.get('q');
+    if (quickEditId) {
+      const zoneToEdit = allRows.find(z => z.id === quickEditId || z.slug === quickEditId);
+      if (zoneToEdit) startEdit(zoneToEdit);
+    }
+
     setLoading(false);
   }, [kindFilter, statusFilter]);
 

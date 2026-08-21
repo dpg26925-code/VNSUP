@@ -58,10 +58,22 @@ function AdminPage() {
   const industries = useIndustryOptions();
   const { zones } = useZoneOptions();
 
-  async function load() {
+  async function load(searchQuery?: string) {
     setLoading(true);
-    const { data } = await supabase.from("companies").select("*").order("updated_at", { ascending: false });
-    setRows((data ?? []) as Row[]); setLoading(false);
+    let query = supabase.from("companies").select("*").order("updated_at", { ascending: false });
+    const { data } = await query;
+    const allRows = (data ?? []) as Row[];
+    setRows(allRows); 
+    
+    // Check for ID in search params (from quick edit button)
+    const params = new URLSearchParams(window.location.search);
+    const quickEditId = params.get('q');
+    if (quickEditId) {
+      const rowToEdit = allRows.find(r => r.id === quickEditId || r.slug === quickEditId);
+      if (rowToEdit) setEdit(rowToEdit);
+    }
+
+    setLoading(false);
   }
   useEffect(() => { load(); }, []);
 

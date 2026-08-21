@@ -5,7 +5,8 @@ import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industryLabel, industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
 import { TrustBadges, VerificationBadge } from "@/components/trust-badges";
-import { BadgeCheck, Building2, Calendar, DollarSign, FileText, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare, UserSquare2 } from "lucide-react";
+import { BadgeCheck, Building2, Calendar, DollarSign, FileText, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare, UserSquare2, Pencil } from "lucide-react";
+import { AdminQuickEdit } from "@/components/admin-quick-edit";
 
 
 type FAQ = { q: string; a: string };
@@ -389,10 +390,13 @@ function CompanyPage() {
               {c.featured && <span className="inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-brand-foreground shadow"><Star className="h-3.5 w-3.5" fill="currentColor" /> Nổi bật</span>}
             </div>
           </div>
-          <div className="px-6 pb-6 pt-12">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <h1 className="text-2xl font-bold md:text-3xl">{c.name}</h1>
+            <div className="px-6 pb-6 pt-12">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-2xl font-bold md:text-3xl">{c.name}</h1>
+                    <AdminQuickEdit entityId={c.id} entityType="company" />
+                  </div>
                 {reviews.length > 0 && (
                   <a href="#reviews" className="mt-2 inline-flex items-center gap-2 text-sm hover:opacity-80">
                     <Stars value={avgRating} />
