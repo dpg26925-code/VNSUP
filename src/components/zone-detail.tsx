@@ -148,7 +148,7 @@ export function ZoneDetail({ zone }: { zone: ZoneRow }) {
             <h2 className="inline-flex items-center gap-2 text-lg font-semibold">
               <Building2 className="h-5 w-5 text-brand" /> Doanh nghiệp trong {M.label} ({companies.length})
             </h2>
-            <Link to="/search" search={{ zone: zone.id }} className="text-sm text-brand hover:underline">Xem tất cả →</Link>
+            <Link to="/search" search={{ q: `zone:${zone.id}` }} className="text-sm text-brand hover:underline">Xem tất cả →</Link>
           </div>
           {companies.length === 0 ? (
             <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">

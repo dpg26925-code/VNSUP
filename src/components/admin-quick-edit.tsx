@@ -8,7 +8,7 @@ interface AdminEditButtonProps {
   entityType: "company" | "zone";
 }
 
-export function AdminEditButton({ entityId, entityType }: AdminEditButtonProps) {
+export function AdminQuickEdit({ entityId, entityType }: AdminEditButtonProps) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
