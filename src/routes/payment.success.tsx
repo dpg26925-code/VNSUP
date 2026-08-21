@@ -30,7 +30,7 @@ function SuccessPage() {
           <p className="mt-2 text-sm text-muted-foreground">Mã đơn: <span className="font-mono">#{orderCode}</span></p>
         )}
         <div className="mt-8 flex justify-center gap-3">
-          <Link to="/dashboard/subscriptions" className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          <Link to="/dashboard/subscriptions" search={{}} className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
             Xem gói của tôi
           </Link>
           <Link to="/" className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-accent">
