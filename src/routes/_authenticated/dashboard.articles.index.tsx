@@ -21,10 +21,12 @@ function ArticlesListPage() {
   const [q, setQ] = useState("");
   const [page, setPage] = useState(0);
   const [count, setCount] = useState(0);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const LIMIT = 20;
 
   async function load() {
     setLoading(true); setErr(null);
+    setSelectedIds(new Set());
     try {
       const params = new URLSearchParams();
       if (status) params.set("status", status);
@@ -43,10 +45,40 @@ function ArticlesListPage() {
     try { await adminApi(`/articles/${a.id}`, { method: "DELETE" }); load(); }
     catch (e) { alert((e as Error).message); }
   }
+
+  async function batchDelete() {
+    if (selectedIds.size === 0) return;
+    if (!confirm(`Xóa ${selectedIds.size} bài viết đã chọn?`)) return;
+    try {
+      await adminApi("/articles/batch-delete", {
+        method: "POST",
+        json: { ids: Array.from(selectedIds) }
+      });
+      load();
+    } catch (e) { alert((e as Error).message); }
+  }
+
   async function publish(a: Article) {
     try { await adminApi(`/articles/${a.id}/publish`, { method: "POST", json: { publish: true } }); load(); }
     catch (e) { alert((e as Error).message); }
   }
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === rows.length && rows.length > 0) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(rows.map((r) => r.id)));
+    }
+  };
 
   return (
     <div className="p-6">
@@ -82,19 +114,34 @@ function ArticlesListPage() {
 
       {err && <div className="mb-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">{err}</div>}
 
+      {selectedIds.size > 0 && (
+        <div className="mb-3 flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800 animate-in fade-in slide-in-from-top-1">
+          <span>Đã chọn <b>{selectedIds.size}</b> bài viết</span>
+          <button onClick={batchDelete} className="flex items-center gap-1.5 rounded-md bg-destructive px-3 py-1.5 font-semibold text-destructive-foreground hover:bg-destructive/90">
+            <Trash2 className="h-4 w-4" /> Xóa hàng loạt
+          </button>
+        </div>
+      )}
+
       <div className="overflow-hidden rounded-lg border bg-card">
         <table className="w-full text-sm">
           <thead className="border-b bg-muted/50 text-left text-xs uppercase text-muted-foreground">
             <tr>
+              <th className="p-3 w-10">
+                <input type="checkbox" checked={selectedIds.size === rows.length && rows.length > 0} onChange={toggleSelectAll} className="h-4 w-4 rounded border-gray-300" />
+              </th>
               <th className="p-3">Tiêu đề</th><th className="p-3">Chuyên mục</th>
               <th className="p-3">Trạng thái</th><th className="p-3">Cập nhật</th><th className="p-3"></th>
             </tr>
           </thead>
           <tbody>
-            {loading ? <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">Đang tải…</td></tr> :
-             rows.length === 0 ? <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">Không có bài nào.</td></tr> :
+            {loading ? <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">Đang tải…</td></tr> :
+             rows.length === 0 ? <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">Không có bài nào.</td></tr> :
              rows.map((a) => (
-              <tr key={a.id} className="border-b last:border-0 hover:bg-accent/40">
+              <tr key={a.id} className={`border-b last:border-0 hover:bg-accent/40 ${selectedIds.has(a.id) ? "bg-primary/5" : ""}`}>
+                <td className="p-3">
+                  <input type="checkbox" checked={selectedIds.has(a.id)} onChange={() => toggleSelect(a.id)} className="h-4 w-4 rounded border-gray-300" />
+                </td>
                 <td className="p-3">
                   <Link to="/dashboard/articles/$id/edit" params={{ id: a.id }} className="font-medium hover:underline">{a.title}</Link>
                   <div className="text-[11px] text-muted-foreground">/{a.slug}</div>
