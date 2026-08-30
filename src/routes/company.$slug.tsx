@@ -46,6 +46,9 @@ type DbVideo = { id: string; title: string | null; video_url: string; thumbnail_
 type DbFaq = { id: string; question: string; answer: string };
 type DbMarket = { id: string; country: string; share_percent: number | null; note: string | null };
 
+type DbFact = { id: string; field_name: string; value: string; evidence: string | null };
+type DbContact = { id: string; contact_type: string; value: string; label: string | null; verified: boolean | null };
+
 type UpdateSeo = { id: string; title: string; content: string | null; published_at: string | null };
 async function loadCompany(slug: string) {
   const { data, error } = await supabase.from("companies").select("*").eq("slug", slug).maybeSingle();
@@ -68,10 +71,13 @@ async function loadCompany(slug: string) {
     { data: ratingRows },
     { data: updateRows },
     { data: certRows },
+    { data: companyCertRows },
     { data: galleryRows },
     { data: videoRows },
     { data: faqRows },
     { data: marketRows },
+    { data: factRows },
+    { data: contactRows },
   ] = await Promise.all([
     supabase.from("company_reviews").select("rating").eq("company_id", id).eq("status", "published"),
     supabase
@@ -82,10 +88,13 @@ async function loadCompany(slug: string) {
       .order("published_at", { ascending: false })
       .limit(10),
     supabase.from("certifications").select("id,name,issuer,certificate_url,issued_at,expires_at,verification_status").eq("company_id", id).order("sort_order"),
+    supabase.from("company_certifications").select("id,cert_name,issued_by,cert_number,source_url").eq("company_id", id),
     supabase.from("company_gallery").select("id,image_url,caption").eq("company_id", id).order("sort_order"),
     supabase.from("company_videos").select("id,title,video_url,thumbnail_url").eq("company_id", id).order("sort_order"),
     supabase.from("company_faqs").select("id,question,answer").eq("company_id", id).order("sort_order"),
     supabase.from("company_export_markets").select("id,country,share_percent,note").eq("company_id", id).order("sort_order"),
+    supabase.from("company_facts").select("id,field_name,value,evidence").eq("company_id", id),
+    supabase.from("company_contacts").select("id,contact_type,value,label,verified").eq("company_id", id),
   ]);
   const zoneId = (data as { industrial_zone_id?: string | null }).industrial_zone_id ?? null;
   let zone: ZoneLite | null = null;
@@ -100,17 +109,33 @@ async function loadCompany(slug: string) {
   const ratings = (ratingRows ?? []) as { rating: number }[];
   const reviewCount = ratings.length;
   const ratingAvg = reviewCount > 0 ? ratings.reduce((s, r) => s + r.rating, 0) / reviewCount : 0;
+
+  const normalizedCerts: DbCertification[] = [
+    ...((certRows ?? []) as DbCertification[]),
+    ...((companyCertRows ?? []) as { id: string; cert_name: string; issued_by: string | null; source_url: string | null }[]).map((c) => ({
+      id: c.id,
+      name: c.cert_name,
+      issuer: c.issued_by,
+      certificate_url: c.source_url,
+      issued_at: null,
+      expires_at: null,
+      verification_status: "verified"
+    }))
+  ];
+
   return {
     ...(data as Company),
     _reviewCount: reviewCount,
     _ratingAvg: ratingAvg,
     _updatesSeo: (updateRows ?? []) as UpdateSeo[],
     _zone: zone,
-    _certs: (certRows ?? []) as DbCertification[],
+    _certs: normalizedCerts,
     _gallery: (galleryRows ?? []) as DbGallery[],
     _videos: (videoRows ?? []) as DbVideo[],
     _faqs: (faqRows ?? []) as DbFaq[],
     _markets: (marketRows ?? []) as DbMarket[],
+    _facts: (factRows ?? []) as DbFact[],
+    _contacts: (contactRows ?? []) as DbContact[],
   };
 }
 
@@ -320,9 +345,26 @@ function CompanyPage() {
     supabase.from("companies").select("slug,name,province,industry,employee_range,ai_summary,capabilities,verified,featured,logo_url")
       .eq("industry", c.industry ?? "").neq("id", c.id).limit(18)
       .then(({ data }) => setSimilar((data ?? []) as CompanyCardProps[]));
-    supabase.from("products").select("id,name,category,description,moq,lead_time,price_range,catalog_url,image_url")
-      .eq("company_id", c.id).order("sort_order").limit(24)
-      .then(({ data }) => setProducts((data ?? []) as DbProduct[]));
+    Promise.all([
+      supabase.from("products").select("id,name,category,description,moq,lead_time,price_range,catalog_url,image_url").eq("company_id", c.id).order("sort_order").limit(24),
+      supabase.from("company_products").select("id,name,category,description,source_url").eq("company_id", c.id).limit(24)
+    ]).then(([{ data: p1 }, { data: p2 }]) => {
+      const combined: DbProduct[] = [
+        ...((p1 ?? []) as DbProduct[]),
+        ...((p2 ?? []) as { id: string; name: string; category: string | null; description: string | null; source_url: string | null }[]).map((p) => ({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          description: p.description,
+          catalog_url: p.source_url,
+          moq: "Thoả thuận",
+          lead_time: null,
+          price_range: null,
+          image_url: null,
+        }))
+      ];
+      setProducts(combined);
+    });
 
     supabase.from("company_updates").select("id,title,content,update_type,published_at")
       .eq("company_id", c.id).not("published_at", "is", null)
