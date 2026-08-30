@@ -1,5 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <path d="M8 8L24 32L40 8" stroke="#EA580C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <circle cx="24" cy="28" r="14" stroke="#0F172A" stroke-width="2.5" fill="none"/>
-  <circle cx="24" cy="28" r="4" fill="#EA580C"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <defs>
+    <linearGradient id="vn-grad-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6B00"/>
+      <stop offset="50%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#C2410C"/>
+    </linearGradient>
+    <linearGradient id="vn-grad-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="vn-grad-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+    <filter id="vn-shadow" x="-10%" y="-10%" width="120%" height="120%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle for crisp tab visibility -->
+  <rect width="64" height="64" rx="16" fill="url(#vn-grad-dark)" />
+  
+  <!-- Outer subtle tech border -->
+  <rect x="1.5" y="1.5" width="61" height="61" rx="14.5" stroke="#334155" stroke-width="1.5" stroke-opacity="0.6"/>
+
+  <!-- Precision Industrial Shield with V and N integration -->
+  <g filter="url(#vn-shadow)" transform="translate(10, 10)">
+    <!-- V Wing Left (Flame Orange) -->
+    <path d="M4 6L18 36L26 36L14 8L6 6H4Z" fill="url(#vn-grad-primary)"/>
+    
+    <!-- N Wing Right (Industrial Orange & Sky accent) -->
+    <path d="M26 8L38 34L40 34V6H34V24L24 6H20L30 26L26 8Z" fill="#FFFFFF"/>
+    
+    <!-- Central Connector Node / AI Factory Link -->
+    <path d="M12 12L22 32L34 10" stroke="url(#vn-grad-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Tech Precision Dots -->
+    <circle cx="12" cy="12" r="2.5" fill="#FF8A3D"/>
+    <circle cx="22" cy="32" r="3.5" fill="#FF6B00" stroke="#FFFFFF" stroke-width="1.5"/>
+    <circle cx="34" cy="10" r="2.5" fill="#38BDF8"/>
+  </g>
 </svg>

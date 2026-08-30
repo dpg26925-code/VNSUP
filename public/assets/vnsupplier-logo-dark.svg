@@ -1,14 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 64" width="260" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 290 64" width="290" height="64" fill="none">
   <defs>
-    <style>
-      .brand-text { font-family: Inter, system-ui, -apple-system, sans-serif; font-weight: 800; }
-    </style>
+    <linearGradient id="logo-dark-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9E58"/>
+      <stop offset="60%" stop-color="#FB923C"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <linearGradient id="logo-dark-slate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <filter id="logo-glow-dark" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#FB923C" flood-opacity="0.35"/>
+    </filter>
   </defs>
-  <g transform="translate(4, 4)">
-    <path d="M4 4L24 32L44 4" fill="none" stroke="#EA580C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="24" cy="28" r="14" stroke="#FFFFFF" stroke-width="2.5" fill="none"/>
-    <circle cx="24" cy="28" r="4" fill="#EA580C"/>
+
+  <!-- Left Emblem (Icon) -->
+  <g transform="translate(6, 8)" filter="url(#logo-glow-dark)">
+    <rect width="48" height="48" rx="12" fill="url(#logo-dark-slate)"/>
+    <rect x="1" y="1" width="46" height="46" rx="11" stroke="#475569" stroke-width="1.2" stroke-opacity="0.8"/>
+    
+    <!-- Emblem Graphics -->
+    <g transform="translate(7, 7)">
+      <path d="M4 8L17 28L30 8" stroke="url(#logo-dark-orange)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M17 28V14" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M4 8L12 21L15 16L9 6L4 8Z" fill="url(#logo-dark-orange)"/>
+      <path d="M20 9L30 24V8H27V17L20 8V9Z" fill="#FFFFFF"/>
+      <circle cx="4" cy="8" r="2.5" fill="#FF9E58"/>
+      <circle cx="30" cy="8" r="2.5" fill="#38BDF8"/>
+      <circle cx="17" cy="28" r="3.5" fill="url(#logo-dark-orange)" stroke="#FFFFFF" stroke-width="1.5"/>
+    </g>
   </g>
-  <text x="60" y="42" class="brand-text" fill="#FFFFFF" font-size="32" letter-spacing="-0.5">VN</text>
-  <text x="108" y="42" class="brand-text" fill="#EA580C" font-size="32" letter-spacing="-0.5">Supplier</text>
+
+  <!-- Typography: VN SUPPLIER -->
+  <g transform="translate(66, 0)">
+    <!-- VN Text -->
+    <text x="0" y="38" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="900" font-size="28" letter-spacing="-0.8" fill="#FFFFFF">VN</text>
+    
+    <!-- Supplier Text -->
+    <text x="44" y="38" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="800" font-size="28" letter-spacing="-0.8" fill="url(#logo-dark-orange)">Supplier</text>
+    
+    <!-- AI Tag Badge -->
+    <rect x="168" y="18" width="42" height="20" rx="6" fill="#EA580C" fill-opacity="0.3" stroke="#FB923C" stroke-width="0.75"/>
+    <text x="175" y="32" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="10" fill="#FDBA74" letter-spacing="0.5">AI B2B</text>
+
+    <!-- Subtitle / Tagline -->
+    <text x="1" y="52" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="600" font-size="8.5" letter-spacing="1.8" fill="#94A3B8" text-transform="uppercase">VIETNAM MANUFACTURING NETWORK</text>
+  </g>
 </svg>

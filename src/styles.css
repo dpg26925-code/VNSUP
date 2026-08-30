@@ -47,10 +47,10 @@
   --color-trust-foreground: var(--trust-foreground);
 }
 
-/* Industrial B2B: White surface + near-black ink + orange accent */
+/* Industrial B2B: White surface + near-black ink + precision flame orange */
 :root {
   --radius: 0.75rem;
-  --background: #ffffff;
+  --background: #fafbfe;
   --foreground: #0f172a;                  /* gray-900 */
   --card: #ffffff;
   --card-foreground: #0f172a;
@@ -86,7 +86,7 @@
 }
 
 .dark {
-  --background: #020617;                  /* gray-950 */
+  --background: #080c15;                  /* dark titanium navy */
   --foreground: #f8fafc;
   --card: #0f172a;
   --card-foreground: #f8fafc;
@@ -96,7 +96,7 @@
   --primary-foreground: #0f172a;
   --secondary: #1e293b;                   /* gray-800 */
   --secondary-foreground: #f8fafc;
-  --muted: #1e293b;
+  --muted: #131d2e;
   --muted-foreground: #94a3b8;            /* gray-400 */
   --accent: #1e293b;
   --accent-foreground: #fdba74;           /* orange-300 */
@@ -106,8 +106,8 @@
   --success-foreground: #020617;
   --warning: #fbbf24;
   --warning-foreground: #020617;
-  --border: #334155;                      /* gray-700 */
-  --input: #334155;
+  --border: #233146;                      /* slate border */
+  --input: #233146;
   --ring: #f97316;
   --brand: #fb923c;                       /* orange-400 */
   --brand-foreground: #020617;
@@ -130,14 +130,65 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 { letter-spacing: -0.02em; }
+  h1, h2, h3, h4 { letter-spacing: -0.025em; }
+}
+
+/* Industrial Grid Background */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(226, 232, 240, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 232, 240, 0.5) 1px, transparent 1px);
+}
+.dark .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(51, 65, 85, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(51, 65, 85, 0.25) 1px, transparent 1px);
+}
+
+/* Glassmorphism Panel */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.dark .glass-card {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+/* Shimmer Animation */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2.5s infinite;
 }
 
 /* Nhãn kỹ thuật / mã số: dùng mono chữ hoa giãn cách kiểu industrial */
 @utility tech-label {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }

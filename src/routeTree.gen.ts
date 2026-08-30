@@ -9,160 +9,84 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SitemapZonesDotxmlRouteImport } from './routes/sitemap-zones[.]xml'
-import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
-import { Route as SitemapProvincesDotxmlRouteImport } from './routes/sitemap-provinces[.]xml'
-import { Route as SitemapIndustriesDotxmlRouteImport } from './routes/sitemap-industries[.]xml'
-import { Route as SitemapEnDotxmlRouteImport } from './routes/sitemap-en[.]xml'
-import { Route as SitemapCompaniesDotxmlRouteImport } from './routes/sitemap-companies[.]xml'
-import { Route as SearchRouteImport } from './routes/search'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as LanguageSelectorRouteImport } from './routes/language-selector'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as ApiRouteImport } from './routes/api'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as KhuCongNghiepIndexRouteImport } from './routes/khu-cong-nghiep.index'
-import { Route as KcnCcnIndexRouteImport } from './routes/kcn-ccn.index'
-import { Route as CumCongNghiepIndexRouteImport } from './routes/cum-cong-nghiep.index'
-import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
-import { Route as BlogIndexRouteImport } from './routes/blog.index'
-import { Route as ProvinceSlugRouteImport } from './routes/province.$slug'
-import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
-import { Route as PaymentCancelRouteImport } from './routes/payment.cancel'
-import { Route as KhuCongNghiepSlugRouteImport } from './routes/khu-cong-nghiep.$slug'
-import { Route as KcnCcnProvinceRouteImport } from './routes/kcn-ccn.$province'
-import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
-import { Route as CumCongNghiepSlugRouteImport } from './routes/cum-cong-nghiep.$slug'
-import { Route as CompanySlugRouteImport } from './routes/company.$slug'
-import { Route as CompaniesProvinceRouteImport } from './routes/companies.$province'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ApiRouteImport } from './routes/api'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as LanguageSelectorRouteImport } from './routes/language-selector'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as SitemapCompaniesDotxmlRouteImport } from './routes/sitemap-companies[.]xml'
+import { Route as SitemapEnDotxmlRouteImport } from './routes/sitemap-en[.]xml'
+import { Route as SitemapIndustriesDotxmlRouteImport } from './routes/sitemap-industries[.]xml'
+import { Route as SitemapProvincesDotxmlRouteImport } from './routes/sitemap-provinces[.]xml'
+import { Route as SitemapStaticDotxmlRouteImport } from './routes/sitemap-static[.]xml'
+import { Route as SitemapZonesDotxmlRouteImport } from './routes/sitemap-zones[.]xml'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
+import { Route as CompaniesProvinceRouteImport } from './routes/companies.$province'
+import { Route as CompanySlugRouteImport } from './routes/company.$slug'
+import { Route as CumCongNghiepIndexRouteImport } from './routes/cum-cong-nghiep.index'
+import { Route as CumCongNghiepSlugRouteImport } from './routes/cum-cong-nghiep.$slug'
+import { Route as IndustrySlugRouteImport } from './routes/industry.$slug'
+import { Route as KcnCcnIndexRouteImport } from './routes/kcn-ccn.index'
+import { Route as KcnCcnProvinceRouteImport } from './routes/kcn-ccn.$province'
+import { Route as KhuCongNghiepIndexRouteImport } from './routes/khu-cong-nghiep.index'
+import { Route as KhuCongNghiepSlugRouteImport } from './routes/khu-cong-nghiep.$slug'
+import { Route as PaymentCancelRouteImport } from './routes/payment.cancel'
+import { Route as PaymentSuccessRouteImport } from './routes/payment.success'
+import { Route as ProvinceSlugRouteImport } from './routes/province.$slug'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
-import { Route as KcnCcnProvinceSlugRouteImport } from './routes/kcn-ccn.$province.$slug'
-import { Route as CompaniesProvinceSlugRouteImport } from './routes/companies.$province.$slug'
-import { Route as AuthenticatedDashboardSubscriptionsRouteImport } from './routes/_authenticated/dashboard.subscriptions'
-import { Route as AuthenticatedDashboardSubmitCompanyRouteImport } from './routes/_authenticated/dashboard.submit-company'
-import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
-import { Route as AuthenticatedDashboardMyCompaniesRouteImport } from './routes/_authenticated/dashboard.my-companies'
-import { Route as AuthenticatedDashboardLeadsRouteImport } from './routes/_authenticated/dashboard.leads'
-import { Route as AuthenticatedDashboardClaimRouteImport } from './routes/_authenticated/dashboard/claim'
-import { Route as AuthenticatedDashboardCategoriesRouteImport } from './routes/_authenticated/dashboard.categories'
-import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
-import { Route as AuthenticatedDashboardAuctionRouteImport } from './routes/_authenticated/dashboard.auction'
 import { Route as AuthenticatedDashboardAnalyticsRouteImport } from './routes/_authenticated/dashboard.analytics'
-import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
-import { Route as ApiPublicWebhooksPayosRouteImport } from './routes/api/public/webhooks/payos'
-import { Route as ApiPublicHooksPriorityRecalculateRouteImport } from './routes/api/public/hooks/priority-recalculate'
-import { Route as ApiPublicHooksExpireSubscriptionsRouteImport } from './routes/api/public/hooks/expire-subscriptions'
-import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
-import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/public/admin/categories'
-import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
-import { Route as AuthenticatedDashboardIntegrationsHermesRouteImport } from './routes/_authenticated/dashboard.integrations.hermes'
-import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
-import { Route as AuthenticatedDashboardAdminZonesRouteImport } from './routes/_authenticated/dashboard/admin/zones'
-import { Route as AuthenticatedDashboardAdminImportRouteImport } from './routes/_authenticated/dashboard/admin/import'
-import { Route as AuthenticatedDashboardAdminEditRouteImport } from './routes/_authenticated/dashboard/admin/edit'
-import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './routes/_authenticated/dashboard/admin/companies'
-import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard/admin/claims'
+import { Route as AuthenticatedDashboardAuctionRouteImport } from './routes/_authenticated/dashboard.auction'
+import { Route as AuthenticatedDashboardBuyerRouteImport } from './routes/_authenticated/dashboard.buyer'
+import { Route as AuthenticatedDashboardCategoriesRouteImport } from './routes/_authenticated/dashboard.categories'
+import { Route as AuthenticatedDashboardClaimRouteImport } from './routes/_authenticated/dashboard/claim'
+import { Route as AuthenticatedDashboardLeadsRouteImport } from './routes/_authenticated/dashboard.leads'
+import { Route as AuthenticatedDashboardMyCompaniesRouteImport } from './routes/_authenticated/dashboard.my-companies'
+import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
+import { Route as AuthenticatedDashboardSubmitCompanyRouteImport } from './routes/_authenticated/dashboard.submit-company'
+import { Route as AuthenticatedDashboardSubscriptionsRouteImport } from './routes/_authenticated/dashboard.subscriptions'
+import { Route as CompaniesProvinceSlugRouteImport } from './routes/companies.$province.$slug'
+import { Route as KcnCcnProvinceSlugRouteImport } from './routes/kcn-ccn.$province.$slug'
 import { Route as AuthenticatedDashboardAdminAuditLogRouteImport } from './routes/_authenticated/dashboard/admin/audit-log'
-import { Route as ApiPublicAdminCompaniesBatchRouteImport } from './routes/api/public/admin/companies.batch'
-import { Route as ApiPublicAdminArticlesBatchDeleteRouteImport } from './routes/api/public/admin/articles.batch-delete'
-import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
-import { Route as ApiPublicAdminAnalyticsSummaryRouteImport } from './routes/api/public/admin/analytics.summary'
+import { Route as AuthenticatedDashboardAdminClaimsRouteImport } from './routes/_authenticated/dashboard/admin/claims'
+import { Route as AuthenticatedDashboardAdminCompaniesRouteImport } from './routes/_authenticated/dashboard/admin/companies'
+import { Route as AuthenticatedDashboardAdminEditRouteImport } from './routes/_authenticated/dashboard/admin/edit'
+import { Route as AuthenticatedDashboardAdminImportRouteImport } from './routes/_authenticated/dashboard/admin/import'
+import { Route as AuthenticatedDashboardAdminZonesRouteImport } from './routes/_authenticated/dashboard/admin/zones'
+import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
+import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
+import { Route as AuthenticatedDashboardIntegrationsHermesRouteImport } from './routes/_authenticated/dashboard.integrations.hermes'
+import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
+import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/public/admin/categories'
+import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
+import { Route as ApiPublicHooksExpireSubscriptionsRouteImport } from './routes/api/public/hooks/expire-subscriptions'
+import { Route as ApiPublicHooksPriorityRecalculateRouteImport } from './routes/api/public/hooks/priority-recalculate'
+import { Route as ApiPublicWebhooksPayosRouteImport } from './routes/api/public/webhooks/payos'
 import { Route as AuthenticatedDashboardArticlesIdEditRouteImport } from './routes/_authenticated/dashboard.articles.$id.edit'
+import { Route as ApiPublicAdminAnalyticsSummaryRouteImport } from './routes/api/public/admin/analytics.summary'
+import { Route as ApiPublicAdminArticlesIdRouteImport } from './routes/api/public/admin/articles.$id'
+import { Route as ApiPublicAdminArticlesBatchDeleteRouteImport } from './routes/api/public/admin/articles.batch-delete'
+import { Route as ApiPublicAdminCompaniesBatchRouteImport } from './routes/api/public/admin/companies.batch'
 import { Route as ApiPublicAdminArticlesIdPublishRouteImport } from './routes/api/public/admin/articles.$id.publish'
 
-const UnauthorizedRoute = UnauthorizedRouteImport.update({
-  id: '/unauthorized',
-  path: '/unauthorized',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapZonesDotxmlRoute = SitemapZonesDotxmlRouteImport.update({
-  id: '/sitemap-zones.xml',
-  path: '/sitemap-zones.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapStaticDotxmlRoute = SitemapStaticDotxmlRouteImport.update({
-  id: '/sitemap-static.xml',
-  path: '/sitemap-static.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapProvincesDotxmlRoute = SitemapProvincesDotxmlRouteImport.update({
-  id: '/sitemap-provinces.xml',
-  path: '/sitemap-provinces.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapIndustriesDotxmlRoute = SitemapIndustriesDotxmlRouteImport.update({
-  id: '/sitemap-industries.xml',
-  path: '/sitemap-industries.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapEnDotxmlRoute = SitemapEnDotxmlRouteImport.update({
-  id: '/sitemap-en.xml',
-  path: '/sitemap-en.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapCompaniesDotxmlRoute = SitemapCompaniesDotxmlRouteImport.update({
-  id: '/sitemap-companies.xml',
-  path: '/sitemap-companies.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LanguageSelectorRoute = LanguageSelectorRouteImport.update({
-  id: '/language-selector',
-  path: '/language-selector',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiRoute = ApiRouteImport.update({
-  id: '/api',
-  path: '/api',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -170,88 +94,89 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const ApiRoute = ApiRouteImport.update({
+  id: '/api',
+  path: '/api',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const KhuCongNghiepIndexRoute = KhuCongNghiepIndexRouteImport.update({
-  id: '/khu-cong-nghiep/',
-  path: '/khu-cong-nghiep/',
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const KcnCcnIndexRoute = KcnCcnIndexRouteImport.update({
-  id: '/kcn-ccn/',
-  path: '/kcn-ccn/',
+const LanguageSelectorRoute = LanguageSelectorRouteImport.update({
+  id: '/language-selector',
+  path: '/language-selector',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CumCongNghiepIndexRoute = CumCongNghiepIndexRouteImport.update({
-  id: '/cum-cong-nghiep/',
-  path: '/cum-cong-nghiep/',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
-  id: '/companies/',
-  path: '/companies/',
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProvinceSlugRoute = ProvinceSlugRouteImport.update({
-  id: '/province/$slug',
-  path: '/province/$slug',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
-  id: '/payment/success',
-  path: '/payment/success',
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PaymentCancelRoute = PaymentCancelRouteImport.update({
-  id: '/payment/cancel',
-  path: '/payment/cancel',
+const SitemapCompaniesDotxmlRoute = SitemapCompaniesDotxmlRouteImport.update({
+  id: '/sitemap-companies.xml',
+  path: '/sitemap-companies.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const KhuCongNghiepSlugRoute = KhuCongNghiepSlugRouteImport.update({
-  id: '/khu-cong-nghiep/$slug',
-  path: '/khu-cong-nghiep/$slug',
+const SitemapEnDotxmlRoute = SitemapEnDotxmlRouteImport.update({
+  id: '/sitemap-en.xml',
+  path: '/sitemap-en.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const KcnCcnProvinceRoute = KcnCcnProvinceRouteImport.update({
-  id: '/kcn-ccn/$province',
-  path: '/kcn-ccn/$province',
+const SitemapIndustriesDotxmlRoute = SitemapIndustriesDotxmlRouteImport.update({
+  id: '/sitemap-industries.xml',
+  path: '/sitemap-industries.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndustrySlugRoute = IndustrySlugRouteImport.update({
-  id: '/industry/$slug',
-  path: '/industry/$slug',
+const SitemapProvincesDotxmlRoute = SitemapProvincesDotxmlRouteImport.update({
+  id: '/sitemap-provinces.xml',
+  path: '/sitemap-provinces.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CumCongNghiepSlugRoute = CumCongNghiepSlugRouteImport.update({
-  id: '/cum-cong-nghiep/$slug',
-  path: '/cum-cong-nghiep/$slug',
+const SitemapStaticDotxmlRoute = SitemapStaticDotxmlRouteImport.update({
+  id: '/sitemap-static.xml',
+  path: '/sitemap-static.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CompanySlugRoute = CompanySlugRouteImport.update({
-  id: '/company/$slug',
-  path: '/company/$slug',
+const SitemapZonesDotxmlRoute = SitemapZonesDotxmlRouteImport.update({
+  id: '/sitemap-zones.xml',
+  path: '/sitemap-zones.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CompaniesProvinceRoute = CompaniesProvinceRouteImport.update({
-  id: '/companies/$province',
-  path: '/companies/$province',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -259,74 +184,85 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
+  id: '/companies/',
+  path: '/companies/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompaniesProvinceRoute = CompaniesProvinceRouteImport.update({
+  id: '/companies/$province',
+  path: '/companies/$province',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanySlugRoute = CompanySlugRouteImport.update({
+  id: '/company/$slug',
+  path: '/company/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CumCongNghiepIndexRoute = CumCongNghiepIndexRouteImport.update({
+  id: '/cum-cong-nghiep/',
+  path: '/cum-cong-nghiep/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CumCongNghiepSlugRoute = CumCongNghiepSlugRouteImport.update({
+  id: '/cum-cong-nghiep/$slug',
+  path: '/cum-cong-nghiep/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndustrySlugRoute = IndustrySlugRouteImport.update({
+  id: '/industry/$slug',
+  path: '/industry/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KcnCcnIndexRoute = KcnCcnIndexRouteImport.update({
+  id: '/kcn-ccn/',
+  path: '/kcn-ccn/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KcnCcnProvinceRoute = KcnCcnProvinceRouteImport.update({
+  id: '/kcn-ccn/$province',
+  path: '/kcn-ccn/$province',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KhuCongNghiepIndexRoute = KhuCongNghiepIndexRouteImport.update({
+  id: '/khu-cong-nghiep/',
+  path: '/khu-cong-nghiep/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KhuCongNghiepSlugRoute = KhuCongNghiepSlugRouteImport.update({
+  id: '/khu-cong-nghiep/$slug',
+  path: '/khu-cong-nghiep/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentCancelRoute = PaymentCancelRouteImport.update({
+  id: '/payment/cancel',
+  path: '/payment/cancel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
+  id: '/payment/success',
+  path: '/payment/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProvinceSlugRoute = ProvinceSlugRouteImport.update({
+  id: '/province/$slug',
+  path: '/province/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const KcnCcnProvinceSlugRoute = KcnCcnProvinceSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => KcnCcnProvinceRoute,
-} as any)
-const CompaniesProvinceSlugRoute = CompaniesProvinceSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => CompaniesProvinceRoute,
-} as any)
-const AuthenticatedDashboardSubscriptionsRoute =
-  AuthenticatedDashboardSubscriptionsRouteImport.update({
-    id: '/subscriptions',
-    path: '/subscriptions',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardSubmitCompanyRoute =
-  AuthenticatedDashboardSubmitCompanyRouteImport.update({
-    id: '/submit-company',
-    path: '/submit-company',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardOwnerRoute =
-  AuthenticatedDashboardOwnerRouteImport.update({
-    id: '/owner',
-    path: '/owner',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardMyCompaniesRoute =
-  AuthenticatedDashboardMyCompaniesRouteImport.update({
-    id: '/my-companies',
-    path: '/my-companies',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardLeadsRoute =
-  AuthenticatedDashboardLeadsRouteImport.update({
-    id: '/leads',
-    path: '/leads',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardClaimRoute =
-  AuthenticatedDashboardClaimRouteImport.update({
-    id: '/claim',
-    path: '/claim',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardCategoriesRoute =
-  AuthenticatedDashboardCategoriesRouteImport.update({
-    id: '/categories',
-    path: '/categories',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardBuyerRoute =
-  AuthenticatedDashboardBuyerRouteImport.update({
-    id: '/buyer',
-    path: '/buyer',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardAuctionRoute =
-  AuthenticatedDashboardAuctionRouteImport.update({
-    id: '/auction',
-    path: '/auction',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardAnalyticsRoute =
@@ -335,79 +271,74 @@ const AuthenticatedDashboardAnalyticsRoute =
     path: '/analytics',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const AuthenticatedDashboardArticlesIndexRoute =
-  AuthenticatedDashboardArticlesIndexRouteImport.update({
-    id: '/articles/',
-    path: '/articles/',
+const AuthenticatedDashboardAuctionRoute =
+  AuthenticatedDashboardAuctionRouteImport.update({
+    id: '/auction',
+    path: '/auction',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const ApiPublicWebhooksPayosRoute = ApiPublicWebhooksPayosRouteImport.update({
-  id: '/public/webhooks/payos',
-  path: '/public/webhooks/payos',
-  getParentRoute: () => ApiRoute,
+const AuthenticatedDashboardBuyerRoute =
+  AuthenticatedDashboardBuyerRouteImport.update({
+    id: '/buyer',
+    path: '/buyer',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardCategoriesRoute =
+  AuthenticatedDashboardCategoriesRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardClaimRoute =
+  AuthenticatedDashboardClaimRouteImport.update({
+    id: '/claim',
+    path: '/claim',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardLeadsRoute =
+  AuthenticatedDashboardLeadsRouteImport.update({
+    id: '/leads',
+    path: '/leads',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardMyCompaniesRoute =
+  AuthenticatedDashboardMyCompaniesRouteImport.update({
+    id: '/my-companies',
+    path: '/my-companies',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardOwnerRoute =
+  AuthenticatedDashboardOwnerRouteImport.update({
+    id: '/owner',
+    path: '/owner',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardSubmitCompanyRoute =
+  AuthenticatedDashboardSubmitCompanyRouteImport.update({
+    id: '/submit-company',
+    path: '/submit-company',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardSubscriptionsRoute =
+  AuthenticatedDashboardSubscriptionsRouteImport.update({
+    id: '/subscriptions',
+    path: '/subscriptions',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const CompaniesProvinceSlugRoute = CompaniesProvinceSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CompaniesProvinceRoute,
 } as any)
-const ApiPublicHooksPriorityRecalculateRoute =
-  ApiPublicHooksPriorityRecalculateRouteImport.update({
-    id: '/public/hooks/priority-recalculate',
-    path: '/public/hooks/priority-recalculate',
-    getParentRoute: () => ApiRoute,
-  } as any)
-const ApiPublicHooksExpireSubscriptionsRoute =
-  ApiPublicHooksExpireSubscriptionsRouteImport.update({
-    id: '/public/hooks/expire-subscriptions',
-    path: '/public/hooks/expire-subscriptions',
-    getParentRoute: () => ApiRoute,
-  } as any)
-const ApiPublicAdminLeadsRoute = ApiPublicAdminLeadsRouteImport.update({
-  id: '/public/admin/leads',
-  path: '/public/admin/leads',
-  getParentRoute: () => ApiRoute,
+const KcnCcnProvinceSlugRoute = KcnCcnProvinceSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => KcnCcnProvinceRoute,
 } as any)
-const ApiPublicAdminCategoriesRoute =
-  ApiPublicAdminCategoriesRouteImport.update({
-    id: '/public/admin/categories',
-    path: '/public/admin/categories',
-    getParentRoute: () => ApiRoute,
-  } as any)
-const ApiPublicAdminArticlesRoute = ApiPublicAdminArticlesRouteImport.update({
-  id: '/public/admin/articles',
-  path: '/public/admin/articles',
-  getParentRoute: () => ApiRoute,
-} as any)
-const AuthenticatedDashboardIntegrationsHermesRoute =
-  AuthenticatedDashboardIntegrationsHermesRouteImport.update({
-    id: '/integrations/hermes',
-    path: '/integrations/hermes',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardArticlesNewRoute =
-  AuthenticatedDashboardArticlesNewRouteImport.update({
-    id: '/articles/new',
-    path: '/articles/new',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardAdminZonesRoute =
-  AuthenticatedDashboardAdminZonesRouteImport.update({
-    id: '/admin/zones',
-    path: '/admin/zones',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardAdminImportRoute =
-  AuthenticatedDashboardAdminImportRouteImport.update({
-    id: '/admin/import',
-    path: '/admin/import',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardAdminEditRoute =
-  AuthenticatedDashboardAdminEditRouteImport.update({
-    id: '/admin/edit',
-    path: '/admin/edit',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardAdminCompaniesRoute =
-  AuthenticatedDashboardAdminCompaniesRouteImport.update({
-    id: '/admin/companies',
-    path: '/admin/companies',
+const AuthenticatedDashboardAdminAuditLogRoute =
+  AuthenticatedDashboardAdminAuditLogRouteImport.update({
+    id: '/admin/audit-log',
+    path: '/admin/audit-log',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardAdminClaimsRoute =
@@ -416,29 +347,86 @@ const AuthenticatedDashboardAdminClaimsRoute =
     path: '/admin/claims',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const AuthenticatedDashboardAdminAuditLogRoute =
-  AuthenticatedDashboardAdminAuditLogRouteImport.update({
-    id: '/admin/audit-log',
-    path: '/admin/audit-log',
+const AuthenticatedDashboardAdminCompaniesRoute =
+  AuthenticatedDashboardAdminCompaniesRouteImport.update({
+    id: '/admin/companies',
+    path: '/admin/companies',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const ApiPublicAdminCompaniesBatchRoute =
-  ApiPublicAdminCompaniesBatchRouteImport.update({
-    id: '/public/admin/companies/batch',
-    path: '/public/admin/companies/batch',
+const AuthenticatedDashboardAdminEditRoute =
+  AuthenticatedDashboardAdminEditRouteImport.update({
+    id: '/admin/edit',
+    path: '/admin/edit',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardAdminImportRoute =
+  AuthenticatedDashboardAdminImportRouteImport.update({
+    id: '/admin/import',
+    path: '/admin/import',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardAdminZonesRoute =
+  AuthenticatedDashboardAdminZonesRouteImport.update({
+    id: '/admin/zones',
+    path: '/admin/zones',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardArticlesIndexRoute =
+  AuthenticatedDashboardArticlesIndexRouteImport.update({
+    id: '/articles/',
+    path: '/articles/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardArticlesNewRoute =
+  AuthenticatedDashboardArticlesNewRouteImport.update({
+    id: '/articles/new',
+    path: '/articles/new',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardIntegrationsHermesRoute =
+  AuthenticatedDashboardIntegrationsHermesRouteImport.update({
+    id: '/integrations/hermes',
+    path: '/integrations/hermes',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const ApiPublicAdminArticlesRoute = ApiPublicAdminArticlesRouteImport.update({
+  id: '/public/admin/articles',
+  path: '/public/admin/articles',
+  getParentRoute: () => ApiRoute,
+} as any)
+const ApiPublicAdminCategoriesRoute =
+  ApiPublicAdminCategoriesRouteImport.update({
+    id: '/public/admin/categories',
+    path: '/public/admin/categories',
     getParentRoute: () => ApiRoute,
   } as any)
-const ApiPublicAdminArticlesBatchDeleteRoute =
-  ApiPublicAdminArticlesBatchDeleteRouteImport.update({
-    id: '/batch-delete',
-    path: '/batch-delete',
-    getParentRoute: () => ApiPublicAdminArticlesRoute,
+const ApiPublicAdminLeadsRoute = ApiPublicAdminLeadsRouteImport.update({
+  id: '/public/admin/leads',
+  path: '/public/admin/leads',
+  getParentRoute: () => ApiRoute,
+} as any)
+const ApiPublicHooksExpireSubscriptionsRoute =
+  ApiPublicHooksExpireSubscriptionsRouteImport.update({
+    id: '/public/hooks/expire-subscriptions',
+    path: '/public/hooks/expire-subscriptions',
+    getParentRoute: () => ApiRoute,
   } as any)
-const ApiPublicAdminArticlesIdRoute =
-  ApiPublicAdminArticlesIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => ApiPublicAdminArticlesRoute,
+const ApiPublicHooksPriorityRecalculateRoute =
+  ApiPublicHooksPriorityRecalculateRouteImport.update({
+    id: '/public/hooks/priority-recalculate',
+    path: '/public/hooks/priority-recalculate',
+    getParentRoute: () => ApiRoute,
+  } as any)
+const ApiPublicWebhooksPayosRoute = ApiPublicWebhooksPayosRouteImport.update({
+  id: '/public/webhooks/payos',
+  path: '/public/webhooks/payos',
+  getParentRoute: () => ApiRoute,
+} as any)
+const AuthenticatedDashboardArticlesIdEditRoute =
+  AuthenticatedDashboardArticlesIdEditRouteImport.update({
+    id: '/articles/$id/edit',
+    path: '/articles/$id/edit',
+    getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const ApiPublicAdminAnalyticsSummaryRoute =
   ApiPublicAdminAnalyticsSummaryRouteImport.update({
@@ -446,11 +434,23 @@ const ApiPublicAdminAnalyticsSummaryRoute =
     path: '/public/admin/analytics/summary',
     getParentRoute: () => ApiRoute,
   } as any)
-const AuthenticatedDashboardArticlesIdEditRoute =
-  AuthenticatedDashboardArticlesIdEditRouteImport.update({
-    id: '/articles/$id/edit',
-    path: '/articles/$id/edit',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+const ApiPublicAdminArticlesIdRoute =
+  ApiPublicAdminArticlesIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => ApiPublicAdminArticlesRoute,
+  } as any)
+const ApiPublicAdminArticlesBatchDeleteRoute =
+  ApiPublicAdminArticlesBatchDeleteRouteImport.update({
+    id: '/batch-delete',
+    path: '/batch-delete',
+    getParentRoute: () => ApiPublicAdminArticlesRoute,
+  } as any)
+const ApiPublicAdminCompaniesBatchRoute =
+  ApiPublicAdminCompaniesBatchRouteImport.update({
+    id: '/public/admin/companies/batch',
+    path: '/public/admin/companies/batch',
+    getParentRoute: () => ApiRoute,
   } as any)
 const ApiPublicAdminArticlesIdPublishRoute =
   ApiPublicAdminArticlesIdPublishRouteImport.update({
@@ -929,130 +929,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/unauthorized': {
-      id: '/unauthorized'
-      path: '/unauthorized'
-      fullPath: '/unauthorized'
-      preLoaderRoute: typeof UnauthorizedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap-zones.xml': {
-      id: '/sitemap-zones.xml'
-      path: '/sitemap-zones.xml'
-      fullPath: '/sitemap-zones.xml'
-      preLoaderRoute: typeof SitemapZonesDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap-static.xml': {
-      id: '/sitemap-static.xml'
-      path: '/sitemap-static.xml'
-      fullPath: '/sitemap-static.xml'
-      preLoaderRoute: typeof SitemapStaticDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap-provinces.xml': {
-      id: '/sitemap-provinces.xml'
-      path: '/sitemap-provinces.xml'
-      fullPath: '/sitemap-provinces.xml'
-      preLoaderRoute: typeof SitemapProvincesDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap-industries.xml': {
-      id: '/sitemap-industries.xml'
-      path: '/sitemap-industries.xml'
-      fullPath: '/sitemap-industries.xml'
-      preLoaderRoute: typeof SitemapIndustriesDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap-en.xml': {
-      id: '/sitemap-en.xml'
-      path: '/sitemap-en.xml'
-      fullPath: '/sitemap-en.xml'
-      preLoaderRoute: typeof SitemapEnDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap-companies.xml': {
-      id: '/sitemap-companies.xml'
-      path: '/sitemap-companies.xml'
-      fullPath: '/sitemap-companies.xml'
-      preLoaderRoute: typeof SitemapCompaniesDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/language-selector': {
-      id: '/language-selector'
-      path: '/language-selector'
-      fullPath: '/language-selector'
-      preLoaderRoute: typeof LanguageSelectorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forgot-password': {
-      id: '/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof ForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api': {
-      id: '/api'
-      path: '/api'
-      fullPath: '/api'
-      preLoaderRoute: typeof ApiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -1062,116 +943,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/khu-cong-nghiep/': {
-      id: '/khu-cong-nghiep/'
-      path: '/khu-cong-nghiep'
-      fullPath: '/khu-cong-nghiep/'
-      preLoaderRoute: typeof KhuCongNghiepIndexRouteImport
+    '/api': {
+      id: '/api'
+      path: '/api'
+      fullPath: '/api'
+      preLoaderRoute: typeof ApiRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/kcn-ccn/': {
-      id: '/kcn-ccn/'
-      path: '/kcn-ccn'
-      fullPath: '/kcn-ccn/'
-      preLoaderRoute: typeof KcnCcnIndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cum-cong-nghiep/': {
-      id: '/cum-cong-nghiep/'
-      path: '/cum-cong-nghiep'
-      fullPath: '/cum-cong-nghiep/'
-      preLoaderRoute: typeof CumCongNghiepIndexRouteImport
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/companies/': {
-      id: '/companies/'
-      path: '/companies'
-      fullPath: '/companies/'
-      preLoaderRoute: typeof CompaniesIndexRouteImport
+    '/language-selector': {
+      id: '/language-selector'
+      path: '/language-selector'
+      fullPath: '/language-selector'
+      preLoaderRoute: typeof LanguageSelectorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/': {
-      id: '/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/province/$slug': {
-      id: '/province/$slug'
-      path: '/province/$slug'
-      fullPath: '/province/$slug'
-      preLoaderRoute: typeof ProvinceSlugRouteImport
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/payment/success': {
-      id: '/payment/success'
-      path: '/payment/success'
-      fullPath: '/payment/success'
-      preLoaderRoute: typeof PaymentSuccessRouteImport
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/payment/cancel': {
-      id: '/payment/cancel'
-      path: '/payment/cancel'
-      fullPath: '/payment/cancel'
-      preLoaderRoute: typeof PaymentCancelRouteImport
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/khu-cong-nghiep/$slug': {
-      id: '/khu-cong-nghiep/$slug'
-      path: '/khu-cong-nghiep/$slug'
-      fullPath: '/khu-cong-nghiep/$slug'
-      preLoaderRoute: typeof KhuCongNghiepSlugRouteImport
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/kcn-ccn/$province': {
-      id: '/kcn-ccn/$province'
-      path: '/kcn-ccn/$province'
-      fullPath: '/kcn-ccn/$province'
-      preLoaderRoute: typeof KcnCcnProvinceRouteImport
+    '/sitemap-companies.xml': {
+      id: '/sitemap-companies.xml'
+      path: '/sitemap-companies.xml'
+      fullPath: '/sitemap-companies.xml'
+      preLoaderRoute: typeof SitemapCompaniesDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/industry/$slug': {
-      id: '/industry/$slug'
-      path: '/industry/$slug'
-      fullPath: '/industry/$slug'
-      preLoaderRoute: typeof IndustrySlugRouteImport
+    '/sitemap-en.xml': {
+      id: '/sitemap-en.xml'
+      path: '/sitemap-en.xml'
+      fullPath: '/sitemap-en.xml'
+      preLoaderRoute: typeof SitemapEnDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cum-cong-nghiep/$slug': {
-      id: '/cum-cong-nghiep/$slug'
-      path: '/cum-cong-nghiep/$slug'
-      fullPath: '/cum-cong-nghiep/$slug'
-      preLoaderRoute: typeof CumCongNghiepSlugRouteImport
+    '/sitemap-industries.xml': {
+      id: '/sitemap-industries.xml'
+      path: '/sitemap-industries.xml'
+      fullPath: '/sitemap-industries.xml'
+      preLoaderRoute: typeof SitemapIndustriesDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/company/$slug': {
-      id: '/company/$slug'
-      path: '/company/$slug'
-      fullPath: '/company/$slug'
-      preLoaderRoute: typeof CompanySlugRouteImport
+    '/sitemap-provinces.xml': {
+      id: '/sitemap-provinces.xml'
+      path: '/sitemap-provinces.xml'
+      fullPath: '/sitemap-provinces.xml'
+      preLoaderRoute: typeof SitemapProvincesDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/companies/$province': {
-      id: '/companies/$province'
-      path: '/companies/$province'
-      fullPath: '/companies/$province'
-      preLoaderRoute: typeof CompaniesProvinceRouteImport
+    '/sitemap-static.xml': {
+      id: '/sitemap-static.xml'
+      path: '/sitemap-static.xml'
+      fullPath: '/sitemap-static.xml'
+      preLoaderRoute: typeof SitemapStaticDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
+    '/sitemap-zones.xml': {
+      id: '/sitemap-zones.xml'
+      path: '/sitemap-zones.xml'
+      fullPath: '/sitemap-zones.xml'
+      preLoaderRoute: typeof SitemapZonesDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard': {
@@ -1181,88 +1076,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/companies/': {
+      id: '/companies/'
+      path: '/companies'
+      fullPath: '/companies/'
+      preLoaderRoute: typeof CompaniesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/companies/$province': {
+      id: '/companies/$province'
+      path: '/companies/$province'
+      fullPath: '/companies/$province'
+      preLoaderRoute: typeof CompaniesProvinceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company/$slug': {
+      id: '/company/$slug'
+      path: '/company/$slug'
+      fullPath: '/company/$slug'
+      preLoaderRoute: typeof CompanySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cum-cong-nghiep/': {
+      id: '/cum-cong-nghiep/'
+      path: '/cum-cong-nghiep'
+      fullPath: '/cum-cong-nghiep/'
+      preLoaderRoute: typeof CumCongNghiepIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cum-cong-nghiep/$slug': {
+      id: '/cum-cong-nghiep/$slug'
+      path: '/cum-cong-nghiep/$slug'
+      fullPath: '/cum-cong-nghiep/$slug'
+      preLoaderRoute: typeof CumCongNghiepSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/industry/$slug': {
+      id: '/industry/$slug'
+      path: '/industry/$slug'
+      fullPath: '/industry/$slug'
+      preLoaderRoute: typeof IndustrySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kcn-ccn/': {
+      id: '/kcn-ccn/'
+      path: '/kcn-ccn'
+      fullPath: '/kcn-ccn/'
+      preLoaderRoute: typeof KcnCcnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kcn-ccn/$province': {
+      id: '/kcn-ccn/$province'
+      path: '/kcn-ccn/$province'
+      fullPath: '/kcn-ccn/$province'
+      preLoaderRoute: typeof KcnCcnProvinceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/khu-cong-nghiep/': {
+      id: '/khu-cong-nghiep/'
+      path: '/khu-cong-nghiep'
+      fullPath: '/khu-cong-nghiep/'
+      preLoaderRoute: typeof KhuCongNghiepIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/khu-cong-nghiep/$slug': {
+      id: '/khu-cong-nghiep/$slug'
+      path: '/khu-cong-nghiep/$slug'
+      fullPath: '/khu-cong-nghiep/$slug'
+      preLoaderRoute: typeof KhuCongNghiepSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment/cancel': {
+      id: '/payment/cancel'
+      path: '/payment/cancel'
+      fullPath: '/payment/cancel'
+      preLoaderRoute: typeof PaymentCancelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment/success': {
+      id: '/payment/success'
+      path: '/payment/success'
+      fullPath: '/payment/success'
+      preLoaderRoute: typeof PaymentSuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/province/$slug': {
+      id: '/province/$slug'
+      path: '/province/$slug'
+      fullPath: '/province/$slug'
+      preLoaderRoute: typeof ProvinceSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/kcn-ccn/$province/$slug': {
-      id: '/kcn-ccn/$province/$slug'
-      path: '/$slug'
-      fullPath: '/kcn-ccn/$province/$slug'
-      preLoaderRoute: typeof KcnCcnProvinceSlugRouteImport
-      parentRoute: typeof KcnCcnProvinceRoute
-    }
-    '/companies/$province/$slug': {
-      id: '/companies/$province/$slug'
-      path: '/$slug'
-      fullPath: '/companies/$province/$slug'
-      preLoaderRoute: typeof CompaniesProvinceSlugRouteImport
-      parentRoute: typeof CompaniesProvinceRoute
-    }
-    '/_authenticated/dashboard/subscriptions': {
-      id: '/_authenticated/dashboard/subscriptions'
-      path: '/subscriptions'
-      fullPath: '/dashboard/subscriptions'
-      preLoaderRoute: typeof AuthenticatedDashboardSubscriptionsRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/submit-company': {
-      id: '/_authenticated/dashboard/submit-company'
-      path: '/submit-company'
-      fullPath: '/dashboard/submit-company'
-      preLoaderRoute: typeof AuthenticatedDashboardSubmitCompanyRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/owner': {
-      id: '/_authenticated/dashboard/owner'
-      path: '/owner'
-      fullPath: '/dashboard/owner'
-      preLoaderRoute: typeof AuthenticatedDashboardOwnerRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/my-companies': {
-      id: '/_authenticated/dashboard/my-companies'
-      path: '/my-companies'
-      fullPath: '/dashboard/my-companies'
-      preLoaderRoute: typeof AuthenticatedDashboardMyCompaniesRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/leads': {
-      id: '/_authenticated/dashboard/leads'
-      path: '/leads'
-      fullPath: '/dashboard/leads'
-      preLoaderRoute: typeof AuthenticatedDashboardLeadsRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/claim': {
-      id: '/_authenticated/dashboard/claim'
-      path: '/claim'
-      fullPath: '/dashboard/claim'
-      preLoaderRoute: typeof AuthenticatedDashboardClaimRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/categories': {
-      id: '/_authenticated/dashboard/categories'
-      path: '/categories'
-      fullPath: '/dashboard/categories'
-      preLoaderRoute: typeof AuthenticatedDashboardCategoriesRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/buyer': {
-      id: '/_authenticated/dashboard/buyer'
-      path: '/buyer'
-      fullPath: '/dashboard/buyer'
-      preLoaderRoute: typeof AuthenticatedDashboardBuyerRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/auction': {
-      id: '/_authenticated/dashboard/auction'
-      path: '/auction'
-      fullPath: '/dashboard/auction'
-      preLoaderRoute: typeof AuthenticatedDashboardAuctionRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/analytics': {
@@ -1272,95 +1195,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAnalyticsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/articles/': {
-      id: '/_authenticated/dashboard/articles/'
-      path: '/articles'
-      fullPath: '/dashboard/articles/'
-      preLoaderRoute: typeof AuthenticatedDashboardArticlesIndexRouteImport
+    '/_authenticated/dashboard/auction': {
+      id: '/_authenticated/dashboard/auction'
+      path: '/auction'
+      fullPath: '/dashboard/auction'
+      preLoaderRoute: typeof AuthenticatedDashboardAuctionRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/api/public/webhooks/payos': {
-      id: '/api/public/webhooks/payos'
-      path: '/public/webhooks/payos'
-      fullPath: '/api/public/webhooks/payos'
-      preLoaderRoute: typeof ApiPublicWebhooksPayosRouteImport
-      parentRoute: typeof ApiRoute
-    }
-    '/api/public/hooks/priority-recalculate': {
-      id: '/api/public/hooks/priority-recalculate'
-      path: '/public/hooks/priority-recalculate'
-      fullPath: '/api/public/hooks/priority-recalculate'
-      preLoaderRoute: typeof ApiPublicHooksPriorityRecalculateRouteImport
-      parentRoute: typeof ApiRoute
-    }
-    '/api/public/hooks/expire-subscriptions': {
-      id: '/api/public/hooks/expire-subscriptions'
-      path: '/public/hooks/expire-subscriptions'
-      fullPath: '/api/public/hooks/expire-subscriptions'
-      preLoaderRoute: typeof ApiPublicHooksExpireSubscriptionsRouteImport
-      parentRoute: typeof ApiRoute
-    }
-    '/api/public/admin/leads': {
-      id: '/api/public/admin/leads'
-      path: '/public/admin/leads'
-      fullPath: '/api/public/admin/leads'
-      preLoaderRoute: typeof ApiPublicAdminLeadsRouteImport
-      parentRoute: typeof ApiRoute
-    }
-    '/api/public/admin/categories': {
-      id: '/api/public/admin/categories'
-      path: '/public/admin/categories'
-      fullPath: '/api/public/admin/categories'
-      preLoaderRoute: typeof ApiPublicAdminCategoriesRouteImport
-      parentRoute: typeof ApiRoute
-    }
-    '/api/public/admin/articles': {
-      id: '/api/public/admin/articles'
-      path: '/public/admin/articles'
-      fullPath: '/api/public/admin/articles'
-      preLoaderRoute: typeof ApiPublicAdminArticlesRouteImport
-      parentRoute: typeof ApiRoute
-    }
-    '/_authenticated/dashboard/integrations/hermes': {
-      id: '/_authenticated/dashboard/integrations/hermes'
-      path: '/integrations/hermes'
-      fullPath: '/dashboard/integrations/hermes'
-      preLoaderRoute: typeof AuthenticatedDashboardIntegrationsHermesRouteImport
+    '/_authenticated/dashboard/buyer': {
+      id: '/_authenticated/dashboard/buyer'
+      path: '/buyer'
+      fullPath: '/dashboard/buyer'
+      preLoaderRoute: typeof AuthenticatedDashboardBuyerRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/articles/new': {
-      id: '/_authenticated/dashboard/articles/new'
-      path: '/articles/new'
-      fullPath: '/dashboard/articles/new'
-      preLoaderRoute: typeof AuthenticatedDashboardArticlesNewRouteImport
+    '/_authenticated/dashboard/categories': {
+      id: '/_authenticated/dashboard/categories'
+      path: '/categories'
+      fullPath: '/dashboard/categories'
+      preLoaderRoute: typeof AuthenticatedDashboardCategoriesRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/admin/zones': {
-      id: '/_authenticated/dashboard/admin/zones'
-      path: '/admin/zones'
-      fullPath: '/dashboard/admin/zones'
-      preLoaderRoute: typeof AuthenticatedDashboardAdminZonesRouteImport
+    '/_authenticated/dashboard/claim': {
+      id: '/_authenticated/dashboard/claim'
+      path: '/claim'
+      fullPath: '/dashboard/claim'
+      preLoaderRoute: typeof AuthenticatedDashboardClaimRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/admin/import': {
-      id: '/_authenticated/dashboard/admin/import'
-      path: '/admin/import'
-      fullPath: '/dashboard/admin/import'
-      preLoaderRoute: typeof AuthenticatedDashboardAdminImportRouteImport
+    '/_authenticated/dashboard/leads': {
+      id: '/_authenticated/dashboard/leads'
+      path: '/leads'
+      fullPath: '/dashboard/leads'
+      preLoaderRoute: typeof AuthenticatedDashboardLeadsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/admin/edit': {
-      id: '/_authenticated/dashboard/admin/edit'
-      path: '/admin/edit'
-      fullPath: '/dashboard/admin/edit'
-      preLoaderRoute: typeof AuthenticatedDashboardAdminEditRouteImport
+    '/_authenticated/dashboard/my-companies': {
+      id: '/_authenticated/dashboard/my-companies'
+      path: '/my-companies'
+      fullPath: '/dashboard/my-companies'
+      preLoaderRoute: typeof AuthenticatedDashboardMyCompaniesRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/admin/companies': {
-      id: '/_authenticated/dashboard/admin/companies'
-      path: '/admin/companies'
-      fullPath: '/dashboard/admin/companies'
-      preLoaderRoute: typeof AuthenticatedDashboardAdminCompaniesRouteImport
+    '/_authenticated/dashboard/owner': {
+      id: '/_authenticated/dashboard/owner'
+      path: '/owner'
+      fullPath: '/dashboard/owner'
+      preLoaderRoute: typeof AuthenticatedDashboardOwnerRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/submit-company': {
+      id: '/_authenticated/dashboard/submit-company'
+      path: '/submit-company'
+      fullPath: '/dashboard/submit-company'
+      preLoaderRoute: typeof AuthenticatedDashboardSubmitCompanyRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/subscriptions': {
+      id: '/_authenticated/dashboard/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/dashboard/subscriptions'
+      preLoaderRoute: typeof AuthenticatedDashboardSubscriptionsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/companies/$province/$slug': {
+      id: '/companies/$province/$slug'
+      path: '/$slug'
+      fullPath: '/companies/$province/$slug'
+      preLoaderRoute: typeof CompaniesProvinceSlugRouteImport
+      parentRoute: typeof CompaniesProvinceRoute
+    }
+    '/kcn-ccn/$province/$slug': {
+      id: '/kcn-ccn/$province/$slug'
+      path: '/$slug'
+      fullPath: '/kcn-ccn/$province/$slug'
+      preLoaderRoute: typeof KcnCcnProvinceSlugRouteImport
+      parentRoute: typeof KcnCcnProvinceRoute
+    }
+    '/_authenticated/dashboard/admin/audit-log': {
+      id: '/_authenticated/dashboard/admin/audit-log'
+      path: '/admin/audit-log'
+      fullPath: '/dashboard/admin/audit-log'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminAuditLogRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/admin/claims': {
@@ -1370,39 +1286,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminClaimsRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/admin/audit-log': {
-      id: '/_authenticated/dashboard/admin/audit-log'
-      path: '/admin/audit-log'
-      fullPath: '/dashboard/admin/audit-log'
-      preLoaderRoute: typeof AuthenticatedDashboardAdminAuditLogRouteImport
+    '/_authenticated/dashboard/admin/companies': {
+      id: '/_authenticated/dashboard/admin/companies'
+      path: '/admin/companies'
+      fullPath: '/dashboard/admin/companies'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminCompaniesRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/api/public/admin/companies/batch': {
-      id: '/api/public/admin/companies/batch'
-      path: '/public/admin/companies/batch'
-      fullPath: '/api/public/admin/companies/batch'
-      preLoaderRoute: typeof ApiPublicAdminCompaniesBatchRouteImport
+    '/_authenticated/dashboard/admin/edit': {
+      id: '/_authenticated/dashboard/admin/edit'
+      path: '/admin/edit'
+      fullPath: '/dashboard/admin/edit'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminEditRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/admin/import': {
+      id: '/_authenticated/dashboard/admin/import'
+      path: '/admin/import'
+      fullPath: '/dashboard/admin/import'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminImportRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/admin/zones': {
+      id: '/_authenticated/dashboard/admin/zones'
+      path: '/admin/zones'
+      fullPath: '/dashboard/admin/zones'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminZonesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/articles/': {
+      id: '/_authenticated/dashboard/articles/'
+      path: '/articles'
+      fullPath: '/dashboard/articles/'
+      preLoaderRoute: typeof AuthenticatedDashboardArticlesIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/articles/new': {
+      id: '/_authenticated/dashboard/articles/new'
+      path: '/articles/new'
+      fullPath: '/dashboard/articles/new'
+      preLoaderRoute: typeof AuthenticatedDashboardArticlesNewRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/integrations/hermes': {
+      id: '/_authenticated/dashboard/integrations/hermes'
+      path: '/integrations/hermes'
+      fullPath: '/dashboard/integrations/hermes'
+      preLoaderRoute: typeof AuthenticatedDashboardIntegrationsHermesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/api/public/admin/articles': {
+      id: '/api/public/admin/articles'
+      path: '/public/admin/articles'
+      fullPath: '/api/public/admin/articles'
+      preLoaderRoute: typeof ApiPublicAdminArticlesRouteImport
       parentRoute: typeof ApiRoute
     }
-    '/api/public/admin/articles/batch-delete': {
-      id: '/api/public/admin/articles/batch-delete'
-      path: '/batch-delete'
-      fullPath: '/api/public/admin/articles/batch-delete'
-      preLoaderRoute: typeof ApiPublicAdminArticlesBatchDeleteRouteImport
-      parentRoute: typeof ApiPublicAdminArticlesRoute
+    '/api/public/admin/categories': {
+      id: '/api/public/admin/categories'
+      path: '/public/admin/categories'
+      fullPath: '/api/public/admin/categories'
+      preLoaderRoute: typeof ApiPublicAdminCategoriesRouteImport
+      parentRoute: typeof ApiRoute
     }
-    '/api/public/admin/articles/$id': {
-      id: '/api/public/admin/articles/$id'
-      path: '/$id'
-      fullPath: '/api/public/admin/articles/$id'
-      preLoaderRoute: typeof ApiPublicAdminArticlesIdRouteImport
-      parentRoute: typeof ApiPublicAdminArticlesRoute
+    '/api/public/admin/leads': {
+      id: '/api/public/admin/leads'
+      path: '/public/admin/leads'
+      fullPath: '/api/public/admin/leads'
+      preLoaderRoute: typeof ApiPublicAdminLeadsRouteImport
+      parentRoute: typeof ApiRoute
     }
-    '/api/public/admin/analytics/summary': {
-      id: '/api/public/admin/analytics/summary'
-      path: '/public/admin/analytics/summary'
-      fullPath: '/api/public/admin/analytics/summary'
-      preLoaderRoute: typeof ApiPublicAdminAnalyticsSummaryRouteImport
+    '/api/public/hooks/expire-subscriptions': {
+      id: '/api/public/hooks/expire-subscriptions'
+      path: '/public/hooks/expire-subscriptions'
+      fullPath: '/api/public/hooks/expire-subscriptions'
+      preLoaderRoute: typeof ApiPublicHooksExpireSubscriptionsRouteImport
+      parentRoute: typeof ApiRoute
+    }
+    '/api/public/hooks/priority-recalculate': {
+      id: '/api/public/hooks/priority-recalculate'
+      path: '/public/hooks/priority-recalculate'
+      fullPath: '/api/public/hooks/priority-recalculate'
+      preLoaderRoute: typeof ApiPublicHooksPriorityRecalculateRouteImport
+      parentRoute: typeof ApiRoute
+    }
+    '/api/public/webhooks/payos': {
+      id: '/api/public/webhooks/payos'
+      path: '/public/webhooks/payos'
+      fullPath: '/api/public/webhooks/payos'
+      preLoaderRoute: typeof ApiPublicWebhooksPayosRouteImport
       parentRoute: typeof ApiRoute
     }
     '/_authenticated/dashboard/articles/$id/edit': {
@@ -1411,6 +1383,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/articles/$id/edit'
       preLoaderRoute: typeof AuthenticatedDashboardArticlesIdEditRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/api/public/admin/analytics/summary': {
+      id: '/api/public/admin/analytics/summary'
+      path: '/public/admin/analytics/summary'
+      fullPath: '/api/public/admin/analytics/summary'
+      preLoaderRoute: typeof ApiPublicAdminAnalyticsSummaryRouteImport
+      parentRoute: typeof ApiRoute
+    }
+    '/api/public/admin/articles/$id': {
+      id: '/api/public/admin/articles/$id'
+      path: '/$id'
+      fullPath: '/api/public/admin/articles/$id'
+      preLoaderRoute: typeof ApiPublicAdminArticlesIdRouteImport
+      parentRoute: typeof ApiPublicAdminArticlesRoute
+    }
+    '/api/public/admin/articles/batch-delete': {
+      id: '/api/public/admin/articles/batch-delete'
+      path: '/batch-delete'
+      fullPath: '/api/public/admin/articles/batch-delete'
+      preLoaderRoute: typeof ApiPublicAdminArticlesBatchDeleteRouteImport
+      parentRoute: typeof ApiPublicAdminArticlesRoute
+    }
+    '/api/public/admin/companies/batch': {
+      id: '/api/public/admin/companies/batch'
+      path: '/public/admin/companies/batch'
+      fullPath: '/api/public/admin/companies/batch'
+      preLoaderRoute: typeof ApiPublicAdminCompaniesBatchRouteImport
+      parentRoute: typeof ApiRoute
     }
     '/api/public/admin/articles/$id/publish': {
       id: '/api/public/admin/articles/$id/publish'
