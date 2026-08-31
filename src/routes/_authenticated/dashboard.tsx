@@ -82,10 +82,16 @@ function DashboardLayout() {
             {!hasAdminRole && (
               <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold">
                 <Link
+                  to="/"
+                  className="px-3 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition"
+                >
+                  Trang chủ
+                </Link>
+                <Link
                   to="/dashboard"
                   className={`px-3 py-1.5 rounded-md transition ${
                     path === "/dashboard" || path === "/dashboard/"
-                      ? "bg-brand text-white"
+                      ? "bg-brand text-white shadow-xs"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
                 >
@@ -95,7 +101,7 @@ function DashboardLayout() {
                   to="/dashboard/my-companies"
                   className={`px-3 py-1.5 rounded-md transition ${
                     path.startsWith("/dashboard/my-companies") || path.startsWith("/dashboard/manage-company")
-                      ? "bg-brand text-white"
+                      ? "bg-brand text-white shadow-xs"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
                 >
@@ -105,21 +111,31 @@ function DashboardLayout() {
                   to="/dashboard/leads"
                   className={`px-3 py-1.5 rounded-md transition ${
                     path.startsWith("/dashboard/leads")
-                      ? "bg-brand text-white"
+                      ? "bg-brand text-white shadow-xs"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
                 >
-                  Hộp thư Báo giá
+                  Hộp thư Báo giá (RFQ)
+                </Link>
+                <Link
+                  to="/dashboard/claim"
+                  className={`px-3 py-1.5 rounded-md transition ${
+                    path.startsWith("/dashboard/claim")
+                      ? "bg-brand text-white shadow-xs"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+                >
+                  Xác thực (Claim)
                 </Link>
                 <Link
                   to="/dashboard/submit-company"
                   className={`px-3 py-1.5 rounded-md transition ${
                     path.startsWith("/dashboard/submit-company")
-                      ? "bg-brand text-white"
+                      ? "bg-brand text-white shadow-xs"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   }`}
                 >
-                  Gửi doanh nghiệp
+                  + Đăng ký nhà máy
                 </Link>
                 <Link
                   to="/pricing"
@@ -134,7 +150,7 @@ function DashboardLayout() {
               <Link
                 to="/dashboard/profile"
                 className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 transition ${
-                  path.startsWith("/dashboard/profile") ? "border-brand text-brand" : "hover:bg-accent text-foreground"
+                  path.startsWith("/dashboard/profile") ? "border-brand text-brand bg-brand/5" : "hover:bg-accent text-foreground"
                 }`}
               >
                 <User className="h-3.5 w-3.5" />
@@ -154,9 +170,15 @@ function DashboardLayout() {
             <div className="border-b bg-background px-4 py-2 lg:hidden overflow-x-auto">
               <div className="flex items-center gap-2 text-xs font-semibold whitespace-nowrap">
                 <Link
+                  to="/"
+                  className="px-3 py-1.5 rounded-md bg-muted text-muted-foreground"
+                >
+                  Trang chủ
+                </Link>
+                <Link
                   to="/dashboard"
                   className={`px-3 py-1.5 rounded-md ${
-                    path === "/dashboard" || path === "/dashboard/" ? "bg-brand text-white" : "bg-muted text-foreground"
+                    path === "/dashboard" || path === "/dashboard/" ? "bg-brand text-white shadow-xs" : "bg-muted text-foreground"
                   }`}
                 >
                   Tổng quan
@@ -165,7 +187,7 @@ function DashboardLayout() {
                   to="/dashboard/my-companies"
                   className={`px-3 py-1.5 rounded-md ${
                     path.startsWith("/dashboard/my-companies") || path.startsWith("/dashboard/manage-company")
-                      ? "bg-brand text-white"
+                      ? "bg-brand text-white shadow-xs"
                       : "bg-muted text-foreground"
                   }`}
                 >
@@ -174,18 +196,26 @@ function DashboardLayout() {
                 <Link
                   to="/dashboard/leads"
                   className={`px-3 py-1.5 rounded-md ${
-                    path.startsWith("/dashboard/leads") ? "bg-brand text-white" : "bg-muted text-foreground"
+                    path.startsWith("/dashboard/leads") ? "bg-brand text-white shadow-xs" : "bg-muted text-foreground"
                   }`}
                 >
-                  Leads RFQ
+                  Hộp thư RFQ
+                </Link>
+                <Link
+                  to="/dashboard/claim"
+                  className={`px-3 py-1.5 rounded-md ${
+                    path.startsWith("/dashboard/claim") ? "bg-brand text-white shadow-xs" : "bg-muted text-foreground"
+                  }`}
+                >
+                  Xác thực
                 </Link>
                 <Link
                   to="/dashboard/submit-company"
                   className={`px-3 py-1.5 rounded-md ${
-                    path.startsWith("/dashboard/submit-company") ? "bg-brand text-white" : "bg-muted text-foreground"
+                    path.startsWith("/dashboard/submit-company") ? "bg-brand text-white shadow-xs" : "bg-muted text-foreground"
                   }`}
                 >
-                  Gửi hồ sơ
+                  + Đăng ký mới
                 </Link>
                 <Link to="/pricing" className="px-3 py-1.5 rounded-md bg-muted text-foreground">
                   Gói nâng cấp

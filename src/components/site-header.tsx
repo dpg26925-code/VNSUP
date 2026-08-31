@@ -1,6 +1,23 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogIn, LogOut, Shield, Search, Facebook, Linkedin, Youtube, MessageCircle, Menu, X, PlusCircle, Factory } from "lucide-react";
+import {
+  LogIn,
+  LogOut,
+  Shield,
+  Search,
+  Facebook,
+  Linkedin,
+  Youtube,
+  MessageCircle,
+  Menu,
+  X,
+  PlusCircle,
+  Factory,
+  LayoutDashboard,
+  Building2,
+  Inbox,
+  User,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BrandLogo } from "@/components/brand-logo";
@@ -8,19 +25,31 @@ import { BrandLogo } from "@/components/brand-logo";
 export function SiteHeader() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [q, setQ] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setUserId(data.session?.user.id ?? null));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setUserId(s?.user.id ?? null));
+    supabase.auth.getSession().then(({ data }) => {
+      setUserId(data.session?.user.id ?? null);
+      setUserEmail(data.session?.user.email ?? null);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setUserId(s?.user.id ?? null);
+      setUserEmail(s?.user.email ?? null);
+    });
     return () => sub.subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
     if (!userId) return setIsAdmin(false);
-    supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin").maybeSingle()
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .in("role", ["admin", "publisher", "editor"])
+      .maybeSingle()
       .then(({ data }) => setIsAdmin(!!data));
   }, [userId]);
 
@@ -93,28 +122,40 @@ export function SiteHeader() {
 
           {/* Post Factory / Supplier Portal Button */}
           <Link
-            to="/auth"
+            to={userId ? "/dashboard/submit-company" : "/auth"}
             className="hidden items-center gap-1.5 rounded-lg border border-brand/30 bg-brand/5 px-3 py-1.5 text-xs font-semibold text-brand transition-all hover:bg-brand/10 hover:border-brand/60 sm:inline-flex"
           >
             <PlusCircle className="h-3.5 w-3.5" strokeWidth={2} /> Đăng nhà máy
           </Link>
 
-          {isAdmin && (
-            <Link
-              to="/dashboard/admin/edit"
-              className="hidden items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary sm:inline-flex"
-            >
-              <Shield className="h-3.5 w-3.5 text-brand" strokeWidth={2} /> Quản trị
-            </Link>
-          )}
-
           {userId ? (
-            <button
-              onClick={handleSignOut}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium hover:bg-secondary transition-colors"
-            >
-              <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} /> Đăng xuất
-            </button>
+            <div className="flex items-center gap-1.5">
+              <Link
+                to="/dashboard"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-brand/90 hover:shadow-sm"
+              >
+                <LayoutDashboard className="h-3.5 w-3.5" strokeWidth={2.2} />
+                <span className="hidden sm:inline">Bảng điều khiển</span>
+              </Link>
+
+              {isAdmin && (
+                <Link
+                  to="/dashboard/admin/edit"
+                  className="hidden items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary sm:inline-flex"
+                  title="Trang quản trị hệ thống"
+                >
+                  <Shield className="h-3.5 w-3.5 text-brand" strokeWidth={2} /> Admin
+                </Link>
+              )}
+
+              <button
+                onClick={handleSignOut}
+                title="Đăng xuất tài khoản"
+                className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-destructive hover:bg-secondary transition-colors"
+              >
+                <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} />
+              </button>
+            </div>
           ) : (
             <Link
               to="/auth"
@@ -170,6 +211,42 @@ export function SiteHeader() {
             </form>
 
             <div className="flex flex-col gap-1 text-sm font-medium">
+              {userId && (
+                <div className="mb-2 rounded-xl bg-brand/10 p-3 border border-brand/20">
+                  <div className="text-xs font-semibold text-brand truncate">{userEmail}</div>
+                  <div className="mt-2 grid grid-cols-2 gap-1.5">
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground shadow-2xs"
+                    >
+                      <LayoutDashboard className="h-3.5 w-3.5 text-brand" /> Tổng quan
+                    </Link>
+                    <Link
+                      to="/dashboard/my-companies"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground shadow-2xs"
+                    >
+                      <Building2 className="h-3.5 w-3.5 text-brand" /> Nhà máy
+                    </Link>
+                    <Link
+                      to="/dashboard/leads"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground shadow-2xs"
+                    >
+                      <Inbox className="h-3.5 w-3.5 text-brand" /> Leads RFQ
+                    </Link>
+                    <Link
+                      to="/dashboard/profile"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground shadow-2xs"
+                    >
+                      <User className="h-3.5 w-3.5 text-brand" /> Tài khoản
+                    </Link>
+                  </div>
+                </div>
+              )}
+
               {[
                 { to: "/", label: "Trang chủ" },
                 { to: "/companies", label: "Danh sách Nhà máy" },
@@ -191,7 +268,7 @@ export function SiteHeader() {
 
             <div className="mt-auto border-t border-border pt-4 flex flex-col gap-2">
               <Link
-                to="/auth"
+                to={userId ? "/dashboard/submit-company" : "/auth"}
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center justify-center gap-2 rounded-xl border border-brand/40 bg-brand/10 py-2.5 text-sm font-semibold text-brand"
               >

@@ -145,9 +145,14 @@ export function CompanyCard(c: CompanyCardProps) {
           </div>
         ) : null}
 
-        <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground group-hover:text-brand">
-          <span>Xem chi tiết hồ sơ</span>
-          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" strokeWidth={2} />
+        <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground group-hover:text-brand pt-1">
+          <span className="flex items-center gap-1 text-brand font-bold">
+            Gửi báo giá (RFQ) →
+          </span>
+          <span className="flex items-center gap-1 text-muted-foreground group-hover:text-foreground">
+            Chi tiết hồ sơ
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" strokeWidth={2} />
+          </span>
         </div>
       </div>
     </Link>

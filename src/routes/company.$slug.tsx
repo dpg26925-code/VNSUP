@@ -475,11 +475,34 @@ function CompanyPage() {
                   isFeatured={c.is_featured ?? c.featured}
                 />
               </div>
-              {c.stock_ticker && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary" title={c.stock_exchange ? `Niêm yết trên ${c.stock_exchange}` : "Đã niêm yết"}>
-                  {c.stock_exchange ?? "STOCK"}: {c.stock_ticker}
-                </span>
-              )}
+
+              {/* Top CTA Actions */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+                {c.stock_ticker && (
+                  <span className="inline-flex items-center justify-center gap-1 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary" title={c.stock_exchange ? `Niêm yết trên ${c.stock_exchange}` : "Đã niêm yết"}>
+                    {c.stock_exchange ?? "STOCK"}: {c.stock_ticker}
+                  </span>
+                )}
+                <a
+                  href="#rfq"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("rfq")?.scrollIntoView({ behavior: "smooth" });
+                    document.getElementById("rfq-message")?.focus();
+                  }}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-brand/20 hover:bg-brand/90 transition hover:scale-[1.02]"
+                >
+                  <Send className="h-3.5 w-3.5" /> Gửi yêu cầu báo giá
+                </a>
+                {c.phone && (
+                  <a
+                    href={`tel:${c.phone}`}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-background px-3.5 py-2.5 text-xs font-semibold text-foreground hover:bg-secondary transition"
+                  >
+                    <Phone className="h-3.5 w-3.5 text-brand" /> Hotline: {c.phone}
+                  </a>
+                )}
+              </div>
             </div>
 
             {/* AI Summary */}
@@ -544,28 +567,57 @@ function CompanyPage() {
 
             {products.length > 0 && (
               <section className="rounded-lg border bg-card p-6">
-                <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><Package className="h-5 w-5 text-brand" />Sản phẩm & dịch vụ</h2>
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="flex items-center gap-2 text-lg font-semibold"><Package className="h-5 w-5 text-brand" />Sản phẩm & dịch vụ ({products.length})</h2>
+                  <a
+                    href="#rfq"
+                    className="text-xs font-semibold text-brand hover:underline"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById("rfq")?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                  >
+                    Gửi RFQ tổng thể →
+                  </a>
+                </div>
                 <ul className="grid gap-3 sm:grid-cols-2">
                   {products.map((p) => (
-                    <li key={p.id} className="rounded-lg border bg-background p-3.5 text-sm transition hover:border-brand/40">
-                      {p.image_url && (
-                        <img src={p.image_url} alt={`Sản phẩm ${p.name}`} loading="lazy" className="mb-2.5 aspect-[4/3] w-full rounded-md border object-cover" />
-                      )}
-                      <div className="font-semibold">{p.name}</div>
-                      {p.category && <div className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{p.category}</div>}
-                      {p.description && <p className="mt-1.5 line-clamp-2 text-xs text-muted-foreground">{p.description}</p>}
-                      {(p.moq || p.lead_time || p.price_range) && (
-                        <dl className="mt-2 grid grid-cols-3 gap-2 border-t pt-2 text-[11px]">
-                          {p.moq && <div><dt className="text-muted-foreground">MOQ</dt><dd className="font-semibold">{p.moq}</dd></div>}
-                          {p.lead_time && <div><dt className="text-muted-foreground">Lead time</dt><dd className="font-semibold">{p.lead_time}</dd></div>}
-                          {p.price_range && <div><dt className="text-muted-foreground">Giá</dt><dd className="font-semibold">{p.price_range}</dd></div>}
-                        </dl>
-                      )}
-                      {p.catalog_url && (
-                        <a href={p.catalog_url} target="_blank" rel="noopener" className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-brand hover:underline">
-                          <FileText className="h-3.5 w-3.5" />Xem catalogue
-                        </a>
-                      )}
+                    <li key={p.id} className="flex flex-col justify-between rounded-lg border bg-background p-3.5 text-sm transition hover:border-brand/40 shadow-2xs">
+                      <div>
+                        {p.image_url && (
+                          <img src={p.image_url} alt={`Sản phẩm ${p.name}`} loading="lazy" className="mb-2.5 aspect-[4/3] w-full rounded-md border object-cover" />
+                        )}
+                        <div className="font-bold text-foreground">{p.name}</div>
+                        {p.category && <div className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{p.category}</div>}
+                        {p.description && <p className="mt-1.5 line-clamp-2 text-xs text-muted-foreground">{p.description}</p>}
+                        {(p.moq || p.lead_time || p.price_range) && (
+                          <dl className="mt-2 grid grid-cols-3 gap-2 border-t pt-2 text-[11px]">
+                            {p.moq && <div><dt className="text-muted-foreground">MOQ</dt><dd className="font-semibold">{p.moq}</dd></div>}
+                            {p.lead_time && <div><dt className="text-muted-foreground">Lead time</dt><dd className="font-semibold">{p.lead_time}</dd></div>}
+                            {p.price_range && <div><dt className="text-muted-foreground">Giá</dt><dd className="font-semibold">{p.price_range}</dd></div>}
+                          </dl>
+                        )}
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-between border-t pt-2.5">
+                        {p.catalog_url ? (
+                          <a href={p.catalog_url} target="_blank" rel="noopener" className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand hover:underline">
+                            <FileText className="h-3.5 w-3.5" />Catalogue
+                          </a>
+                        ) : <div />}
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const msg = `Tôi quan tâm và muốn nhận báo giá chi tiết cho sản phẩm: "${p.name}" (MOQ: ${p.moq || 'Thỏa thuận'}). Vui lòng gửi bảng báo giá và catalogue qua email.`;
+                            window.dispatchEvent(new CustomEvent("vnsup:rfq-product", { detail: { message: msg } }));
+                            document.getElementById("rfq")?.scrollIntoView({ behavior: "smooth" });
+                          }}
+                          className="inline-flex items-center gap-1 rounded-md bg-brand/10 px-2.5 py-1 text-[11px] font-bold text-brand hover:bg-brand hover:text-white transition"
+                        >
+                          <Send className="h-3 w-3" /> Báo giá sản phẩm
+                        </button>
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -804,20 +856,57 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
   const [err, setErr] = useState<string | null>(null);
   const submitInquiryFn = useServerFn(submitInquiry);
 
+  useEffect(() => {
+    // Auto-fill logged-in user details if available
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setForm((prev) => ({
+          ...prev,
+          name: prev.name || (data.user?.user_metadata?.full_name as string) || "",
+          email: prev.email || data.user?.email || "",
+          company: prev.company || (data.user?.user_metadata?.company_name as string) || "",
+          phone: prev.phone || (data.user?.user_metadata?.phone as string) || "",
+        }));
+      }
+    });
+
+    // Listen to product quote requests
+    const handler = (e: Event) => {
+      const customEvent = e as CustomEvent<{ message: string }>;
+      if (customEvent.detail?.message) {
+        setForm((prev) => ({
+          ...prev,
+          message: customEvent.detail.message,
+        }));
+      }
+    };
+    window.addEventListener("vnsup:rfq-product", handler);
+    return () => window.removeEventListener("vnsup:rfq-product", handler);
+  }, []);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("sending"); setErr(null);
+    setStatus("sending");
+    setErr(null);
     if (form.name.trim().length < 2) {
-      setStatus("error"); setErr("Vui lòng nhập họ và tên (tối thiểu 2 ký tự)."); return;
+      setStatus("error");
+      setErr("Vui lòng nhập họ và tên (tối thiểu 2 ký tự).");
+      return;
     }
     if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
-      setStatus("error"); setErr("Email công việc không hợp lệ."); return;
+      setStatus("error");
+      setErr("Email công việc không hợp lệ.");
+      return;
     }
     if (form.company.trim().length < 2) {
-      setStatus("error"); setErr("Vui lòng nhập tên công ty của bạn."); return;
+      setStatus("error");
+      setErr("Vui lòng nhập tên công ty của bạn.");
+      return;
     }
     if (form.message.trim().length < 10) {
-      setStatus("error"); setErr("Mô tả nhu cầu cần ít nhất 10 ký tự để nhà máy báo giá chính xác."); return;
+      setStatus("error");
+      setErr("Mô tả nhu cầu cần ít nhất 10 ký tự để nhà máy báo giá chính xác.");
+      return;
     }
 
     try {
@@ -833,39 +922,120 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
         },
       });
       setStatus("sent");
-      setForm({ name: "", email: "", phone: "", company: "", message: "" });
     } catch (error: any) {
       setStatus("error");
       setErr(error?.message || "Không thể gửi yêu cầu báo giá. Vui lòng thử lại.");
     }
   }
 
-  const inputCls = "w-full rounded-md border bg-background px-3 py-2 outline-none transition focus:ring-2 focus:ring-primary/20";
+  const inputCls =
+    "w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20";
 
   return (
-    <section className="rounded-lg border bg-card p-5">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Yêu cầu báo giá</h3>
-      <p className="mt-1 text-xs text-muted-foreground">Gửi trực tiếp đến {companyName}. Phản hồi trong 24h.</p>
+    <section className="rounded-2xl border border-brand/20 bg-card p-6 shadow-sm">
+      <div className="flex items-center gap-2 mb-1">
+        <Send className="h-4 w-4 text-brand" />
+        <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
+          Yêu cầu báo giá trực tiếp
+        </h3>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Gửi trực tiếp đến phòng kinh doanh của {companyName}. Cam kết bảo mật thông tin & phản hồi trong 24h.
+      </p>
+
       {status === "sent" ? (
-        <div className="mt-4 rounded-md border border-success/30 bg-success/10 p-4 text-sm">
-          <div className="font-semibold text-success">✓ Đã gửi yêu cầu báo giá</div>
-          <p className="mt-1 text-muted-foreground">{companyName} sẽ liên hệ lại qua email/điện thoại bạn đã cung cấp. Một email xác nhận đã được gửi tới hòm thư của bạn.</p>
-          <button onClick={() => setStatus("idle")} className="mt-3 text-xs font-semibold text-primary hover:underline">Gửi yêu cầu khác</button>
+        <div className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs">
+          <div className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">
+            ✓ Đã gửi yêu cầu báo giá thành công!
+          </div>
+          <p className="mt-1.5 text-muted-foreground leading-relaxed">
+            Đại diện của <strong>{companyName}</strong> sẽ liên hệ lại với bạn qua Email hoặc Số điện thoại trong thời gian sớm nhất.
+          </p>
+          <button
+            onClick={() => {
+              setStatus("idle");
+              setForm((prev) => ({ ...prev, message: "" }));
+            }}
+            className="mt-3 inline-flex items-center gap-1 font-bold text-brand hover:underline"
+          >
+            + Gửi thêm yêu cầu khác
+          </button>
         </div>
       ) : (
-        <form onSubmit={submit} className="mt-3 space-y-2 text-sm">
-          <input required maxLength={100} placeholder="Họ và tên (VD: Nguyễn Văn A) *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
-          <input required type="email" maxLength={200} placeholder="Email công việc (VD: buyer@congty.com) *" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} />
-          <input maxLength={30} placeholder="Số điện thoại (VD: 0901 234 567)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputCls} />
-          <input required maxLength={150} placeholder="Tên công ty của bạn (VD: Công ty ABC) *" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputCls} />
-          <textarea required minLength={10} maxLength={2000} rows={4} placeholder="Mô tả nhu cầu: sản phẩm, số lượng/tháng, ngành, thời gian giao hàng… (tối thiểu 10 ký tự) *" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputCls} />
-          <div className="text-right text-[11px] text-muted-foreground">{form.message.trim().length}/10 ký tự tối thiểu</div>
+        <form onSubmit={submit} className="mt-4 space-y-2.5">
+          <div>
+            <input
+              required
+              maxLength={100}
+              placeholder="Họ và tên người liên hệ *"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <input
+              required
+              type="email"
+              maxLength={200}
+              placeholder="Email công việc (VD: buyer@congty.com) *"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <input
+              maxLength={30}
+              placeholder="Số điện thoại / Zalo (VD: 0901 234 567)"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <input
+              required
+              maxLength={150}
+              placeholder="Tên công ty / Tổ chức của bạn *"
+              value={form.company}
+              onChange={(e) => setForm({ ...form, company: e.target.value })}
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <textarea
+              id="rfq-message"
+              required
+              minLength={10}
+              maxLength={2000}
+              rows={4}
+              placeholder="Mô tả nhu cầu gia công/sản xuất: quy cách, số lượng dự kiến/tháng, bản vẽ kỹ thuật, thời gian cần hàng… *"
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
+              className={inputCls}
+            />
+            <div className="text-right text-[11px] text-muted-foreground mt-0.5">
+              {form.message.trim().length}/10 ký tự tối thiểu
+            </div>
+          </div>
 
-          {err && <div className="rounded-md border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">{err}</div>}
-          <button disabled={status === "sending"} className="w-full rounded-md bg-primary py-2.5 font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
-            {status === "sending" ? "Đang gửi…" : "Gửi yêu cầu báo giá"}
+          {err && (
+            <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs text-destructive">
+              {err}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            className="w-full flex items-center justify-center gap-1.5 rounded-xl bg-brand py-2.5 text-xs font-bold text-white shadow-md shadow-brand/20 hover:bg-brand/90 disabled:opacity-60 transition"
+          >
+            {status === "sending" ? "Đang gửi yêu cầu…" : "Gửi yêu cầu báo giá (RFQ)"}
           </button>
-          <p className="text-center text-[11px] text-muted-foreground">Miễn phí · Không spam · Bảo mật thông tin</p>
+          <p className="text-center text-[10px] text-muted-foreground">
+            Miễn phí cho Buyer · Không qua trung gian · Bảo mật dữ liệu
+          </p>
         </form>
       )}
     </section>
@@ -874,6 +1044,7 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
 
 function ClaimCard({ companyId, companyName }: { companyId: string; companyName: string }) {
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [note, setNote] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -881,26 +1052,28 @@ function ClaimCard({ companyId, companyName }: { companyId: string; companyName:
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!open) return;
-    (async () => {
-      const { data } = await supabase.auth.getUser();
+    supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
+        setIsLoggedIn(true);
         setEmail(data.user.email ?? "");
         setName((data.user.user_metadata?.full_name as string) ?? "");
-        const { data: existing } = await supabase
+        supabase
           .from("company_claims")
           .select("id,status")
           .eq("company_id", companyId)
           .eq("user_id", data.user.id)
-          .maybeSingle();
-        if (existing) setStatus("exists");
+          .maybeSingle()
+          .then(({ data: existing }) => {
+            if (existing) setStatus("exists");
+          });
       }
-    })();
-  }, [open, companyId]);
+    });
+  }, [companyId]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("sending"); setErr(null);
+    setStatus("sending");
+    setErr(null);
     const { data: userRes } = await supabase.auth.getUser();
     if (!userRes.user) {
       setStatus("error");
@@ -908,7 +1081,9 @@ function ClaimCard({ companyId, companyName }: { companyId: string; companyName:
       return;
     }
     if (name.trim().length < 2 || !/^\S+@\S+\.\S+$/.test(email)) {
-      setStatus("error"); setErr("Nhập họ tên và email hợp lệ."); return;
+      setStatus("error");
+      setErr("Nhập họ tên và email hợp lệ.");
+      return;
     }
     const { error } = await supabase.from("company_claims").insert({
       company_id: companyId,
@@ -917,44 +1092,95 @@ function ClaimCard({ companyId, companyName }: { companyId: string; companyName:
       requester_name: name.trim(),
       note: note.trim() || null,
     });
-    if (error) { setStatus("error"); setErr(error.message); return; }
+    if (error) {
+      setStatus("error");
+      setErr(error.message);
+      return;
+    }
     setStatus("sent");
   }
 
-  const inputCls = "w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20";
+  const inputCls =
+    "w-full rounded-xl border border-input bg-background px-3 py-2 text-xs outline-none focus:border-brand focus:ring-2 focus:ring-brand/20";
 
   return (
-    <section className="rounded-lg border border-brand/30 bg-brand-soft/40 p-5">
-      <div className="flex items-start gap-2">
-        <ShieldQuestion className="mt-0.5 h-5 w-5 text-brand" />
+    <section className="rounded-2xl border border-brand/30 bg-brand/5 p-5 shadow-2xs">
+      <div className="flex items-start gap-2.5">
+        <ShieldQuestion className="mt-0.5 h-5 w-5 text-brand shrink-0" />
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold">Bạn là chủ nhà máy này?</h3>
-          <p className="mt-1 text-xs text-muted-foreground">Yêu cầu xác thực quyền sở hữu để cập nhật thông tin, phản hồi báo giá và mở khoá các tính năng nâng cao.</p>
+          <h3 className="text-sm font-bold text-foreground">Bạn là chủ nhà máy này?</h3>
+          <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+            Xác thực quyền sở hữu để cập nhật thông tin năng lực sản xuất, quản lý sản phẩm và tiếp nhận RFQ từ khách mua.
+          </p>
         </div>
       </div>
-      {!open ? (
-        <button onClick={() => setOpen(true)} className="mt-3 w-full rounded-md bg-brand py-2 text-sm font-semibold text-brand-foreground hover:bg-brand/90">
-          Yêu cầu xác thực (Claim)
+
+      {!isLoggedIn ? (
+        <Link
+          to="/auth"
+          search={{ redirect: typeof window !== "undefined" ? window.location.pathname : undefined }}
+          className="mt-3.5 flex items-center justify-center gap-1.5 w-full rounded-xl bg-brand py-2 text-xs font-bold text-white hover:bg-brand/90 transition shadow-2xs"
+        >
+          Đăng nhập để Claim hồ sơ
+        </Link>
+      ) : !open ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="mt-3.5 w-full rounded-xl bg-brand py-2 text-xs font-bold text-white hover:bg-brand/90 transition shadow-2xs"
+        >
+          Yêu cầu xác thực quyền quản trị (Claim)
         </button>
       ) : status === "sent" ? (
-        <div className="mt-3 rounded-md border border-success/30 bg-success/10 p-3 text-xs">
-          <div className="font-semibold text-success">✓ Đã gửi yêu cầu</div>
+        <div className="mt-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs">
+          <div className="font-bold text-emerald-600 dark:text-emerald-400">✓ Đã gửi yêu cầu xác thực</div>
           <p className="mt-1 text-muted-foreground">Admin VNSupplier sẽ liên hệ xác minh trong 1–2 ngày làm việc.</p>
         </div>
       ) : status === "exists" ? (
-        <div className="mt-3 rounded-md border bg-card p-3 text-xs text-muted-foreground">
-          Bạn đã gửi yêu cầu cho nhà máy này. Xem trạng thái trong <Link to="/dashboard/my-companies" className="font-semibold text-brand hover:underline">Doanh nghiệp của tôi</Link>.
+        <div className="mt-3 rounded-xl border bg-card p-3 text-xs text-muted-foreground">
+          Bạn đã gửi yêu cầu cho nhà máy này. Xem trạng thái trong{" "}
+          <Link to="/dashboard/my-companies" className="font-semibold text-brand hover:underline">
+            Doanh nghiệp của tôi
+          </Link>.
         </div>
       ) : (
         <form onSubmit={submit} className="mt-3 space-y-2">
-          <input placeholder="Họ và tên *" value={name} onChange={(e) => setName(e.target.value)} className={inputCls} required />
-          <input type="email" placeholder="Email công việc *" value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} required />
-          <textarea rows={3} placeholder={`Chứng minh bạn là đại diện hợp pháp của ${companyName} (chức vụ, giấy tờ, website nội bộ…)`} value={note} onChange={(e) => setNote(e.target.value)} className={inputCls} />
-          {err && <div className="rounded border border-destructive/30 bg-destructive/10 p-2 text-[11px] text-destructive">{err}</div>}
-          <div className="flex gap-2">
-            <button type="button" onClick={() => setOpen(false)} className="flex-1 rounded-md border py-2 text-sm hover:bg-accent">Hủy</button>
-            <button disabled={status === "sending"} className="flex-1 rounded-md bg-brand py-2 text-sm font-semibold text-brand-foreground hover:bg-brand/90 disabled:opacity-60">
-              {status === "sending" ? "Đang gửi…" : "Gửi yêu cầu"}
+          <input
+            placeholder="Họ và tên người đại diện *"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className={inputCls}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email doanh nghiệp *"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={inputCls}
+            required
+          />
+          <textarea
+            placeholder="Ghi chú minh chứng (VD: Tôi là Giám đốc kinh doanh / GPKD số...)"
+            rows={2}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            className={inputCls}
+          />
+          {err && <div className="text-xs text-destructive">{err}</div>}
+          <div className="flex gap-2 pt-1">
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              className="flex-1 rounded-xl bg-brand py-2 text-xs font-bold text-white hover:bg-brand/90 disabled:opacity-60"
+            >
+              {status === "sending" ? "Đang gửi…" : "Gửi xác thực"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="rounded-xl border px-3 py-2 text-xs font-semibold hover:bg-secondary"
+            >
+              Hủy
             </button>
           </div>
         </form>
