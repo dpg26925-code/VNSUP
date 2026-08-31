@@ -28,7 +28,7 @@ PUBLIC_DIR = os.path.join(BASE_DIR, "public")
 COMPANIES_OUT_DIR = os.path.join(PUBLIC_DIR, "company")
 
 SUPABASE_URL = os.getenv("SUPABASE_URL", "https://fnyonwdojxkchbrqrcpu.supabase.co")
-SUPABASE_KEY = os.getenv("SUPABASE_PUBLISHABLE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZueW9ud2RvanhrY2hicnFyY3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3ODA0NDcsImV4cCI6MjA5OTM1NjQ0N30.NiaFCAuY-1-7o5H203TZ3voczi5bfn1WCu89uOztC_c")
+SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", os.getenv("SUPABASE_PUBLISHABLE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZueW9ud2RvanhrY2hicnFyY3B1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4Mzc4MDQ0NywiZXhwIjoyMDk5MzU2NDQ3fQ.SR1Hcnv2AR-UKb5VlV1xh5m4SEEsSu9izXU8HHaNod4"))
 
 ctx = ssl.create_default_context()
 ctx.check_hostname = False

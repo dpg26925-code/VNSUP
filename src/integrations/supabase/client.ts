@@ -29,7 +29,7 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 
 export const DEFAULT_SUPABASE_URL = "https://fnyonwdojxkchbrqrcpu.supabase.co";
 export const DEFAULT_SUPABASE_PUBLISHABLE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZueW9ud2RvanhrY2hicnFyY3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3ODA0NDcsImV4cCI6MjA5OTM1NjQ0N30.NiaFCAuY-1-7o5H203TZ3voczi5bfn1WCu89uOztC_c";
+  "sb_publishable_GnTAgTLODhvGTCdwN3NTKg_vXA3ruuj";
 
 function createSupabaseClient() {
   // Use import.meta.env for client-side, process.env for SSR, fallback to embedded keys
