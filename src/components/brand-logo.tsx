@@ -24,7 +24,7 @@ export function BrandLogo({ size = "md", className = "", to = "/" }: BrandLogoPr
         alt="VNSupplier — Vietnam Manufacturing Network"
         width={180}
         height={44}
-        className={`block ${imgHeight} w-auto object-contain dark:hidden select-none`}
+        className={`brand-logo-light ${imgHeight} w-auto object-contain select-none`}
         loading="eager"
       />
 
@@ -34,7 +34,7 @@ export function BrandLogo({ size = "md", className = "", to = "/" }: BrandLogoPr
         alt="VNSupplier — Vietnam Manufacturing Network"
         width={180}
         height={44}
-        className={`hidden ${imgHeight} w-auto object-contain dark:block select-none`}
+        className={`brand-logo-dark ${imgHeight} w-auto object-contain select-none`}
         loading="eager"
       />
     </div>
