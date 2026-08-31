@@ -81,15 +81,15 @@ export async function requireAdmin(
   const token = bearerFrom(request);
   if (!token) return json({ error: "unauthorized", message: "Missing Bearer token" }, 401);
 
-  const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
+  const url =
+    process.env.SUPABASE_URL ??
+    process.env.VITE_SUPABASE_URL ??
+    "https://fnyonwdojxkchbrqrcpu.supabase.co";
   const anon =
     process.env.SUPABASE_PUBLISHABLE_KEY ??
     process.env.SUPABASE_ANON_KEY ??
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !anon) {
-    console.error("[admin-api] missing SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY env");
-    return json({ error: "server_misconfigured", message: "Supabase env not configured" }, 500);
-  }
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZueW9ud2RvanhrY2hicnFyY3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3ODA0NDcsImV4cCI6MjA5OTM1NjQ0N30.NiaFCAuY-1-7o5H203TZ3voczi5bfn1WCu89uOztC_c";
 
   const supabase = createClient<Database>(url, anon, {
     global: { headers: { Authorization: `Bearer ${token}` } },
