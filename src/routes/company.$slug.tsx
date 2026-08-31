@@ -7,7 +7,7 @@ import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industryLabel, industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
 import { TrustBadges, VerificationBadge } from "@/components/trust-badges";
-import { BadgeCheck, Building2, Calendar, DollarSign, FileText, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare, UserSquare2, Pencil } from "lucide-react";
+import { BadgeCheck, Building2, Calendar, DollarSign, FileText, Globe, Mail, MapPin, Newspaper, Phone, Play, Sparkles, Star, Users, ShieldQuestion, Award, Image as ImageIcon, HelpCircle, Package, Globe2, MessageSquare, UserSquare2, Pencil, Send } from "lucide-react";
 import { AdminQuickEdit } from "@/components/admin-quick-edit";
 
 

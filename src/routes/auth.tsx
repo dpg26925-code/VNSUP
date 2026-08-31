@@ -5,7 +5,7 @@ import { BadgeCheck, Building2, ShoppingBag, ArrowRight } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
     redirect: typeof search.redirect === "string" ? search.redirect : undefined,
   }),
   head: () => ({

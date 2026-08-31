@@ -8,7 +8,9 @@ export const Route = createFileRoute("/api/public/admin/articles/delete-all")({
       OPTIONS: async () => corsPreflight(),
       POST: async ({ request }) => {
         try {
-          const admin = await requireAdmin(request);
+          const adminRes = await requireAdmin(request);
+          if (adminRes instanceof Response) return adminRes;
+          const admin = adminRes;
           if (!admin.canDelete) {
             return json({ error: "forbidden", message: "Bạn không có quyền xóa bài viết." }, 403);
           }

@@ -538,7 +538,7 @@ function ManageCompanyPage() {
                   >
                     <option value="">-- Chọn tỉnh thành --</option>
                     {PROVINCES.map((p) => (
-                      <option key={p} value={p}>{p}</option>
+                      <option key={p.slug} value={p.name}>{p.name}</option>
                     ))}
                   </select>
                 </div>
