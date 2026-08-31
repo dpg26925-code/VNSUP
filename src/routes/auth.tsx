@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BadgeCheck } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -107,11 +108,8 @@ function AuthPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-10">
       <div className="w-full max-w-md space-y-6 rounded-2xl border bg-card p-6 shadow-sm">
-        <div className="text-center">
-          <Link to="/" className="inline-flex items-center justify-center">
-            <img src="/assets/vnsupplier-logo-light.svg" alt="VNSupplier" className="h-8 w-auto dark:hidden" />
-            <img src="/assets/vnsupplier-logo-dark.svg" alt="VNSupplier" className="hidden h-8 w-auto dark:block" />
-          </Link>
+        <div className="text-center flex flex-col items-center">
+          <BrandLogo size="lg" />
           <h1 className="mt-4 text-2xl font-semibold">
             {mode === "signin" ? "Đăng nhập" : "Đăng ký"}
           </h1>

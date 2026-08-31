@@ -1,17 +1,28 @@
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminSidebar } from "@/components/admin-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { LogOut } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
+import {
+  LogOut,
+  Building2,
+  Inbox,
+  Send,
+  User,
+  LayoutDashboard,
+  CreditCard,
+  Search,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Admin | VNSupplier" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Bảng điều khiển | VNSupplier" }, { name: "robots", content: "noindex" }] }),
   component: DashboardLayout,
 });
 
 function DashboardLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState<string>("");
   const [role, setRole] = useState<string | null>(null);
   const [checked, setChecked] = useState(false);
@@ -42,31 +53,147 @@ function DashboardLayout() {
     navigate({ to: "/auth", replace: true });
   }
 
-  if (!checked) return <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">Đang tải…</div>;
+  if (!checked)
+    return (
+      <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">
+        Đang tải thông tin người dùng…
+      </div>
+    );
 
-  // Users without any admin-tier role fall back to the legacy account pages.
   const hasAdminRole = role === "admin" || role === "publisher" || role === "editor";
+  const path = location.pathname;
 
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-muted/30">
         {hasAdminRole && <AdminSidebar role={role} />}
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background px-3">
-            {hasAdminRole && <SidebarTrigger />}
-            <Link to="/" className="text-sm font-semibold">
-              VNSupplier {hasAdminRole && <span className="text-muted-foreground font-normal">/ Admin</span>}
-            </Link>
-            <div className="ml-auto flex items-center gap-3 text-xs">
-              <span className="hidden text-muted-foreground sm:inline">{email}</span>
+          {/* Top Header */}
+          <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background/95 px-4 backdrop-blur">
+            <div className="flex items-center gap-3">
+              {hasAdminRole && <SidebarTrigger />}
+              <div className="flex items-center gap-2">
+                <BrandLogo size="sm" />
+                {hasAdminRole && <span className="text-muted-foreground font-normal text-xs">/ Admin</span>}
+              </div>
+            </div>
+
+            {/* User Nav (Non-admin top menu) */}
+            {!hasAdminRole && (
+              <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold">
+                <Link
+                  to="/dashboard"
+                  className={`px-3 py-1.5 rounded-md transition ${
+                    path === "/dashboard" || path === "/dashboard/"
+                      ? "bg-brand text-white"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+                >
+                  Tổng quan
+                </Link>
+                <Link
+                  to="/dashboard/my-companies"
+                  className={`px-3 py-1.5 rounded-md transition ${
+                    path.startsWith("/dashboard/my-companies") || path.startsWith("/dashboard/manage-company")
+                      ? "bg-brand text-white"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+                >
+                  Nhà máy của tôi
+                </Link>
+                <Link
+                  to="/dashboard/leads"
+                  className={`px-3 py-1.5 rounded-md transition ${
+                    path.startsWith("/dashboard/leads")
+                      ? "bg-brand text-white"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+                >
+                  Hộp thư Báo giá
+                </Link>
+                <Link
+                  to="/dashboard/submit-company"
+                  className={`px-3 py-1.5 rounded-md transition ${
+                    path.startsWith("/dashboard/submit-company")
+                      ? "bg-brand text-white"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+                >
+                  Gửi doanh nghiệp
+                </Link>
+                <Link
+                  to="/pricing"
+                  className="px-3 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent"
+                >
+                  Gói dịch vụ
+                </Link>
+              </nav>
+            )}
+
+            <div className="flex items-center gap-3 text-xs">
+              <Link
+                to="/dashboard/profile"
+                className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 transition ${
+                  path.startsWith("/dashboard/profile") ? "border-brand text-brand" : "hover:bg-accent text-foreground"
+                }`}
+              >
+                <User className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline font-medium">{email}</span>
+              </Link>
               <button
                 onClick={signOut}
-                className="inline-flex items-center gap-1 rounded-md border px-2.5 py-1 hover:bg-accent"
+                className="inline-flex items-center gap-1 rounded-lg border border-destructive/20 bg-destructive/5 px-2.5 py-1.5 text-xs text-destructive hover:bg-destructive/10"
               >
-                <LogOut className="h-3.5 w-3.5" /> Đăng xuất
+                <LogOut className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Đăng xuất</span>
               </button>
             </div>
           </header>
+
+          {/* Subheader mobile menu for non-admin */}
+          {!hasAdminRole && (
+            <div className="border-b bg-background px-4 py-2 lg:hidden overflow-x-auto">
+              <div className="flex items-center gap-2 text-xs font-semibold whitespace-nowrap">
+                <Link
+                  to="/dashboard"
+                  className={`px-3 py-1.5 rounded-md ${
+                    path === "/dashboard" || path === "/dashboard/" ? "bg-brand text-white" : "bg-muted text-foreground"
+                  }`}
+                >
+                  Tổng quan
+                </Link>
+                <Link
+                  to="/dashboard/my-companies"
+                  className={`px-3 py-1.5 rounded-md ${
+                    path.startsWith("/dashboard/my-companies") || path.startsWith("/dashboard/manage-company")
+                      ? "bg-brand text-white"
+                      : "bg-muted text-foreground"
+                  }`}
+                >
+                  Nhà máy của tôi
+                </Link>
+                <Link
+                  to="/dashboard/leads"
+                  className={`px-3 py-1.5 rounded-md ${
+                    path.startsWith("/dashboard/leads") ? "bg-brand text-white" : "bg-muted text-foreground"
+                  }`}
+                >
+                  Leads RFQ
+                </Link>
+                <Link
+                  to="/dashboard/submit-company"
+                  className={`px-3 py-1.5 rounded-md ${
+                    path.startsWith("/dashboard/submit-company") ? "bg-brand text-white" : "bg-muted text-foreground"
+                  }`}
+                >
+                  Gửi hồ sơ
+                </Link>
+                <Link to="/pricing" className="px-3 py-1.5 rounded-md bg-muted text-foreground">
+                  Gói nâng cấp
+                </Link>
+              </div>
+            </div>
+          )}
+
           <main className="flex-1">
             <Outlet />
           </main>

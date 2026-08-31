@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { BrandIcon } from "@/components/brand-logo";
 import {
   BarChart3,
   Building2,
@@ -53,12 +54,10 @@ export function AdminSidebar({ role }: { role?: string | null }) {
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b">
         <Link to="/dashboard" className="flex items-center gap-2 px-2 py-1.5">
-          <div className="grid h-8 w-8 place-items-center rounded-md bg-primary text-primary-foreground">
-            <ShieldCheck className="h-4 w-4" />
-          </div>
+          <BrandIcon size="sm" />
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <div className="truncate text-sm font-semibold leading-tight">VNSupplier</div>
-            <div className="truncate text-[11px] text-muted-foreground">Admin Panel</div>
+            <div className="truncate text-sm font-bold leading-tight">VNSupplier</div>
+            <div className="truncate text-[10px] font-semibold uppercase tracking-wider text-brand">Admin Panel</div>
           </div>
         </Link>
       </SidebarHeader>

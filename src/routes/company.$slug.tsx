@@ -1,6 +1,8 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { submitInquiry } from "@/lib/rfq.functions";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
 import { CompanyCard, type CompanyCardProps } from "@/components/company-card";
 import { industryLabel, industrySlug, provinceSlug, truncate, abs } from "@/lib/factory";
@@ -800,6 +802,7 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
   const [form, setForm] = useState({ name: "", email: "", phone: "", company: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [err, setErr] = useState<string | null>(null);
+  const submitInquiryFn = useServerFn(submitInquiry);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -813,18 +816,28 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
     if (form.company.trim().length < 2) {
       setStatus("error"); setErr("Vui lòng nhập tên công ty của bạn."); return;
     }
-    if (form.message.trim().length < 20) {
-      setStatus("error"); setErr("Mô tả nhu cầu cần ít nhất 20 ký tự để nhà máy báo giá chính xác."); return;
+    if (form.message.trim().length < 10) {
+      setStatus("error"); setErr("Mô tả nhu cầu cần ít nhất 10 ký tự để nhà máy báo giá chính xác."); return;
     }
 
-    const { error } = await supabase.from("leads").insert({
-      company_id: companyId, name: form.name.trim(), email: form.email.trim(),
-      phone: form.phone.trim() || null, company: form.company.trim() || null,
-      message: form.message.trim(), source_page: typeof window !== "undefined" ? window.location.pathname : null,
-    });
-    if (error) { setStatus("error"); setErr(error.message); return; }
-    setStatus("sent");
-    setForm({ name: "", email: "", phone: "", company: "", message: "" });
+    try {
+      await submitInquiryFn({
+        data: {
+          companyId,
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim() || null,
+          company: form.company.trim(),
+          message: form.message.trim(),
+          sourcePage: typeof window !== "undefined" ? window.location.pathname : null,
+        },
+      });
+      setStatus("sent");
+      setForm({ name: "", email: "", phone: "", company: "", message: "" });
+    } catch (error: any) {
+      setStatus("error");
+      setErr(error?.message || "Không thể gửi yêu cầu báo giá. Vui lòng thử lại.");
+    }
   }
 
   const inputCls = "w-full rounded-md border bg-background px-3 py-2 outline-none transition focus:ring-2 focus:ring-primary/20";
@@ -835,8 +848,8 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
       <p className="mt-1 text-xs text-muted-foreground">Gửi trực tiếp đến {companyName}. Phản hồi trong 24h.</p>
       {status === "sent" ? (
         <div className="mt-4 rounded-md border border-success/30 bg-success/10 p-4 text-sm">
-          <div className="font-semibold text-success">✓ Đã gửi yêu cầu</div>
-          <p className="mt-1 text-muted-foreground">{companyName} sẽ liên hệ lại qua email/điện thoại bạn đã cung cấp.</p>
+          <div className="font-semibold text-success">✓ Đã gửi yêu cầu báo giá</div>
+          <p className="mt-1 text-muted-foreground">{companyName} sẽ liên hệ lại qua email/điện thoại bạn đã cung cấp. Một email xác nhận đã được gửi tới hòm thư của bạn.</p>
           <button onClick={() => setStatus("idle")} className="mt-3 text-xs font-semibold text-primary hover:underline">Gửi yêu cầu khác</button>
         </div>
       ) : (
@@ -845,8 +858,8 @@ function ContactForm({ companyId, companyName }: { companyId: string; companyNam
           <input required type="email" maxLength={200} placeholder="Email công việc (VD: buyer@congty.com) *" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} />
           <input maxLength={30} placeholder="Số điện thoại (VD: 0901 234 567)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputCls} />
           <input required maxLength={150} placeholder="Tên công ty của bạn (VD: Công ty ABC) *" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputCls} />
-          <textarea required minLength={20} maxLength={2000} rows={4} placeholder="Mô tả nhu cầu: sản phẩm, số lượng/tháng, ngành, thời gian giao hàng… (tối thiểu 20 ký tự) *" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputCls} />
-          <div className="text-right text-[11px] text-muted-foreground">{form.message.trim().length}/20 ký tự tối thiểu</div>
+          <textarea required minLength={10} maxLength={2000} rows={4} placeholder="Mô tả nhu cầu: sản phẩm, số lượng/tháng, ngành, thời gian giao hàng… (tối thiểu 10 ký tự) *" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={inputCls} />
+          <div className="text-right text-[11px] text-muted-foreground">{form.message.trim().length}/10 ký tự tối thiểu</div>
 
           {err && <div className="rounded-md border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">{err}</div>}
           <button disabled={status === "sending"} className="w-full rounded-md bg-primary py-2.5 font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">

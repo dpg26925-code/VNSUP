@@ -54,6 +54,7 @@ import { Route as AuthenticatedDashboardClaimRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardLeadsRouteImport } from './routes/_authenticated/dashboard.leads'
 import { Route as AuthenticatedDashboardMyCompaniesRouteImport } from './routes/_authenticated/dashboard.my-companies'
 import { Route as AuthenticatedDashboardOwnerRouteImport } from './routes/_authenticated/dashboard.owner'
+import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardSubmitCompanyRouteImport } from './routes/_authenticated/dashboard.submit-company'
 import { Route as AuthenticatedDashboardSubscriptionsRouteImport } from './routes/_authenticated/dashboard.subscriptions'
 import { Route as CompaniesProvinceSlugRouteImport } from './routes/companies.$province.$slug'
@@ -67,6 +68,7 @@ import { Route as AuthenticatedDashboardAdminZonesRouteImport } from './routes/_
 import { Route as AuthenticatedDashboardArticlesIndexRouteImport } from './routes/_authenticated/dashboard.articles.index'
 import { Route as AuthenticatedDashboardArticlesNewRouteImport } from './routes/_authenticated/dashboard.articles.new'
 import { Route as AuthenticatedDashboardIntegrationsHermesRouteImport } from './routes/_authenticated/dashboard.integrations.hermes'
+import { Route as AuthenticatedDashboardManageCompanyIdRouteImport } from './routes/_authenticated/dashboard.manage-company.$id'
 import { Route as ApiPublicAdminArticlesRouteImport } from './routes/api/public/admin/articles'
 import { Route as ApiPublicAdminCategoriesRouteImport } from './routes/api/public/admin/categories'
 import { Route as ApiPublicAdminLeadsRouteImport } from './routes/api/public/admin/leads'
@@ -313,6 +315,12 @@ const AuthenticatedDashboardOwnerRoute =
     path: '/owner',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardProfileRoute =
+  AuthenticatedDashboardProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardSubmitCompanyRoute =
   AuthenticatedDashboardSubmitCompanyRouteImport.update({
     id: '/submit-company',
@@ -387,6 +395,12 @@ const AuthenticatedDashboardIntegrationsHermesRoute =
   AuthenticatedDashboardIntegrationsHermesRouteImport.update({
     id: '/integrations/hermes',
     path: '/integrations/hermes',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardManageCompanyIdRoute =
+  AuthenticatedDashboardManageCompanyIdRouteImport.update({
+    id: '/manage-company/$id',
+    path: '/manage-company/$id',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const ApiPublicAdminArticlesRoute = ApiPublicAdminArticlesRouteImport.update({
@@ -503,6 +517,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/leads': typeof AuthenticatedDashboardLeadsRoute
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
   '/dashboard/subscriptions': typeof AuthenticatedDashboardSubscriptionsRoute
   '/companies/$province/$slug': typeof CompaniesProvinceSlugRoute
@@ -516,6 +531,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
+  '/dashboard/manage-company/$id': typeof AuthenticatedDashboardManageCompanyIdRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
@@ -573,6 +589,7 @@ export interface FileRoutesByTo {
   '/dashboard/leads': typeof AuthenticatedDashboardLeadsRoute
   '/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
   '/dashboard/subscriptions': typeof AuthenticatedDashboardSubscriptionsRoute
   '/companies/$province/$slug': typeof CompaniesProvinceSlugRoute
@@ -586,6 +603,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
+  '/dashboard/manage-company/$id': typeof AuthenticatedDashboardManageCompanyIdRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
@@ -646,6 +664,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/leads': typeof AuthenticatedDashboardLeadsRoute
   '/_authenticated/dashboard/my-companies': typeof AuthenticatedDashboardMyCompaniesRoute
   '/_authenticated/dashboard/owner': typeof AuthenticatedDashboardOwnerRoute
+  '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/_authenticated/dashboard/submit-company': typeof AuthenticatedDashboardSubmitCompanyRoute
   '/_authenticated/dashboard/subscriptions': typeof AuthenticatedDashboardSubscriptionsRoute
   '/companies/$province/$slug': typeof CompaniesProvinceSlugRoute
@@ -659,6 +678,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/zones': typeof AuthenticatedDashboardAdminZonesRoute
   '/_authenticated/dashboard/articles/new': typeof AuthenticatedDashboardArticlesNewRoute
   '/_authenticated/dashboard/integrations/hermes': typeof AuthenticatedDashboardIntegrationsHermesRoute
+  '/_authenticated/dashboard/manage-company/$id': typeof AuthenticatedDashboardManageCompanyIdRoute
   '/api/public/admin/articles': typeof ApiPublicAdminArticlesRouteWithChildren
   '/api/public/admin/categories': typeof ApiPublicAdminCategoriesRoute
   '/api/public/admin/leads': typeof ApiPublicAdminLeadsRoute
@@ -719,6 +739,7 @@ export interface FileRouteTypes {
     | '/dashboard/leads'
     | '/dashboard/my-companies'
     | '/dashboard/owner'
+    | '/dashboard/profile'
     | '/dashboard/submit-company'
     | '/dashboard/subscriptions'
     | '/companies/$province/$slug'
@@ -732,6 +753,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/zones'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
+    | '/dashboard/manage-company/$id'
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
@@ -789,6 +811,7 @@ export interface FileRouteTypes {
     | '/dashboard/leads'
     | '/dashboard/my-companies'
     | '/dashboard/owner'
+    | '/dashboard/profile'
     | '/dashboard/submit-company'
     | '/dashboard/subscriptions'
     | '/companies/$province/$slug'
@@ -802,6 +825,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/zones'
     | '/dashboard/articles/new'
     | '/dashboard/integrations/hermes'
+    | '/dashboard/manage-company/$id'
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
@@ -861,6 +885,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/leads'
     | '/_authenticated/dashboard/my-companies'
     | '/_authenticated/dashboard/owner'
+    | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/submit-company'
     | '/_authenticated/dashboard/subscriptions'
     | '/companies/$province/$slug'
@@ -874,6 +899,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin/zones'
     | '/_authenticated/dashboard/articles/new'
     | '/_authenticated/dashboard/integrations/hermes'
+    | '/_authenticated/dashboard/manage-company/$id'
     | '/api/public/admin/articles'
     | '/api/public/admin/categories'
     | '/api/public/admin/leads'
@@ -1244,6 +1270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardOwnerRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/profile': {
+      id: '/_authenticated/dashboard/profile'
+      path: '/profile'
+      fullPath: '/dashboard/profile'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/submit-company': {
       id: '/_authenticated/dashboard/submit-company'
       path: '/submit-company'
@@ -1333,6 +1366,13 @@ declare module '@tanstack/react-router' {
       path: '/integrations/hermes'
       fullPath: '/dashboard/integrations/hermes'
       preLoaderRoute: typeof AuthenticatedDashboardIntegrationsHermesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/manage-company/$id': {
+      id: '/_authenticated/dashboard/manage-company/$id'
+      path: '/manage-company/$id'
+      fullPath: '/dashboard/manage-company/$id'
+      preLoaderRoute: typeof AuthenticatedDashboardManageCompanyIdRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/api/public/admin/articles': {
@@ -1431,6 +1471,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardLeadsRoute: typeof AuthenticatedDashboardLeadsRoute
   AuthenticatedDashboardMyCompaniesRoute: typeof AuthenticatedDashboardMyCompaniesRoute
   AuthenticatedDashboardOwnerRoute: typeof AuthenticatedDashboardOwnerRoute
+  AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
   AuthenticatedDashboardSubmitCompanyRoute: typeof AuthenticatedDashboardSubmitCompanyRoute
   AuthenticatedDashboardSubscriptionsRoute: typeof AuthenticatedDashboardSubscriptionsRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
@@ -1442,6 +1483,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAdminZonesRoute: typeof AuthenticatedDashboardAdminZonesRoute
   AuthenticatedDashboardArticlesNewRoute: typeof AuthenticatedDashboardArticlesNewRoute
   AuthenticatedDashboardIntegrationsHermesRoute: typeof AuthenticatedDashboardIntegrationsHermesRoute
+  AuthenticatedDashboardManageCompanyIdRoute: typeof AuthenticatedDashboardManageCompanyIdRoute
   AuthenticatedDashboardArticlesIndexRoute: typeof AuthenticatedDashboardArticlesIndexRoute
   AuthenticatedDashboardArticlesIdEditRoute: typeof AuthenticatedDashboardArticlesIdEditRoute
 }
@@ -1458,6 +1500,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardMyCompaniesRoute:
       AuthenticatedDashboardMyCompaniesRoute,
     AuthenticatedDashboardOwnerRoute: AuthenticatedDashboardOwnerRoute,
+    AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
     AuthenticatedDashboardSubmitCompanyRoute:
       AuthenticatedDashboardSubmitCompanyRoute,
     AuthenticatedDashboardSubscriptionsRoute:
@@ -1478,6 +1521,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
       AuthenticatedDashboardArticlesNewRoute,
     AuthenticatedDashboardIntegrationsHermesRoute:
       AuthenticatedDashboardIntegrationsHermesRoute,
+    AuthenticatedDashboardManageCompanyIdRoute:
+      AuthenticatedDashboardManageCompanyIdRoute,
     AuthenticatedDashboardArticlesIndexRoute:
       AuthenticatedDashboardArticlesIndexRoute,
     AuthenticatedDashboardArticlesIdEditRoute:

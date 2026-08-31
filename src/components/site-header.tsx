@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { LogIn, LogOut, Shield, Search, Facebook, Linkedin, Youtube, MessageCircle, Menu, X, PlusCircle, Factory } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { BrandLogo } from "@/components/brand-logo";
 
 export function SiteHeader() {
   const navigate = useNavigate();
@@ -37,22 +38,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-md transition-all">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
         {/* Brand Logo Adaptive to Dark/Light mode */}
-        <Link to="/" className="flex shrink-0 items-center gap-2" aria-label="VNSupplier Home">
-          <img
-            src="/assets/vnsupplier-logo-light.svg"
-            alt="VNSupplier"
-            width={180}
-            height={44}
-            className="h-10 w-auto dark:hidden"
-          />
-          <img
-            src="/assets/vnsupplier-logo-dark.svg"
-            alt="VNSupplier"
-            width={180}
-            height={44}
-            className="hidden h-10 w-auto dark:block"
-          />
-        </Link>
+        <BrandLogo size="md" />
 
         {/* Quick Search Omnibar on Header */}
         <form onSubmit={submitSearch} className="hidden flex-1 md:block max-w-sm lg:max-w-md mx-2">
@@ -157,22 +143,9 @@ export function SiteHeader() {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity" onClick={() => setMenuOpen(false)} />
           <div className="absolute inset-y-0 right-0 flex w-80 max-w-[85%] flex-col gap-2 border-l border-border bg-background p-5 shadow-2xl">
             <div className="mb-4 flex items-center justify-between border-b border-border pb-3">
-              <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center">
-                <img
-                  src="/assets/vnsupplier-logo-light.svg"
-                  alt="VNSupplier"
-                  width={140}
-                  height={34}
-                  className="h-8 w-auto dark:hidden"
-                />
-                <img
-                  src="/assets/vnsupplier-logo-dark.svg"
-                  alt="VNSupplier"
-                  width={140}
-                  height={34}
-                  className="hidden h-8 w-auto dark:block"
-                />
-              </Link>
+              <div onClick={() => setMenuOpen(false)}>
+                <BrandLogo size="sm" />
+              </div>
               <button
                 type="button"
                 aria-label="Đóng menu"
@@ -255,22 +228,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
-            <Link to="/" className="inline-block">
-              <img
-                src="/assets/vnsupplier-logo-light.svg"
-                alt="VNSupplier"
-                width={170}
-                height={42}
-                className="h-10 w-auto dark:hidden"
-              />
-              <img
-                src="/assets/vnsupplier-logo-dark.svg"
-                alt="VNSupplier"
-                width={170}
-                height={42}
-                className="hidden h-10 w-auto dark:block"
-              />
-            </Link>
+            <BrandLogo size="md" />
 
             <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
               Nền tảng AI kết nối mạng lưới 2,400+ nhà máy & nhà cung cấp sản xuất công nghiệp tại Việt Nam.
