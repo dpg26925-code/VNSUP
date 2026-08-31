@@ -27,13 +27,16 @@ export type PayOSPaymentLink = {
   qrCode: string;
 };
 
+export const DEFAULT_PAYOS_CLIENT_ID = "d849e12e-9e00-47d3-901d-5469b85e6c14";
+export const DEFAULT_PAYOS_API_KEY = "fa3db62f-4982-4263-9a38-660d95f6f5fb";
+export const DEFAULT_PAYOS_CHECKSUM_KEY =
+  "666895294a335bbe91b1f3c94f17fa488b7da061c14d57c";
+
 function requireEnv() {
-  const clientId = process.env.PAYOS_CLIENT_ID;
-  const apiKey = process.env.PAYOS_API_KEY;
-  const checksumKey = process.env.PAYOS_CHECKSUM_KEY;
-  if (!clientId || !apiKey || !checksumKey) {
-    throw new Error("payOS credentials chưa được cấu hình");
-  }
+  const clientId = process.env.PAYOS_CLIENT_ID || DEFAULT_PAYOS_CLIENT_ID;
+  const apiKey = process.env.PAYOS_API_KEY || DEFAULT_PAYOS_API_KEY;
+  const checksumKey =
+    process.env.PAYOS_CHECKSUM_KEY || DEFAULT_PAYOS_CHECKSUM_KEY;
   return { clientId, apiKey, checksumKey };
 }
 
