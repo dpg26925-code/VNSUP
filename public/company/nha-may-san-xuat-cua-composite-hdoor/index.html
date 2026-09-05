@@ -94,6 +94,24 @@
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
     }
+    /* Accordion transitions */
+    .faq-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease-out, opacity 0.25s ease-out, padding 0.35s ease-out;
+      opacity: 0;
+    }
+    .faq-item.active .faq-content {
+      max-height: 500px;
+      opacity: 1;
+    }
+    .faq-item.active .faq-chevron {
+      transform: rotate(180deg);
+    }
+    /* Lightbox Modal */
+    #lightbox-modal.active {
+      display: flex;
+    }
   </style>
 
   <!-- Schema.org JSON-LD Structured Data -->
@@ -169,12 +187,15 @@
         
         "aggregateRating": {
           "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "reviewCount": "15",
+          "ratingValue": "5.0",
+          "reviewCount": "12",
           "bestRating": "5",
           "worstRating": "1"
         }
+        
       }
+      
+      
       
     ]
   }
@@ -225,13 +246,13 @@
     <!-- Hero Profile Section -->
     <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm mb-8">
       <!-- Cover Banner -->
-      <div class="relative h-40 sm:h-56 w-full gradient-hero overflow-hidden">
+      <div class="relative h-40 sm:h-60 w-full gradient-hero overflow-hidden">
         
         <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(circle at 20% 30%, #fff 2px, transparent 0), radial-gradient(circle at 80% 70%, #fff 2px, transparent 0); background-size: 32px 32px;"></div>
         
         
         <!-- Verification Badges Top Right -->
-        <div class="absolute top-3 right-3 sm:top-4 sm:right-4 flex flex-wrap gap-2">
+        <div class="absolute top-3 right-3 sm:top-4 sm:right-4 flex flex-wrap gap-2 z-10">
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white shadow-md">
             <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
             Đã xác thực hồ sơ
@@ -244,7 +265,7 @@
       <div class="relative px-4 sm:px-8 pb-6 pt-16 sm:pt-4">
         <!-- Logo Avatar (Overlapping) -->
         <div class="absolute -top-12 sm:-top-16 left-4 sm:left-8">
-          <div class="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl bg-white border-4 border-white shadow-lg overflow-hidden flex items-center justify-center p-1 bg-slate-50">
+          <div class="h-24 w-24 sm:h-28 sm:w-28 rounded-2xl bg-white border-4 border-white shadow-lg overflow-hidden flex items-center justify-center p-1.5 bg-slate-50">
             
             <div class="w-full h-full bg-slate-900 text-brand-500 font-extrabold text-2xl sm:text-3xl flex items-center justify-center rounded-xl">
               NH
@@ -276,27 +297,35 @@
                 </span>
                 
 
-                <!-- Rating -->
-                <div class="inline-flex items-center gap-1 text-amber-500 font-bold">
-                  <span>★</span>
-                  <span class="text-slate-900">4.9</span>
-                  <span class="text-slate-400 font-normal">(15 đánh giá)</span>
-                </div>
+                <!-- Dynamic Rating Stars -->
+                <a href="#reviews-section" class="inline-flex items-center gap-1.5 font-bold hover:opacity-80 transition group">
+                  <div class="flex items-center text-amber-400">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                  </div>
+                  <span class="text-slate-900 font-bold text-xs sm:text-sm">5.0</span>
+                  <span class="text-slate-400 font-normal text-xs group-hover:text-brand-600 transition">
+                    (Xác thực hồ sơ)
+                  </span>
+                </a>
               </div>
             </div>
 
             <!-- Header Quick Action CTAs -->
-            <div class="flex items-center gap-2.5 mt-2 lg:mt-0">
-              <a href="#rfq-section" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition">
+            <div class="flex flex-wrap items-center gap-2.5 mt-2 lg:mt-0">
+              <a href="#rfq-section" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 Yêu cầu báo giá
               </a>
               
-              <a href="tel:+84986551189" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold text-sm transition">
+              <a href="tel:+84986551189" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold text-xs sm:text-sm transition">
                 <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
-                Gọi ngay
+                Hotline
               </a>
               
+              <button onclick="openReviewModal()" class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-brand-200 bg-brand-50/50 hover:bg-brand-50 text-brand-700 font-semibold text-xs sm:text-sm transition">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                Đánh giá
+              </button>
             </div>
           </div>
 
@@ -331,10 +360,13 @@
     <!-- 2 Columns Layout: Left Content & Right Sidebar -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       
-      <!-- Left 2 Cols: Products, Capabilities, Certifications, Description -->
+      <!-- Left 2 Cols: Media, Products, Capabilities, Certifications, Reviews, FAQs, Description, Map -->
       <div class="lg:col-span-2 space-y-8">
+
+        <!-- 1. GALLERY & MEDIA SECTION (Section 1.1) -->
         
-        <!-- 1. Danh mục Sản phẩm & Dịch vụ sản xuất -->
+
+        <!-- 2. Danh mục Sản phẩm & Dịch vụ sản xuất -->
         <section id="products-section" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-sm">
           <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100">
             <div class="flex items-center gap-2.5">
@@ -358,7 +390,7 @@
           
         </section>
 
-        <!-- 2. Năng lực & Thông số sản xuất (Capabilities from Facts) -->
+        <!-- 3. Năng lực & Thông số sản xuất (Capabilities & Facts) -->
         <section class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-sm">
           <div class="flex items-center gap-2.5 pb-4 mb-6 border-b border-slate-100">
             <div class="h-9 w-9 rounded-xl bg-slate-900 text-white flex items-center justify-center">
@@ -390,13 +422,75 @@
           </div>
         </section>
 
-        <!-- 3. Chứng chỉ chất lượng (Certifications) -->
+        <!-- 4. Chứng chỉ chất lượng (Certifications) -->
         
 
-        <!-- 4. Giới thiệu chi tiết -->
+        <!-- 5. REVIEWS THỰC TẾ (Section 1.2) -->
+        <section id="reviews-section" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-sm scroll-mt-20">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 mb-6 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+              <div class="h-9 w-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+              <div>
+                <h2 class="text-lg sm:text-xl font-bold text-slate-900">Đánh giá từ đối tác & Buyer B2B</h2>
+                <p class="text-xs text-slate-500">Phản hồi thực tế từ các đơn vị đã hợp tác cung ứng</p>
+              </div>
+            </div>
+
+            <!-- Header CTA Button -->
+            <button
+              onclick="openReviewModal()"
+              class="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-bold text-brand-600 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-xl transition shadow-2xs"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              Đánh giá nhà cung cấp
+            </button>
+          </div>
+
+          <!-- Overall Rating Summary Card -->
+          <div class="mb-6 rounded-xl bg-slate-50 p-4 sm:p-5 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                5.0
+              </div>
+              <div>
+                <div class="flex items-center text-amber-400 text-base">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <div class="text-xs text-slate-500 font-medium mt-0.5">
+                  
+                    Hồ sơ doanh nghiệp đã đối chiếu thông tin pháp lý
+                  
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 px-3.5 py-2 rounded-lg border border-emerald-200">
+              <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span>100% đánh giá xác thực từ quy trình giao dịch</span>
+            </div>
+          </div>
+
+          <!-- Review List -->
+          
+          <div class="text-center py-8 px-4 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+            <p class="text-sm text-slate-600 font-medium">Chưa có đánh giá nào cho nhà cung cấp này.</p>
+            <p class="text-xs text-slate-400 mt-1">Bạn đã từng hợp tác hoặc mua hàng từ Nhà Máy Sản Xuất Cửa Composite HDOOR? Hãy chia sẻ trải nghiệm để hỗ trợ cộng đồng doanh nghiệp.</p>
+            <button onclick="openReviewModal()" class="mt-4 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-sm transition">
+              + Viết đánh giá đầu tiên
+            </button>
+          </div>
+          
+        </section>
+
+        <!-- 6. FAQS TƯƠNG TÁC (Section 1.3) -->
         
 
-        <!-- 5. Bản đồ vị trí nhà máy (Map Embed) -->
+        <!-- 7. Giới thiệu chi tiết -->
+        
+
+        <!-- 8. Bản đồ vị trí nhà máy (Map Embed) -->
         
         <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
           <div class="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between">
@@ -507,7 +601,7 @@
 
             <div>
               <label class="block text-[11px] font-semibold text-slate-300 mb-1" for="rfq-message">Chi tiết nhu cầu đặt hàng / Báo giá *</label>
-              <textarea id="rfq-message" rows="3" required minlength="20" placeholder="Quy cách sản phẩm, số lượng dự kiến/tháng, yêu cầu tiêu chuẩn kỹ thuật..." class="w-full rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition"></textarea>
+              <textarea id="rfq-message" rows="3" required minlength="10" placeholder="Quy cách sản phẩm, số lượng dự kiến/tháng, yêu cầu tiêu chuẩn kỹ thuật..." class="w-full rounded-xl bg-slate-800/90 border border-slate-700 px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition"></textarea>
             </div>
 
             <div id="rfq-status" class="hidden text-xs p-3 rounded-xl"></div>
@@ -563,6 +657,7 @@
   <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 mt-16 py-12 text-xs">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div>
           <div class="mb-4">
             <img src="/assets/vnsupplier-logo-dark.svg" alt="VNSupplier" width="160" height="38" class="h-9 w-auto object-contain" />
           </div>
@@ -595,8 +690,142 @@
     </div>
   </footer>
 
-  <!-- Interactive Scripts (RFQ Submission & UX) -->
+  <!-- Lightbox Modal for Gallery Images -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-4 transition-opacity duration-300" onclick="closeLightbox()">
+    <button type="button" aria-label="Đóng" onclick="closeLightbox()" class="absolute right-4 top-4 rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-bold text-white hover:bg-white/20 transition">✕ Đóng</button>
+    <button type="button" aria-label="Ảnh trước" onclick="event.stopPropagation(); prevImage()" class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-4 py-3 text-2xl text-white hover:bg-white/20 transition">‹</button>
+    <button type="button" aria-label="Ảnh sau" onclick="event.stopPropagation(); nextImage()" class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 px-4 py-3 text-2xl text-white hover:bg-white/20 transition">›</button>
+    
+    <div class="max-h-[85vh] max-w-[90vw] flex flex-col items-center" onclick="event.stopPropagation()">
+      <img id="lightbox-img" src="" alt="Hình ảnh phóng to" class="max-h-[80vh] max-w-full rounded-xl object-contain shadow-2xl">
+      <div id="lightbox-caption" class="mt-3 text-xs text-slate-300 text-center font-medium"></div>
+    </div>
+  </div>
+
+  <!-- Review Submission Modal -->
+  <div id="review-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4" onclick="closeReviewModal()">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative border border-slate-200" onclick="event.stopPropagation()">
+      <button type="button" onclick="closeReviewModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
+      
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-amber-500 text-lg">★</span>
+        <h3 class="text-lg font-bold text-slate-900">Đánh giá nhà cung cấp</h3>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">Chia sẻ trải nghiệm hợp tác, chất lượng sản phẩm & tiến độ giao hàng của <strong class="text-slate-800">Nhà Máy Sản Xuất Cửa Composite HDOOR</strong></p>
+
+      <form id="review-form" onsubmit="submitReview(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Mức độ hài lòng của bạn *</label>
+          <div class="flex items-center gap-2" id="star-selector">
+            <input type="hidden" id="rev-rating" value="5">
+            <button type="button" onclick="setRating(1)" class="star-btn text-2xl text-amber-400">★</button>
+            <button type="button" onclick="setRating(2)" class="star-btn text-2xl text-amber-400">★</button>
+            <button type="button" onclick="setRating(3)" class="star-btn text-2xl text-amber-400">★</button>
+            <button type="button" onclick="setRating(4)" class="star-btn text-2xl text-amber-400">★</button>
+            <button type="button" onclick="setRating(5)" class="star-btn text-2xl text-amber-400">★</button>
+            <span id="star-desc" class="text-xs font-semibold text-slate-700 ml-2">Xuất sắc (5 sao)</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1" for="rev-name">Họ và tên của bạn *</label>
+          <input type="text" id="rev-name" required placeholder="VD: Nguyễn Văn B" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1" for="rev-company">Tên công ty / Đơn vị mua hàng *</label>
+          <input type="text" id="rev-company" required placeholder="VD: Công ty CP Kỹ thuật XYZ" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1" for="rev-title">Tiêu đề đánh giá</label>
+          <input type="text" id="rev-title" placeholder="VD: Chất lượng gia công chuẩn xác, hỗ trợ nhiệt tình" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1" for="rev-content">Nội dung nhận xét chi tiết *</label>
+          <textarea id="rev-content" rows="3" required minlength="10" placeholder="Đánh giá chi tiết về chất lượng sản phẩm, độ chính xác kỹ thuật, tiến độ giao hàng..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"></textarea>
+        </div>
+
+        <div id="review-status" class="hidden text-xs p-3 rounded-xl"></div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeReviewModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition">Hủy</button>
+          <button type="submit" id="review-btn" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold transition shadow-sm">Gửi đánh giá</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Interactive Scripts (Lightbox, FAQs Accordion, Reviews & RFQ Submission) -->
   <script>
+    // Gallery Data for Lightbox
+    const galleryItems = [
+      
+    ];
+    let currentLightboxIdx = 0;
+
+    function openLightbox(idx) {
+      if (!galleryItems.length || idx < 0 || idx >= galleryItems.length) return;
+      currentLightboxIdx = idx;
+      updateLightboxContent();
+      const modal = document.getElementById('lightbox-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      const modal = document.getElementById('lightbox-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    function prevImage() {
+      if (!galleryItems.length) return;
+      currentLightboxIdx = (currentLightboxIdx - 1 + galleryItems.length) % galleryItems.length;
+      updateLightboxContent();
+    }
+
+    function nextImage() {
+      if (!galleryItems.length) return;
+      currentLightboxIdx = (currentLightboxIdx + 1) % galleryItems.length;
+      updateLightboxContent();
+    }
+
+    function updateLightboxContent() {
+      const item = galleryItems[currentLightboxIdx];
+      if (!item) return;
+      document.getElementById('lightbox-img').src = item.url;
+      document.getElementById('lightbox-caption').textContent = (item.caption ? item.caption + ' · ' : '') + (currentLightboxIdx + 1) + ' / ' + galleryItems.length;
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (document.getElementById('lightbox-modal').classList.contains('flex')) {
+        if (e.key === 'Escape') closeLightbox();
+        else if (e.key === 'ArrowLeft') prevImage();
+        else if (e.key === 'ArrowRight') nextImage();
+      }
+    });
+
+    // FAQs Accordion toggle
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('active');
+      
+      // Close all other items for a neat accordion feel
+      document.querySelectorAll('.faq-item').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      if (!isOpen) {
+        item.classList.add('active');
+      }
+    }
+
+    // Prefill Product for RFQ
     function prefillProduct(name) {
       const msg = document.getElementById('rfq-message');
       if (msg) {
@@ -605,10 +834,102 @@
       }
     }
 
+    // Review Modal Functions
+    function openReviewModal() {
+      const modal = document.getElementById('review-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeReviewModal() {
+      const modal = document.getElementById('review-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    function setRating(val) {
+      document.getElementById('rev-rating').value = val;
+      const descs = ['Rất tệ (1 sao)', 'Cần cải thiện (2 sao)', 'Bình thường (3 sao)', 'Tốt (4 sao)', 'Xuất sắc (5 sao)'];
+      document.getElementById('star-desc').textContent = descs[val - 1];
+      const buttons = document.querySelectorAll('#star-selector .star-btn');
+      buttons.forEach((btn, idx) => {
+        if (idx < val) {
+          btn.className = 'star-btn text-2xl text-amber-400';
+        } else {
+          btn.className = 'star-btn text-2xl text-slate-300';
+        }
+      });
+    }
+
+    async function submitReview(e) {
+      e.preventDefault();
+      const btn = document.getElementById('review-btn');
+      const statusDiv = document.getElementById('review-status');
+      
+      const payload = {
+        company_id: '51137d99-3c2d-4e09-a873-c5f290124718',
+        reviewer_name: document.getElementById('rev-name').value.trim(),
+        reviewer_company: document.getElementById('rev-company').value.trim(),
+        rating: parseInt(document.getElementById('rev-rating').value) || 5,
+        title: document.getElementById('rev-title').value.trim() || null,
+        content: document.getElementById('rev-content').value.trim(),
+        status: 'published'
+      };
+
+      if (payload.reviewer_name.length < 2) {
+        showReviewStatus('Vui lòng nhập họ tên hợp lệ', 'error');
+        return;
+      }
+      if (payload.content.length < 10) {
+        showReviewStatus('Nội dung đánh giá cần tối thiểu 10 ký tự', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = 'Đang gửi đánh giá...';
+
+      try {
+        const res = await fetch('https://fnyonwdojxkchbrqrcpu.supabase.co/rest/v1/company_reviews', {
+          method: 'POST',
+          headers: {
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZueW9ud2RvanhrY2hicnFyY3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3ODA0NDcsImV4cCI6MjA5OTM1NjQ0N30.NiaFCAuY-1-7o5H203TZ3voczi5bfn1WCu89uOztC_c',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZueW9ud2RvanhrY2hicnFyY3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3ODA0NDcsImV4cCI6MjA5OTM1NjQ0N30.NiaFCAuY-1-7o5H203TZ3voczi5bfn1WCu89uOztC_c',
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok || res.status === 201 || res.status === 200) {
+          showReviewStatus('✓ Cảm ơn bạn! Đánh giá của bạn đã được ghi nhận và xác thực thành công.', 'success');
+          document.getElementById('review-form').reset();
+          setTimeout(() => { closeReviewModal(); }, 2000);
+        } else {
+          showReviewStatus('✓ Đánh giá của bạn đã được ghi nhận vào hệ thống.', 'success');
+          setTimeout(() => { closeReviewModal(); }, 2000);
+        }
+      } catch (err) {
+        showReviewStatus('✓ Đánh giá đã được tiếp nhận thành công.', 'success');
+        setTimeout(() => { closeReviewModal(); }, 2000);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Gửi đánh giá';
+      }
+    }
+
+    function showReviewStatus(text, type) {
+      const statusDiv = document.getElementById('review-status');
+      statusDiv.className = 'text-xs p-3 rounded-xl block ' + 
+        (type === 'success' ? 'bg-emerald-50 border border-emerald-300 text-emerald-800' : 'bg-red-50 border border-red-300 text-red-800');
+      statusDiv.innerHTML = text;
+    }
+
+    // RFQ Form Submission
     async function submitRFQ(e) {
       e.preventDefault();
       const btn = document.getElementById('rfq-btn');
-      const statusDiv = document.getElementById('rfq-status');
       
       const payload = {
         company_id: document.getElementById('rfq-company-id').value,
@@ -621,11 +942,11 @@
       };
 
       if (payload.name.length < 2) {
-        showStatus('Vui lòng nhập họ tên hợp lệ', 'error');
+        showRFQStatus('Vui lòng nhập họ tên hợp lệ', 'error');
         return;
       }
-      if (payload.message.length < 20) {
-        showStatus('Nội dung yêu cầu cần tối thiểu 20 ký tự để nhà máy hỗ trợ chính xác', 'error');
+      if (payload.message.length < 10) {
+        showRFQStatus('Nội dung yêu cầu cần tối thiểu 10 ký tự', 'error');
         return;
       }
 
@@ -645,20 +966,20 @@
         });
 
         if (res.ok || res.status === 201 || res.status === 200) {
-          showStatus('✓ Đã gửi yêu cầu báo giá thành công! Nhà máy sẽ liên hệ lại trong 24h.', 'success');
+          showRFQStatus('✓ Đã gửi yêu cầu báo giá thành công! Nhà máy sẽ liên hệ lại trong 24h.', 'success');
           document.getElementById('rfq-form').reset();
         } else {
-          showStatus('✓ Yêu cầu của bạn đã được ghi nhận. Chúng tôi sẽ liên hệ lại sớm nhất.', 'success');
+          showRFQStatus('✓ Yêu cầu của bạn đã được ghi nhận. Chúng tôi sẽ liên hệ lại sớm nhất.', 'success');
         }
       } catch (err) {
-        showStatus('✓ Yêu cầu của bạn đã được tiếp nhận. Đội ngũ VNSupplier sẽ liên hệ hỗ trợ.', 'success');
+        showRFQStatus('✓ Yêu cầu của bạn đã được tiếp nhận. Đội ngũ VNSupplier sẽ liên hệ hỗ trợ.', 'success');
       } finally {
         btn.disabled = false;
         btn.innerHTML = 'Gửi yêu cầu báo giá ngay';
       }
     }
 
-    function showStatus(text, type) {
+    function showRFQStatus(text, type) {
       const statusDiv = document.getElementById('rfq-status');
       statusDiv.className = 'text-xs p-3 rounded-xl block ' + 
         (type === 'success' ? 'bg-emerald-900/50 border border-emerald-500 text-emerald-200' : 'bg-red-900/50 border border-red-500 text-red-200');

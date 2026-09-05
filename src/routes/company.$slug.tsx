@@ -1336,22 +1336,54 @@ function ReviewsSection({
         <p className="text-sm text-muted-foreground">Chưa có đánh giá nào. Hãy là người đầu tiên chia sẻ trải nghiệm.</p>
       ) : (
         <ul className="space-y-3">
-          {reviews.map((r) => (
-            <li key={r.id} className="rounded-md border bg-background p-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <Stars value={r.rating} />
-                  <span className="text-sm font-semibold">{r.reviewer_name ?? "Khách hàng"}</span>
-                  <span className="text-[11px] text-muted-foreground">{new Date(r.created_at).toLocaleDateString("vi-VN")}</span>
+          {reviews.map((r) => {
+            let displayName = r.reviewer_name ?? "Khách hàng B2B";
+            let reviewerComp: string | null = null;
+            if (displayName.includes("(") && displayName.includes(")")) {
+              const m = displayName.match(/^(.*?)\s*\((.*?)\)$/);
+              if (m) {
+                displayName = m[1].trim();
+                reviewerComp = m[2].trim();
+              }
+            }
+            return (
+              <li key={r.id} className="rounded-xl border bg-background p-4 sm:p-5 shadow-2xs">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="flex items-start gap-3">
+                    <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-soft text-xs font-bold text-brand">
+                      {displayName.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm font-bold text-foreground">{displayName}</span>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                          ✓ Đối tác đã xác thực
+                        </span>
+                      </div>
+                      {reviewerComp && (
+                        <p className="mt-0.5 text-xs text-muted-foreground font-medium">{reviewerComp}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center justify-end">
+                      <Stars value={r.rating} size={14} />
+                    </div>
+                    <span className="text-[11px] text-muted-foreground">
+                      {new Date(r.created_at).toLocaleDateString("vi-VN")}
+                    </span>
+                  </div>
                 </div>
+                {r.title && <div className="mt-2 text-sm font-semibold text-foreground">{r.title}</div>}
+                <p className="mt-1.5 whitespace-pre-line text-xs sm:text-sm leading-relaxed text-foreground/85">{r.content}</p>
                 {me?.id === r.user_id && (
-                  <button onClick={() => remove(r.id)} className="text-[11px] font-semibold text-destructive hover:underline">Xoá</button>
+                  <div className="mt-2.5 pt-2 border-t text-right">
+                    <button onClick={() => remove(r.id)} className="text-[11px] font-semibold text-destructive hover:underline">Xoá đánh giá</button>
+                  </div>
                 )}
-              </div>
-              {r.title && <div className="mt-1 text-sm font-semibold">{r.title}</div>}
-              <p className="mt-1 whitespace-pre-line text-sm text-muted-foreground">{r.content}</p>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>

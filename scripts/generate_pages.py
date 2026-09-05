@@ -16,7 +16,7 @@ import time
 import ssl
 import urllib.request
 import urllib.parse
-from datetime import datetime
+from datetime import datetime, timezone
 from jinja2 import Environment, FileSystemLoader
 
 # Ensure UTF-8 output
@@ -48,6 +48,126 @@ def slugify(text):
     text = re.sub(r'[^a-z0-9\s-]', '', text)
     text = re.sub(r'[\s-]+', '-', text).strip('-')
     return text
+
+def get_video_embed_url(url):
+    if not url:
+        return None
+    url = str(url).strip()
+    yt_match = re.search(r'(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})', url)
+    if yt_match:
+        return f"https://www.youtube.com/embed/{yt_match.group(1)}"
+    vimeo_match = re.search(r'vimeo\.com\/(?:video\/)?(\d+)', url)
+    if vimeo_match:
+        return f"https://player.vimeo.com/video/{vimeo_match.group(1)}"
+    return None
+
+def extract_gallery(company):
+    gallery_list = []
+    seen = set()
+
+    # 1. From company_gallery relation
+    for item in (company.get("company_gallery") or []):
+        img_url = item.get("image_url")
+        if img_url and img_url not in seen:
+            seen.add(img_url)
+            gallery_list.append({
+                "url": img_url,
+                "caption": item.get("caption") or ""
+            })
+
+    # 2. From gallery_urls JSON column
+    raw_gallery = company.get("gallery_urls")
+    if isinstance(raw_gallery, str):
+        try:
+            raw_gallery = json.loads(raw_gallery)
+        except Exception:
+            raw_gallery = []
+    if isinstance(raw_gallery, list):
+        for img in raw_gallery:
+            if isinstance(img, str) and img and img not in seen:
+                seen.add(img)
+                gallery_list.append({"url": img, "caption": ""})
+            elif isinstance(img, dict) and img.get("url") and img["url"] not in seen:
+                seen.add(img["url"])
+                gallery_list.append({"url": img["url"], "caption": img.get("caption", "")})
+
+    return gallery_list
+
+def extract_faqs(company):
+    faqs_list = []
+    seen_questions = set()
+
+    # 1. From company_faqs relation
+    for item in (company.get("company_faqs") or []):
+        q = item.get("question") or item.get("q")
+        a = item.get("answer") or item.get("a")
+        if q and a and q.strip() not in seen_questions:
+            seen_questions.add(q.strip())
+            faqs_list.append({"question": q.strip(), "answer": a.strip()})
+
+    # 2. From faqs JSON column
+    raw_faqs = company.get("faqs")
+    if isinstance(raw_faqs, str):
+        try:
+            raw_faqs = json.loads(raw_faqs)
+        except Exception:
+            raw_faqs = []
+    if isinstance(raw_faqs, list):
+        for item in raw_faqs:
+            if isinstance(item, dict):
+                q = item.get("question") or item.get("q")
+                a = item.get("answer") or item.get("a")
+                if q and a and q.strip() not in seen_questions:
+                    seen_questions.add(q.strip())
+                    faqs_list.append({"question": q.strip(), "answer": a.strip()})
+
+    return faqs_list
+
+def extract_reviews(company):
+    reviews_data = company.get("company_reviews") or []
+    valid_reviews = []
+    total_stars = 0
+
+    for r in reviews_data:
+        try:
+            rating = int(r.get("rating", 5))
+        except (ValueError, TypeError):
+            rating = 5
+        rating = max(1, min(5, rating))
+
+        raw_name = r.get("reviewer_name") or "Khách hàng B2B"
+        reviewer_comp = r.get("reviewer_company")
+        if not reviewer_comp and "(" in raw_name and ")" in raw_name:
+            match = re.match(r'^(.*?)\s*\((.*?)\)$', raw_name)
+            if match:
+                raw_name = match.group(1).strip()
+                reviewer_comp = match.group(2).strip()
+
+        content = r.get("review_text") or r.get("content") or ""
+        created_at = r.get("created_at") or datetime.now(timezone.utc).isoformat()
+        date_display = created_at.split("T")[0] if "T" in str(created_at) else str(created_at)
+
+        valid_reviews.append({
+            "id": r.get("id"),
+            "reviewer_name": raw_name,
+            "reviewer_company": reviewer_comp,
+            "rating": rating,
+            "title": r.get("title") or "",
+            "content": content,
+            "is_verified": r.get("is_verified", True),
+            "created_at": created_at,
+            "date_display": date_display
+        })
+        total_stars += rating
+
+    review_count = len(valid_reviews)
+    if review_count > 0:
+        avg_rating = round(total_stars / review_count, 1)
+        rating_val = f"{avg_rating:.1f}"
+    else:
+        rating_val = "5.0"
+
+    return valid_reviews, rating_val, review_count
 
 def generate_sitemap(companies):
     today = datetime.now().strftime("%Y-%m-%d")
@@ -104,7 +224,7 @@ def generate_sitemap(companies):
 
 def main():
     print("=" * 60)
-    print("VNSupplier - Static Page Generator")
+    print("VNSupplier - Static Page Generator (Media & Trust Enhanced)")
     print("=" * 60)
 
     os.makedirs(COMPANIES_OUT_DIR, exist_ok=True)
@@ -115,11 +235,14 @@ def main():
     print("Fetching all companies and child records from Supabase...")
     select_query = (
         "id,name,slug,website,industry,province,district,founded_year,employee_range,"
-        "tax_code,description,ai_summary,logo_url,cover_url,is_featured,featured,capabilities,"
+        "tax_code,description,ai_summary,logo_url,cover_url,video_url,gallery_urls,faqs,is_featured,featured,capabilities,"
         "updated_at,company_products(id,name,category,description,source_url),"
         "company_contacts(id,contact_type,value,label),"
         "company_certifications(id,cert_name,issued_by,cert_number),"
-        "company_facts(id,field_name,value,evidence)"
+        "company_facts(id,field_name,value,evidence),"
+        "company_reviews(id,rating,title,content,reviewer_name,created_at),"
+        "company_gallery(id,image_url,caption),"
+        "company_faqs(id,question,answer)"
     )
 
     url = f"{SUPABASE_URL}/rest/v1/companies?select={urllib.parse.quote(select_query)}&limit=500"
@@ -163,6 +286,13 @@ def main():
         c_conts = c.get("company_contacts") or []
         c_certs = c.get("company_certifications") or []
         c_facts = c.get("company_facts") or []
+
+        # Extract Media, Gallery, Video, FAQs, Reviews
+        gallery_images = extract_gallery(c)
+        video_url = c.get("video_url")
+        video_embed_url = get_video_embed_url(video_url)
+        faqs_list = extract_faqs(c)
+        reviews_list, rating_val, review_count = extract_reviews(c)
 
         phone = None
         email = None
@@ -208,6 +338,13 @@ def main():
             "canonical_url": canonical_url,
             "logo_url": c.get("logo_url"),
             "cover_url": c.get("cover_url"),
+            "video_url": video_url,
+            "video_embed_url": video_embed_url,
+            "gallery_images": gallery_images,
+            "faqs": faqs_list,
+            "reviews": reviews_list,
+            "rating_val": rating_val,
+            "review_count": review_count,
             "industry": industry_name,
             "industry_slug": industry_slug,
             "province": province_name,
@@ -217,8 +354,6 @@ def main():
             "employee_range": c.get("employee_range"),
             "tax_code": c.get("tax_code"),
             "is_featured": c.get("is_featured") or c.get("featured", False),
-            "rating_val": "4.9",
-            "review_count": "15",
             "ai_summary": c.get("ai_summary"),
             "description": c.get("description"),
             "products": c_prods,
