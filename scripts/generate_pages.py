@@ -3,7 +3,8 @@
 """
 VNSupplier - Lightning Fast Static Page Generator
 Fetches all approved companies with their embedded relations in one go,
-renders templates/company-profile.html into public/company/{slug}/index.html,
+renders templates/company-profile.html into public/company/{slug}/index.html
+and public/companies/{province_slug}/{slug}/index.html,
 and updates sitemap.xml & sitemap-companies.xml.
 """
 
@@ -22,10 +23,13 @@ from jinja2 import Environment, FileSystemLoader
 # Ensure UTF-8 output
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
+BASE_URL = "https://vnsupplier.cloud"
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 PUBLIC_DIR = os.path.join(BASE_DIR, "public")
 COMPANIES_OUT_DIR = os.path.join(PUBLIC_DIR, "company")
+COMPANIES_NESTED_OUT_DIR = os.path.join(PUBLIC_DIR, "companies")
 
 SUPABASE_URL = os.getenv("SUPABASE_URL", "https://fnyonwdojxkchbrqrcpu.supabase.co")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", os.getenv("SUPABASE_PUBLISHABLE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZueW9ud2RvanhrY2hicnFyY3B1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4Mzc4MDQ0NywiZXhwIjoyMDk5MzU2NDQ3fQ.SR1Hcnv2AR-UKb5VlV1xh5m4SEEsSu9izXU8HHaNod4"))
@@ -49,6 +53,28 @@ def slugify(text):
     text = re.sub(r'[\s-]+', '-', text).strip('-')
     return text
 
+def normalize_province_slug(province_name):
+    if not province_name:
+        return "viet-nam"
+    p_lower = province_name.lower().strip()
+    if any(k in p_lower for k in ["hồ chí minh", "tp.hcm", "tphcm", "tp hcm", "hcm"]):
+        return "tphcm"
+    if "hà nội" in p_lower or "ha noi" in p_lower:
+        return "ha-noi"
+    if "đà nẵng" in p_lower or "da nang" in p_lower:
+        return "da-nang"
+    if "hải phòng" in p_lower or "hai phong" in p_lower:
+        return "hai-phong"
+    if "bình dương" in p_lower or "binh duong" in p_lower:
+        return "binh-duong"
+    if "đồng nai" in p_lower or "dong nai" in p_lower:
+        return "dong-nai"
+    if "bắc ninh" in p_lower or "bac ninh" in p_lower:
+        return "bac-ninh"
+    if "long an" in p_lower:
+        return "long-an"
+    return slugify(province_name)
+
 def get_video_embed_url(url):
     if not url:
         return None
@@ -65,7 +91,6 @@ def extract_gallery(company):
     gallery_list = []
     seen = set()
 
-    # 1. From company_gallery relation
     for item in (company.get("company_gallery") or []):
         img_url = item.get("image_url")
         if img_url and img_url not in seen:
@@ -75,7 +100,6 @@ def extract_gallery(company):
                 "caption": item.get("caption") or ""
             })
 
-    # 2. From gallery_urls JSON column
     raw_gallery = company.get("gallery_urls")
     if isinstance(raw_gallery, str):
         try:
@@ -97,7 +121,6 @@ def extract_faqs(company):
     faqs_list = []
     seen_questions = set()
 
-    # 1. From company_faqs relation
     for item in (company.get("company_faqs") or []):
         q = item.get("question") or item.get("q")
         a = item.get("answer") or item.get("a")
@@ -105,7 +128,6 @@ def extract_faqs(company):
             seen_questions.add(q.strip())
             faqs_list.append({"question": q.strip(), "answer": a.strip()})
 
-    # 2. From faqs JSON column
     raw_faqs = company.get("faqs")
     if isinstance(raw_faqs, str):
         try:
@@ -176,6 +198,7 @@ def generate_sitemap(companies):
     for c in companies:
         slug = c.get("slug")
         if slug:
+            p_slug = normalize_province_slug(c.get("province"))
             lastmod = c.get("updated_at")
             if lastmod:
                 try:
@@ -186,7 +209,7 @@ def generate_sitemap(companies):
                 lastmod = today
                 
             comp_urls.append(f"""  <url>
-    <loc>https://vnsupplier.cloud/company/{slug}</loc>
+    <loc>{BASE_URL}/companies/{p_slug}/{slug}</loc>
     <lastmod>{lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -205,15 +228,15 @@ def generate_sitemap(companies):
     sitemap_index_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>https://vnsupplier.cloud/sitemap-companies.xml</loc>
+    <loc>{BASE_URL}/sitemap-companies.xml</loc>
     <lastmod>{today}</lastmod>
   </sitemap>
   <sitemap>
-    <loc>https://vnsupplier.cloud/sitemap-industries.xml</loc>
+    <loc>{BASE_URL}/sitemap-industries.xml</loc>
     <lastmod>{today}</lastmod>
   </sitemap>
   <sitemap>
-    <loc>https://vnsupplier.cloud/sitemap-provinces.xml</loc>
+    <loc>{BASE_URL}/sitemap-provinces.xml</loc>
     <lastmod>{today}</lastmod>
   </sitemap>
 </sitemapindex>
@@ -228,6 +251,7 @@ def main():
     print("=" * 60)
 
     os.makedirs(COMPANIES_OUT_DIR, exist_ok=True)
+    os.makedirs(COMPANIES_NESTED_OUT_DIR, exist_ok=True)
     
     env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
     template = env.get_template("company-profile.html")
@@ -268,7 +292,6 @@ def main():
 
     print(f"Loaded {len(companies)} companies with complete child relations.")
 
-    # Industry grouped companies for related links
     industry_map = {}
     for c in companies:
         ind = c.get("industry")
@@ -287,7 +310,6 @@ def main():
         c_certs = c.get("company_certifications") or []
         c_facts = c.get("company_facts") or []
 
-        # Extract Media, Gallery, Video, FAQs, Reviews
         gallery_images = extract_gallery(c)
         video_url = c.get("video_url")
         video_embed_url = get_video_embed_url(video_url)
@@ -312,12 +334,15 @@ def main():
         industry_name = c.get("industry") or "Sản xuất & Gia công"
         province_name = c.get("province") or "Việt Nam"
         industry_slug = slugify(industry_name)
-        province_slug = slugify(province_name)
+        province_slug = normalize_province_slug(province_name)
+        raw_province_slug = slugify(province_name)
 
         related = [
             rc for rc in industry_map.get(industry_name, [])
             if rc["id"] != cid
         ][:6]
+        for rc in related:
+            rc["province_slug"] = normalize_province_slug(rc.get("province"))
 
         company_name = c.get("name", "")
         page_title = f"{company_name} | {industry_name} tại {province_name} | VNSupplier"
@@ -326,9 +351,10 @@ def main():
         raw_desc = c.get("ai_summary") or c.get("description") or f"Hồ sơ năng lực, chứng nhận, sản phẩm và thông tin liên hệ của {company_name} - nhà máy {industry_name} tại {province_name}."
         meta_description = raw_desc[:160].replace("\n", " ").strip()
 
-        canonical_url = f"https://vnsupplier.cloud/company/{slug}"
+        canonical_url = f"{BASE_URL}/companies/{province_slug}/{slug}"
 
         context = {
+            "base_url": BASE_URL,
             "company_id": cid,
             "company_name": company_name,
             "slug": slug,
@@ -369,18 +395,28 @@ def main():
 
         html_out = template.render(**context)
 
-        # Output to /public/company/{slug}/index.html
+        # 1. Output to /public/company/{slug}/index.html
         target_dir = os.path.join(COMPANIES_OUT_DIR, slug)
         os.makedirs(target_dir, exist_ok=True)
         target_file = os.path.join(target_dir, "index.html")
         with open(target_file, "w", encoding="utf-8") as f:
             f.write(html_out)
 
+        # 2. Output to /public/companies/{province_slug}/{slug}/index.html
+        nested_dirs = [os.path.join(COMPANIES_NESTED_OUT_DIR, province_slug, slug)]
+        if raw_province_slug != province_slug:
+            nested_dirs.append(os.path.join(COMPANIES_NESTED_OUT_DIR, raw_province_slug, slug))
+        
+        for nd in nested_dirs:
+            os.makedirs(nd, exist_ok=True)
+            with open(os.path.join(nd, "index.html"), "w", encoding="utf-8") as f:
+                f.write(html_out)
+
         generated_count += 1
         if idx % 50 == 0 or idx == len(companies):
             print(f"Generated {idx}/{len(companies)} pages...")
 
-    print(f"\n✓ Successfully generated {generated_count} company profile pages in {COMPANIES_OUT_DIR}!")
+    print(f"\n✓ Successfully generated {generated_count} company profile pages in {COMPANIES_OUT_DIR} and {COMPANIES_NESTED_OUT_DIR}!")
     
     generate_sitemap(companies)
 
